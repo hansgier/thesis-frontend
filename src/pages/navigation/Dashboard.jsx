@@ -1,9 +1,13 @@
-import React from 'react';
+import React from "react";
 import { Announcement, FeaturedProject, FeedbackRow, RecentActivity, UpcomingProject } from "./dashboard/index.jsx";
+import { motion } from "framer-motion";
 
 export const Dashboard = () => {
     return (
-        <div
+        <motion.div
+            initial={ { opacity: 0, y: -30 } }
+            animate={ { opacity: 1, y: 0 } }
+            transition={ { type: "tween" } }
             className="absolute bg-transparent flex-1 h-[calc(100%-64px)] md:ml-[272px] ml-0 overflow-y-hidden top-16 z-0"
         >
             <div className="h-full max-h-full overflow-y-scroll pt-6 px-0 md:px-6">
@@ -26,7 +30,7 @@ export const Dashboard = () => {
                                 <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
                                      viewBox="0 0 24 24" width="24" className="text-green-700">
                                     <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round"
-                                          strokeWidth="2" d="M12 6v13m0-13 4 4m-4-4-4 4"/>
+                                          strokeWidth="2" d="M12 6v13m0-13 4 4m-4-4-4 4" />
                                 </svg>
                             </div>
                         </div>
@@ -41,7 +45,7 @@ export const Dashboard = () => {
                                 <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
                                      viewBox="0 0 24 24" width="24" className="text-yellow-700">
                                     <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round"
-                                          strokeWidth="2" d="M12 6v13m0-13 4 4m-4-4-4 4"/>
+                                          strokeWidth="2" d="M12 6v13m0-13 4 4m-4-4-4 4" />
                                 </svg>
                             </div>
                         </div>
@@ -56,7 +60,7 @@ export const Dashboard = () => {
                                 <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
                                      viewBox="0 0 24 24" width="24" className="text-red-700">
                                     <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round"
-                                          strokeWidth="2" d="M12 6v13m0-13 4 4m-4-4-4 4"/>
+                                          strokeWidth="2" d="M12 6v13m0-13 4 4m-4-4-4 4" />
                                 </svg>
                             </div>
                         </div>
@@ -207,6 +211,6 @@ export const Dashboard = () => {
                     </div>
                 </div>
             </div>
-        </div>
+        </motion.div>
     );
 };

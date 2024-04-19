@@ -3,7 +3,9 @@ import { createSlice } from "@reduxjs/toolkit";
 const initialState = {
     isLoading: false,
     isSidebarOpen: false,
-    user: null,
+    isNotificationsOpen: false,
+    isFeedbackOpen: false,
+    user: null
 };
 
 const userSlice = createSlice({
@@ -13,8 +15,18 @@ const userSlice = createSlice({
         toggleSidebar: (state) => {
             state.isSidebarOpen = !state.isSidebarOpen;
         },
-    },
+        toggleNotifications: (state) => {
+            state.isNotificationsOpen = !state.isNotificationsOpen;
+        },
+        toggleFeedback: (state) => {
+            state.isFeedbackOpen = !state.isFeedbackOpen;
+        }
+    }
 });
 
-export const { toggleSidebar } = userSlice.actions;
+export const {
+    toggleSidebar,
+    toggleNotifications,
+    toggleFeedback
+} = userSlice.actions;
 export default userSlice.reducer;
