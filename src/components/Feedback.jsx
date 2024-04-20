@@ -1,6 +1,6 @@
 import { AnimatePresence, motion } from "framer-motion";
 import { useDispatch, useSelector } from "react-redux";
-import { toggleFeedback } from "../app/features/user/userSlice.jsx";
+import { toggleFeedback } from "../app/features/user/userSlice.js";
 import { useEffect } from "react";
 
 export const Feedback = () => {
@@ -39,21 +39,22 @@ export const Feedback = () => {
                         initial={ { opacity: 0, scale: 0 } }
                         animate={ { opacity: 1, scale: 1 } }
                         exit={ { opacity: 0, scale: 0 } }
-                        transition={ { type: "spring", damping: 10, stiffness: 100 } }
+                        transition={ { type: "tween" } }
                         onClick={ (e) => e.stopPropagation() }
                         className="backdrop-blur-3xl backdrop-brightness-150 bg-transparent mx-4 p-4 rounded-xl shadow-xl space-y-4 w-full md:mx-0 md:p-8 md:space-y-7 md:w-3/4 lg:w-2/4">
                         <div>
                             <h2 className="font-bold text-xl md:text-3xl">Feedback</h2>
                             <h6 className="text-gray-600 text-sm md:text-base">We'd love to hear your thoughts</h6>
                         </div>
-                        <div className="h-[428px] overflow-y-scroll">
+                        <div className="h-[428px] overflow-y-hidden">
                             <form className="min-h-full space-y-4">
                                 <div className="flex flex-col">
                                     <label
                                         className="font-semibold text-gray-800 text-sm uppercase md:text-base">Title</label>
                                     <input
                                         className="bg-transparent border-b-2 border-l-0 border-r-0 border-t-0 focus:border-Thesis-300 focus:outline-none focus:ring-0 focus:ring-offset-0 pb-1 pt-0 px-2 text-sm md:text-base"
-                                        name="feedback-title" type="text" required={ true } placeholder="Enter title" />
+                                        name="feedback-title" type="text" required={ true }
+                                        placeholder="Enter title" />
                                 </div>
                                 <div className="flex flex-col">
                                     <label
@@ -81,6 +82,7 @@ export const Feedback = () => {
                             </button>
                         </div>
                     </motion.div>
+
                 </motion.div>
             ) }
         </AnimatePresence>

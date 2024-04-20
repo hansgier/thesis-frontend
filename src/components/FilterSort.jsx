@@ -92,10 +92,10 @@ export const FilterSort = () => {
             </div>
             <div className="mb-6 mt-5 px-2">
                 <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-                    <select
-                        className="appearance-none border border-gray-300 flex focus-visible:border-none focus-visible:outline-none focus:border-none focus:outline-none focus:ring-1 focus:ring-Thesis-200 focus:ring-offset-0 h-10 hover:cursor-pointer items-center justify-between outline-none px-3 py-2 rounded-md text-gray-500 text-xs w-full md:text-sm"
-                        id="tags">
-                        <option value="" disabled selected className="disabled:hidden">
+                    <select defaultValue="none"
+                            className="appearance-none border border-gray-300 flex focus-visible:border-none focus-visible:outline-none focus:border-none focus:outline-none focus:ring-1 focus:ring-Thesis-200 focus:ring-offset-0 h-10 hover:cursor-pointer items-center justify-between outline-none px-3 py-2 rounded-md text-gray-500 text-xs w-full md:text-sm"
+                            id="tags">
+                        <option value="none" disabled selected className="disabled:hidden">
                             Tags
                         </option>
                         <option value="none">
@@ -119,10 +119,10 @@ export const FilterSort = () => {
                             <path d="m6 9 6 6 6-6"></path>
                         </svg>
                     </select>
-                    <select
-                        className="border border-gray-300 flex focus-visible:outline-none focus:border-none focus:ring-1 focus:ring-Thesis-200 focus:ring-offset-0 h-10 hover:cursor-pointer items-center justify-between px-3 py-2 rounded-md text-gray-500 text-xs w-full md:text-sm outline-none"
-                        id="tags">
-                        <option value="" disabled selected className="disabled:hidden">
+                    <select defaultValue="none"
+                            className="border border-gray-300 flex focus-visible:outline-none focus:border-none focus:ring-1 focus:ring-Thesis-200 focus:ring-offset-0 h-10 hover:cursor-pointer items-center justify-between px-3 py-2 rounded-md text-gray-500 text-xs w-full md:text-sm outline-none"
+                            id="tags">
+                        <option value="none" disabled selected className="disabled:hidden">
                             Barangays
                         </option>
                         <option value="none">
@@ -146,10 +146,10 @@ export const FilterSort = () => {
                             <path d="m6 9 6 6 6-6"></path>
                         </svg>
                     </select>
-                    <select
-                        className="border border-gray-300 flex focus-visible:outline-none focus:border-none focus:ring-1 focus:ring-Thesis-200 focus:ring-offset-0 h-10 hover:cursor-pointer items-center justify-between px-3 py-2 rounded-md text-gray-500 text-xs w-full md:text-sm"
-                        id="tags">
-                        <option value="" disabled selected className="disabled:hidden">
+                    <select defaultValue="none"
+                            className="border border-gray-300 flex focus-visible:outline-none focus:border-none focus:ring-1 focus:ring-Thesis-200 focus:ring-offset-0 h-10 hover:cursor-pointer items-center justify-between px-3 py-2 rounded-md text-gray-500 text-xs w-full md:text-sm"
+                            id="tags">
+                        <option value="none" disabled selected className="disabled:hidden">
                             Posted by
                         </option>
                         <option value="none">
@@ -173,10 +173,10 @@ export const FilterSort = () => {
                             <path d="m6 9 6 6 6-6"></path>
                         </svg>
                     </select>
-                    <select
-                        className="border border-gray-300 flex focus-visible:outline-none focus:border-none focus:ring-1 focus:ring-Thesis-200 focus:ring-offset-0 h-10 hover:cursor-pointer items-center justify-between px-3 py-2 rounded-md text-gray-500 text-xs w-full md:text-sm outline-none"
-                        id="tags">
-                        <option value="" disabled selected className="disabled:hidden">
+                    <select defaultValue="none"
+                            className="border border-gray-300 flex focus-visible:outline-none focus:border-none focus:ring-1 focus:ring-Thesis-200 focus:ring-offset-0 h-10 hover:cursor-pointer items-center justify-between px-3 py-2 rounded-md text-gray-500 text-xs w-full md:text-sm outline-none"
+                            id="tags">
+                        <option value="none" disabled selected className="disabled:hidden">
                             Status
                         </option>
                         <option value="none">
@@ -200,10 +200,10 @@ export const FilterSort = () => {
                             <path d="m6 9 6 6 6-6"></path>
                         </svg>
                     </select>
-                    <select
-                        className="border border-gray-300 flex focus-visible:outline-none focus:border-none focus:ring-1 focus:ring-Thesis-200 focus:ring-offset-0 h-10 hover:cursor-pointer items-center justify-between px-3 py-2 rounded-md text-gray-500 text-xs w-full md:text-sm outline-none"
-                        id="tags">
-                        <option value="" disabled selected className="disabled:hidden">
+                    <select defaultValue="none"
+                            className="border border-gray-300 flex focus-visible:outline-none focus:border-none focus:ring-1 focus:ring-Thesis-200 focus:ring-offset-0 h-10 hover:cursor-pointer items-center justify-between px-3 py-2 rounded-md text-gray-500 text-xs w-full md:text-sm outline-none"
+                            id="tags">
+                        <option value="none" disabled selected className="disabled:hidden">
                             Cost
                         </option>
                         <option value="none">
@@ -227,10 +227,10 @@ export const FilterSort = () => {
                             <path d="m6 9 6 6 6-6"></path>
                         </svg>
                     </select>
-                    <select
-                        className="border border-gray-300 flex focus-visible:outline-none focus:border-none focus:ring-1 focus:ring-Thesis-200 focus:ring-offset-0 h-10 hover:cursor-pointer items-center justify-between px-3 py-2 rounded-md text-gray-500 text-xs w-full md:text-sm outline-none"
-                        id="tags">
-                        <option value="" disabled selected className="disabled:hidden">
+                    <select defaultValue="none"
+                            className="border border-gray-300 flex focus-visible:outline-none focus:border-none focus:ring-1 focus:ring-Thesis-200 focus:ring-offset-0 h-10 hover:cursor-pointer items-center justify-between px-3 py-2 rounded-md text-gray-500 text-xs w-full md:text-sm outline-none"
+                            id="tags">
+                        <option value="none" disabled selected className="disabled:hidden">
                             Progress
                         </option>
                         <option value="none">
@@ -254,10 +254,10 @@ export const FilterSort = () => {
                             <path d="m6 9 6 6 6-6"></path>
                         </svg>
                     </select>
-                    <select
-                        className="border border-gray-300 flex focus-visible:outline-none focus:border-none focus:ring-1 focus:ring-Thesis-200 focus:ring-offset-0 h-10 hover:cursor-pointer items-center justify-between px-3 py-2 rounded-md text-gray-500 text-xs w-full md:text-sm"
-                        id="tags">
-                        <option value="" disabled selected className="disabled:hidden">
+                    <select defaultValue="none"
+                            className="border border-gray-300 flex focus-visible:outline-none focus:border-none focus:ring-1 focus:ring-Thesis-200 focus:ring-offset-0 h-10 hover:cursor-pointer items-center justify-between px-3 py-2 rounded-md text-gray-500 text-xs w-full md:text-sm"
+                            id="tags">
+                        <option value="none" disabled selected className="disabled:hidden">
                             Views
                         </option>
                         <option value="none">

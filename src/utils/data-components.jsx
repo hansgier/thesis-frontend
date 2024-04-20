@@ -1,5 +1,5 @@
-import { MdOutlineAnnouncement, MdOutlineSpaceDashboard } from "react-icons/md";
-import { GrProjects } from "react-icons/gr";
+import { MdOutlineAnnouncement, MdOutlineSpaceDashboard, MdUpdate } from "react-icons/md";
+import { GrProjects, GrSystem } from "react-icons/gr";
 import { VscFeedback } from "react-icons/vsc";
 import { RiContactsBook2Line } from "react-icons/ri";
 import { PiUsersThree } from "react-icons/pi";
@@ -11,9 +11,9 @@ export const sideLinks = [
         path: "/",
         svg: {
             active:
-                <MdOutlineSpaceDashboard size={ 24 } color={ "#ffffff" } />,
+                <MdOutlineSpaceDashboard className="h-6 w-6 md:w-6 md:h-6" color={ "#ffffff" } />,
             inactive:
-                <MdOutlineSpaceDashboard size={ 24 } color={ "#5c5c5c" } />
+                <MdOutlineSpaceDashboard className="h-6 w-6 md:w-6 md:h-6" color={ "#5c5c5c" } />
         }
     },
     {
@@ -33,9 +33,9 @@ export const sideLinks = [
         path: "announcements",
         svg: {
             active:
-                <MdOutlineAnnouncement size={ 22 } color={ "#ffffff" } />,
+                <MdOutlineAnnouncement className="h-5 w-5 md:w-5 md:h-5" color={ "#ffffff" } />,
             inactive:
-                <MdOutlineAnnouncement size={ 22 } color={ "#5c5c5c" } />
+                <MdOutlineAnnouncement className="h-5 w-5 md:w-5 md:h-5" color={ "#5c5c5c" } />
         }
     },
     {
@@ -44,9 +44,9 @@ export const sideLinks = [
         path: "messages",
         svg: {
             active:
-                <VscFeedback size={ 22 } color={ "#ffffff" } />,
+                <VscFeedback className="h-5 w-5 md:w-5 md:h-5" color={ "#ffffff" } />,
             inactive:
-                <VscFeedback size={ 22 } color={ "#5c5c5c" } />
+                <VscFeedback className="h-5 w-5 md:w-5 md:h-5" color={ "#5c5c5c" } />
         }
     },
     {
@@ -55,9 +55,9 @@ export const sideLinks = [
         path: "contacts",
         svg: {
             active:
-                <RiContactsBook2Line size={ 22 } color={ "#ffffff" } />,
+                <RiContactsBook2Line className="h-5 w-5 md:w-5 md:h-5" color={ "#ffffff" } />,
             inactive:
-                <RiContactsBook2Line size={ 22 } color={ "#5c5c5c" } />
+                <RiContactsBook2Line className="h-5 w-5 md:w-5 md:h-5" color={ "#5c5c5c" } />
         }
     },
     {
@@ -66,9 +66,18 @@ export const sideLinks = [
         path: "users",
         svg: {
             active:
-                <PiUsersThree size={ 24 } color={ "#ffffff" } />,
+                <PiUsersThree className="h-6 w-6 md:w-6 md:h-6" color={ "#ffffff" } />,
             inactive:
-                <PiUsersThree size={ 24 } color={ "#5c5c5c" } />
+                <PiUsersThree className="h-6 w-6 md:w-6 md:h-6" color={ "#5c5c5c" } />
         }
     }
 ];
+
+export const announcements = {
+    basic: {
+        icon: <MdUpdate className="h-5 w-5 md:w-7 md:h-7" color={ "#0284c7" } />
+    },
+    system: {
+        icon: <GrSystem className="h-5 w-5 md:w-6 md:h-6" color={ "#db2777" } />
+    }
+};

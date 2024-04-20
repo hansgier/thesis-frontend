@@ -2,7 +2,7 @@ import { Notification } from "./Notification.jsx";
 import { useDispatch, useSelector } from "react-redux";
 import { TbClearAll } from "react-icons/tb";
 import { AnimatePresence, motion } from "framer-motion";
-import { toggleNotifications } from "../app/features/user/userSlice.jsx";
+import { toggleNotifications } from "../app/features/user/userSlice.js";
 import { useEffect } from "react";
 
 export const NotifContainer = () => {

@@ -1,9 +1,11 @@
 import { Feedback, NotifContainer, Sidebar, TopBar } from "../../components/index.jsx";
-import { Outlet } from "react-router-dom";
+import { Outlet, useLocation } from "react-router-dom";
+import { AnimatePresence, motion } from "framer-motion";
 
 export const SharedLayout = () => {
+    const location = useLocation();
     return (
-        <main className="font-poppins ">
+        <main>
             <div className="fixed h-full left-0 top-0 w-full z-0"></div>
             <div
                 className="-left-16 bg-Thesis-50 bg-opacity-10 blur-3xl fixed h-80 rounded-full top-20 w-52 md:bg-opacity-40"></div>
@@ -19,7 +21,19 @@ export const SharedLayout = () => {
             <Sidebar />
             <NotifContainer />
             <Feedback />
-            <Outlet />
+            <AnimatePresence mode="wait">
+                <motion.div
+                    key={ location.pathname }
+                    initial={ { opacity: 0, y: -30 } }
+                    animate={ { opacity: 1, y: 0 } }
+                    transition={ { type: "tween" } }
+                    className="absolute bg-transparent flex-1 h-[calc(100%-64px)] pt-0 md:pt-0 md:pb-0 pb-0 ml-0 top-16 z-0 md:ml-[272px] w-full md:w-[calc(100%-272px)]"
+                >
+                    <div className="h-full max-h-full overflow-y-scroll pt-6 px-0 md:px-6">
+                        <Outlet />
+                    </div>
+                </motion.div>
+            </AnimatePresence>
         </main>
     );
 };

@@ -9,7 +9,7 @@ function App() {
                     <Route index element={ <Dashboard /> } />
                     <Route path="projects" element={ <Projects /> } />
                     <Route path="announcements" element={ <Announcements /> } />
-                    <Route path="feedback" element={ <Messages /> } />
+                    <Route path="messages" element={ <Messages /> } />
                     <Route path="contacts" element={ <Contacts /> } />
                 </Route>
             </Routes>

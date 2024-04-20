@@ -1,5 +1,5 @@
 import { useDispatch } from "react-redux";
-import { toggleFeedback, toggleNotifications, toggleSidebar } from "../app/features/user/userSlice.jsx";
+import { toggleFeedback, toggleNotifications, toggleSidebar } from "../app/features/user/userSlice.js";
 import { SearchBar } from "./SearchBar.jsx";
 import { FiFlag } from "react-icons/fi";
 import { MdNotificationsNone } from "react-icons/md";

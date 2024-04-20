@@ -1,17 +1,36 @@
 import { useDispatch, useSelector } from "react-redux";
-import { useEffect, useRef, useState } from "react";
-import { toggleSidebar } from "../app/features/user/userSlice.jsx";
+import { useEffect, useState } from "react";
+import { toggleSidebar } from "../app/features/user/userSlice.js";
 import { sideLinks } from "../utils/data-components.jsx";
-import { NavLink } from "react-router-dom";
+import { NavLink, useLocation } from "react-router-dom";
 import { NavProfile } from "./NavProfile.jsx";
 import { AnimatePresence, motion } from "framer-motion";
 
+const paths = {
+    "/": 1,
+    "/projects": 2,
+    "/announcements": 3,
+    "/messages": 4,
+    "/contacts": 5,
+    "/users": 6
+};
+
 export const Sidebar = () => {
+    const location = useLocation();
     const { isSidebarOpen } = useSelector((store) => store.user);
     const [activeNavLink, setActiveNavLink] = useState(1);
     const [NavLinkClicked, setNavLinkClicked] = useState(null);
-    const navBarMobileRef = useRef(null);
     const dispatch = useDispatch();
+
+    useEffect(() => {
+        const path = paths[location.pathname];
+        if (path) {
+            setActiveNavLink(path);
+        }
+        if (location.pathname in paths) {
+            setActiveNavLink(paths[location.pathname]);
+        }
+    }, [location]);
 
     const toggleSide = () => {
         dispatch(toggleSidebar());
@@ -71,7 +90,10 @@ export const Sidebar = () => {
                                             <NavLink
                                                 key={ nav.id }
                                                 to={ nav.path }
-                                                onClick={ () => setActiveNavLink(nav.id) }
+                                                onClick={ () => {
+                                                    setActiveNavLink(nav.id);
+                                                    dispatch(toggleSidebar());
+                                                } }
                                                 className={ ({ isActive }) => {
                                                     return isActive
                                                         ? "bg-gradient-to-r flex font-normal from-Thesis-50 group items-center" +
@@ -80,7 +102,7 @@ export const Sidebar = () => {
                                                 } }>
                                     <span
                                         id="project-link"
-                                        className="border-none flex group-hover:duration-300 group-hover:transition-colors h-10 items-center justify-center mr-2 rounded-lg w-10">
+                                        className="border-none flex group-hover:duration-300 group-hover:transition-colors h-10 items-center justify-center mr-2 rounded-lg w-10 md:w-10">
                                         { activeNavLink === nav.id ? nav.svg.active : nav.svg.inactive }
                                     </span>
                                                 <label
@@ -93,8 +115,9 @@ export const Sidebar = () => {
                                                         "cursor-pointer duration-300" +
                                                         " ease-out font-medium group-hover:duration-300 group-hover:ease-out" +
                                                         " group-hover:text-Thesis-300 group-hover:transition-transform" +
-                                                        " group-hover:translate-x-3 select-none text-gray-500" +
-                                                        " transition-transform" } mr-2 text-base` }
+                                                        " group-hover:translate-x-3 select-none" +
+                                                        " font-normal text-slate-600" +
+                                                        " transition-transform" } mr-2 text-sm` }
                                                     id="project-label">
                                                     { nav.name }
                                                 </label>
@@ -152,8 +175,8 @@ export const Sidebar = () => {
                                                 "cursor-pointer duration-300" +
                                                 " ease-out font-medium group-hover:duration-300 group-hover:ease-out" +
                                                 " group-hover:text-Thesis-300 group-hover:transition-transform" +
-                                                " group-hover:translate-x-3 select-none text-gray-500" +
-                                                " transition-transform" } mr-2 text-base` }
+                                                " group-hover:translate-x-3 select-none text-slate-600" +
+                                                " transition-transform" } mr-2 font-normal text-base` }
                                             id="project-label">
                                             { nav.name }
                                         </label>
