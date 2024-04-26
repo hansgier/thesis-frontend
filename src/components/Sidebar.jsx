@@ -1,10 +1,11 @@
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import { toggleSidebar } from "../app/features/user/userSlice.js";
-import { sideLinks } from "../utils/data-components.jsx";
 import { NavLink, useLocation } from "react-router-dom";
-import { NavProfile } from "./NavProfile.jsx";
+import { sideLinks } from "../utils/data-components.jsx";
+import logo from "/public/logo.png";
 import { AnimatePresence, motion } from "framer-motion";
+import { NavProfile } from "./NavProfile.jsx";
 
 const paths = {
     "/": 1,
@@ -56,140 +57,131 @@ export const Sidebar = () => {
 
     return (
         <>
+            {/*Desktop version*/ }
+            <div>
+                <div
+                    className="bg-white fixed hidden h-full md:h-[calc(100%-68px)] left-0 top-0 md:top-[68px] w-4/6 z-50 sm:w-1/2 md:bg-opacity-100 md:bg-transparent md:flex md:flex-col md:w-[100px]">
+                    <div className="flex flex-1 flex-col h-full items-center justify-between p-6">
+                        <div className="cursor-pointer flex items-center w-full md:hidden">
+                            <img src={ logo } alt="logo" loading="lazy"
+                                 className="mx-3 select-none w-7 md:block" />
+                            <h1 className="flex font-Gilroy font-extrabold h-full items-center select-none text-2xl">ormocpis</h1>
+                        </div>
+                        {/*-----------------------Navigation Bars-----------------------*/ }
+                        {/*Desktop version*/ }
+                        <nav className="flex-col gap-6 hidden md:flex">
+                            { sideLinks.map((sideLink) => {
+                                return (
+                                    <NavLink
+                                        key={ sideLink.id }
+                                        to={ sideLink.path }
+                                        onClick={ () => {
+                                            setActiveNavLink(sideLink.id);
+                                            dispatch(toggleSidebar());
+                                        } }
+                                        className={ ({ isActive }) => {
+                                            return isActive
+                                                ? "bg-gradient-to-r flex font-normal from-Thesis-200 group hover:bg-gradient-to-br hover:duration-150 hover:from-Thesis-100 hover:to-indigo-900 hover:transition-all items-center justify-center p-4 rounded-full to-Thesis-100 w-full"
+                                                : "bg-white duration-150 flex font-normal group hover:bg-gradient-to-tr hover:from-pink-100 hover:to-blue-100 items-center justify-center p-4 rounded-full transition-all";
+                                        } }
+                                    >
+                                        <span
+                                            id="project-link" className="border-none flex items-center justify-center">
+                                            { activeNavLink === sideLink.id ? sideLink.svg.active : sideLink.svg.inactive }
+                                        </span>
+                                    </NavLink>
+                                );
+                            })
+                            }
+                        </nav>
+                        <NavProfile mode="desktop" onClick={ (e) => e.stopPropagation() } />
+                    </div>
+                </div>
+            </div>
+
             <AnimatePresence>
                 { isSidebarOpen && (
-                    <motion.div
-                        id="sidebar-container"
-                        initial={ { opacity: 0 } }
-                        animate={ { opacity: 1 } }
-                        exit={ { opacity: 0 } }
-                        transition={ { duration: 0.3 } }
-                        onClick={ toggleSide }
-                        className={ `bg-black bg-opacity-40 fixed h-[calc(100%-60px)] left-0 top-[60px] w-full z-10 md:hidden` }
-                    >
+                    <div>
                         <motion.div
-                            initial={ { x: -300 } }
-                            animate={ { x: 0 } }
-                            exit={ { x: -500 } }
-                            transition={ { duration: 0.2, type: "tween" } }
-                            onClick={ toggleSide }
-                            className={ `absolute bg-gradient-to-bl flex flex-col from-white h-full md:backdrop-blur-[70px] md:bg-none md:bg-transparent md:border-r-2 md:pt-4 md:px-6 md:w-full md:z-50 pb-3 pt-8 px-3 sm:w-1/2 to-blue-50 top-0 w-10/12` }>
-                            {/*---------------Logo Title---------------*/ }
-                            <div className="cursor-pointer hidden items-center mb-10 md:flex">
-                                <img src="src/assets/logo.png" alt="logo" loading="lazy"
-                                     className="hidden mx-3 select-none w-7 md:block" />
-                                <h4 className="font-['nexa'] font-bold h-full hidden select-none text-xl md:flex md:items-center">
-                                    ORMOC PIS
-                                </h4>
-                            </div>
-                            <div className="flex flex-1 flex-col justify-between">
-                                {/*---------------Nav Bars---------------*/ }
-                                <nav className="gap-3 grid mb-10 mt-3 w-full">
-                                    { sideLinks.map((nav) => {
+                            initial={ { opacity: 0 } }
+                            animate={ { opacity: 1 } }
+                            exit={ { opacity: 0 } }
+                            transition={ { duration: 0.05 } }
+                            className="bg-black bg-opacity-25 block fixed h-full w-full z-50 md:hidden"
+                            onClick={ () => toggleSide() }></motion.div>
+                        <motion.div
+                            initial={ { width: 0, opacity: 0 } }
+                            animate={ { width: "70%", opacity: 1 } }
+                            exit={ { width: 0, opacity: 0 } }
+                            transition={ { type: "spring", duration: 0.5 } }
+                            className="bg-white fixed h-full left-0 top-0 w-4/6 z-50 sm:w-1/2 md:bg-opacity-100 md:bg-transparent md:hidden md:flex-col md:w-[100px]">
+                            <div className="flex flex-1 flex-col h-full items-center justify-between p-6">
+                                <div className="cursor-pointer flex items-center w-full md:hidden">
+                                    <img src={ logo } alt="logo" loading="lazy"
+                                         className="mx-3 select-none w-7 md:block" />
+                                    <h1 className="flex font-Gilroy font-extrabold h-full items-center select-none text-2xl">ormocpis</h1>
+                                </div>
+                                {/*-----------------------Navigation Bars-----------------------*/ }
+                                {/*Desktop version*/ }
+                                <nav className="flex-col gap-6 hidden md:flex">
+                                    { sideLinks.map((sideLink) => {
                                         return (
                                             <NavLink
-                                                key={ nav.id }
-                                                to={ nav.path }
+                                                key={ sideLink.id }
+                                                to={ sideLink.path }
                                                 onClick={ () => {
-                                                    setActiveNavLink(nav.id);
+                                                    setActiveNavLink(sideLink.id);
                                                     dispatch(toggleSidebar());
                                                 } }
                                                 className={ ({ isActive }) => {
                                                     return isActive
-                                                        ? "bg-gradient-to-r flex font-normal from-Thesis-50 group items-center" +
-                                                        " px-4 py-2 rounded-xl to-Thesis-300 w-full"
-                                                        : "flex font-normal group items-center px-4 py-2 rounded-xl";
+                                                        ? "bg-gradient-to-r flex font-normal from-Thesis-200 group hover:bg-gradient-to-br hover:duration-150 hover:from-Thesis-100 hover:to-indigo-900 hover:transition-all items-center justify-center p-4 rounded-full to-Thesis-100 w-full"
+                                                        : "bg-white duration-150 flex font-normal group hover:bg-gradient-to-tr hover:from-pink-100 hover:to-blue-100 items-center justify-center p-4 rounded-full transition-all";
                                                 } }>
-                                    <span
-                                        id="project-link"
-                                        className="border-none flex group-hover:duration-300 group-hover:transition-colors h-10 items-center justify-center mr-2 rounded-lg w-10 md:w-10">
-                                        { activeNavLink === nav.id ? nav.svg.active : nav.svg.inactive }
-                                    </span>
-                                                <label
-                                                    className={ `${ activeNavLink === nav.id ?
-                                                        "cursor-pointer duration-300" +
-                                                        " ease-out font-semibold group-hover:duration-300 group-hover:ease-out" +
-                                                        " group-hover:transition-transform group-hover:translate-x-3 select-none" +
-                                                        " text-white transition-transform"
-                                                        :
-                                                        "cursor-pointer duration-300" +
-                                                        " ease-out font-medium group-hover:duration-300 group-hover:ease-out" +
-                                                        " group-hover:text-Thesis-300 group-hover:transition-transform" +
-                                                        " group-hover:translate-x-3 select-none" +
-                                                        " font-normal text-slate-600" +
-                                                        " transition-transform" } mr-2 text-sm` }
-                                                    id="project-label">
-                                                    { nav.name }
-                                                </label>
+                                        <span
+                                            id="project-link" className="border-none flex items-center justify-center">
+                                            { activeNavLink === sideLink.id ? sideLink.svg.active : sideLink.svg.inactive }
+                                        </span>
+                                            </NavLink>
+                                        );
+                                    })
+                                    }
+                                </nav>
+                                {/*Mobile version*/ }
+                                <nav className="flex flex-col gap-6 w-full md:hidden">
+                                    { sideLinks.map((sideLink) => {
+                                        return (
+                                            <NavLink
+                                                key={ sideLink.id }
+                                                to={ sideLink.path }
+                                                onClick={ () => {
+                                                    setActiveNavLink(sideLink.id);
+                                                    dispatch(toggleSidebar());
+                                                } }
+                                                className={ ({ isActive }) => {
+                                                    return isActive
+                                                        ? "bg-gradient-to-r flex font-normal from-Thesis-200 group items-center justify-start p-4 rounded-lg to-Thesis-100 w-full"
+                                                        : "bg-white flex font-normal group items-center justify-start p-4 rounded-lg w-full";
+                                                } }>
+                                                <span
+                                                    id="project-link"
+                                                    className="border-none flex items-center justify-center">
+                                                    { activeNavLink === sideLink.id ? sideLink.svg.active : sideLink.svg.inactive }
+                                                    <p className={ `${ activeNavLink === sideLink.id ? "text-white" : "text-gray-800" } font-semibold ml-4 select-none  text-sm` }>
+                                                        { sideLink.name }
+                                                    </p>
+                                                </span>
                                             </NavLink>
                                         );
                                     }) }
                                 </nav>
-                                {/*---------------Nav Profile---------------*/ }
-                                <NavProfile onClick={ (e) => e.stopPropagation() } />
+                                <NavProfile mode="mobile" onClick={ (e) => e.stopPropagation() } />
                             </div>
                         </motion.div>
-                        <div className="bg-black bg-opacity-25 mt-16 w-full sm:w-full md:hidden"></div>
-                    </motion.div>
+                    </div>
                 ) }
             </AnimatePresence>
-            <div
-                className={ `hidden bg-black transition-all duration-200 ease-in-out fixed h-[calc(100%-60px)] left-0 z-10 md:bg-opacity-100 md:bg-transparent md:flex md:flex-col md:h-full md:top-0 md:w-[272px]` }>
-                <div
-                    className={ `absolute bg-gradient-to-bl flex flex-col from-white h-full md:backdrop-blur-[70px] md:bg-none md:bg-transparent md:border-r-2 md:pt-4 md:px-6 md:w-full md:z-50 pb-3 pt-8 px-3 sm:w-1/2 to-blue-50 top-0 w-10/12 md:translate-x-0 transition-all duration-200 ease-in-out ` }>
-                    {/*---------------Logo Title---------------*/ }
-                    <div className="cursor-pointer hidden items-center mb-10 md:flex">
-                        <img src="src/assets/logo.png" alt="logo" loading="lazy"
-                             className="hidden mx-3 select-none w-7 md:block" />
-                        <h4 className="font-['nexa'] font-bold h-full hidden select-none text-xl md:flex md:items-center">
-                            ORMOC PIS
-                        </h4>
-                    </div>
-                    <div className="flex flex-1 flex-col justify-between">
-                        {/*---------------Nav Bars---------------*/ }
-                        <nav className="gap-3 grid mb-10 mt-3 w-full">
-                            { sideLinks.map((nav) => {
-                                return (
-                                    <NavLink
-                                        key={ nav.id }
-                                        to={ nav.path }
-                                        onClick={ () => setActiveNavLink(nav.id) }
-                                        className={ ({ isActive }) => {
-                                            return isActive
-                                                ? "bg-gradient-to-r flex font-normal from-Thesis-50 group items-center" +
-                                                " px-4 py-2 rounded-xl to-Thesis-300 w-full"
-                                                : "flex font-normal group items-center px-4 py-2 rounded-xl";
-                                        } }>
-                                    <span
-                                        id="project-link"
-                                        className="border-none flex group-hover:duration-300 group-hover:transition-colors h-10 items-center justify-center mr-2 rounded-lg w-10">
-                                        { activeNavLink === nav.id ? nav.svg.active : nav.svg.inactive }
-                                    </span>
-                                        <label
-                                            className={ `${ activeNavLink === nav.id ?
-                                                "cursor-pointer duration-300" +
-                                                " ease-out font-semibold group-hover:duration-300 group-hover:ease-out" +
-                                                " group-hover:transition-transform group-hover:translate-x-3 select-none" +
-                                                " text-white transition-transform"
-                                                :
-                                                "cursor-pointer duration-300" +
-                                                " ease-out font-medium group-hover:duration-300 group-hover:ease-out" +
-                                                " group-hover:text-Thesis-300 group-hover:transition-transform" +
-                                                " group-hover:translate-x-3 select-none text-slate-600" +
-                                                " transition-transform" } mr-2 font-normal text-base` }
-                                            id="project-label">
-                                            { nav.name }
-                                        </label>
-                                    </NavLink>
-                                );
-                            }) }
-                        </nav>
-                        {/*---------------Nav Profile---------------*/ }
-                        <NavProfile onClick={ (e) => e.stopPropagation() } />
-                    </div>
-                </div>
-                <div className="bg-black bg-opacity-25 mt-16 w-full sm:w-full md:hidden"></div>
-            </div>
         </>
-    );
+    )
+        ;
 };

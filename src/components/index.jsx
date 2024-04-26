@@ -8,6 +8,7 @@ import { NotifContainer } from "./NotifContainer.jsx";
 import { Notification } from "./Notification.jsx";
 import { Feedback } from "./Feedback.jsx";
 import { ContactInfo } from "./ContactInfo.jsx";
+import { LogViewProfilePopup } from "./LogViewProfilePopup.jsx";
 
 export {
     Sidebar,
@@ -19,5 +20,6 @@ export {
     NotifContainer,
     Notification,
     Feedback,
-    ContactInfo
+    ContactInfo,
+    LogViewProfilePopup
 };

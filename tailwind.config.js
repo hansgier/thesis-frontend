@@ -8,7 +8,19 @@ export default {
     theme: {
         extend: {
             fontFamily: {
-                poppins: ["Poppins", "sans-serif"]
+                gilroy: ["Gilroy"]
+            },
+            fontWeight: {
+                "black": 1000,
+                "extrabold": 900,
+                "bold": 800,
+                "heavy": 700,
+                "semibold": 600,
+                "medium": 500,
+                "normal": 400,
+                "light": 300,
+                "ultralight": 200,
+                "thin": 100
             },
             colors: {
                 "gradient-blue-indigo": "linear-gradient(90deg, #005C97 0%, #363795 100%)",
