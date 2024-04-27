@@ -1,6 +1,7 @@
 import { useDispatch } from "react-redux";
-import { toggleNotifications, toggleSidebar } from "../app/features/user/userSlice.js";
+import { toggleFeedback, toggleNotifications, toggleSidebar } from "../app/features/user/userSlice.js";
 import { SearchBar } from "./SearchBar.jsx";
+import logo from "/src/assets/logo.png";
 
 export const TopBar = () => {
     const dispatch = useDispatch();
@@ -13,12 +14,12 @@ export const TopBar = () => {
     return (
         <div className="bg-transparent fixed flex items-center left-0 p-3 top-0 w-full z-30 md:space-x-9 lg:space-x-36">
             <div className="cursor-pointer hidden items-center mr-3 md:flex">
-                <img src="../../public/logo.png" loading="lazy" alt="logo"
+                <img src={ logo } loading="lazy" alt="logo"
                      className="hidden mx-3 select-none w-7 md:block" />
-                <h4 className="font-Gilroy font-extrabold h-full hidden select-none text-2xl md:flex md:items-center">ormocpis</h4>
+                <h4 className="font-gilroy font-extrabold h-full hidden select-none text-2xl md:flex md:items-center">ormocpis</h4>
             </div>
             <div className="hidden select-none w-auto md:block">
-                <h5 className="text-gray-600 text-sm">Welcome,</h5>
+                <h5 className="text-gray-600 text-sm font-normal">Welcome,</h5>
                 <h6 className="font-bold text-black">Hans Gier</h6>
             </div>
             <div className="flex flex-1 justify-between">
@@ -44,6 +45,8 @@ export const TopBar = () => {
                 <div className="flex items-center space-x-2 md:pr-4 md:space-x-4">
                     {/*Feedback Button*/ }
                     <button
+                        id="feedback-button"
+                        onClick={ () => dispatch(toggleFeedback()) }
                         className="bg-white duration-150 flex focus:border-none focus:outline-none focus:ring-0 focus:ring-offset-0 font-normal group hover:bg-gradient-to-tr hover:from-pink-100 hover:to-blue-100 items-center justify-center p-2 rounded-full transition-all md:p-3"
                         type="button">
                         <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" width="24"

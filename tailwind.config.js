@@ -12,15 +12,15 @@ export default {
             },
             fontWeight: {
                 "black": 1000,
-                "extrabold": 900,
-                "bold": 800,
-                "heavy": 700,
+                // "extrabold": 900,
+                "bold": 700,
+                // "heavy": 700,
                 "semibold": 600,
-                "medium": 500,
-                "normal": 400,
-                "light": 300,
-                "ultralight": 200,
-                "thin": 100
+                // "medium": 600,
+                "normal": 500,
+                "light": 400,
+                "ultralight": 300,
+                "thin": 200
             },
             colors: {
                 "gradient-blue-indigo": "linear-gradient(90deg, #005C97 0%, #363795 100%)",

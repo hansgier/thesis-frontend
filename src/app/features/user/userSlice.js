@@ -5,6 +5,7 @@ const initialState = {
     isSidebarOpen: false,
     isNotificationsOpen: false,
     isFeedbackOpen: false,
+    view: "stack",
     user: null
 };
 

@@ -31,10 +31,11 @@ export const NotifContainer = () => {
                 { isNotificationsOpen && (
                     <motion.div
                         id="notif-container"
+                        layout
                         initial={ { opacity: 0, height: 0 } }
                         animate={ { opacity: 1, height: "auto" } }
                         exit={ { opacity: 0, height: 0 } }
-                        transition={ { type: "tween", duration: 0.07 } }
+                        transition={ { type: "tween", duration: 0.2 } }
                         className="fixed flex h-auto justify-end right-0 w-full z-50 top-16 md:w-auto">
                         <div
                             className="bg-white border flex flex-col max-h-[450px] pb-0 pt-4 rounded-b-lg shadow-md space-y-2 w-full z-50 md:w-full lg:w-full">

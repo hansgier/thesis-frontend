@@ -6,14 +6,12 @@ export const Projects = () => {
     return (
         <>
             <FilterSort />
-            <div>
-                { project < 1 ?
-                    <div className="text-gray-500 flex justify-center pt-8 h-full items-center w-full">
-                        No projects found.
-                    </div>
-                    :
+            <div
+                className="absolute top-16 h-[calc(100%-64px)] md:h-full md:absolute md:flex md:top-0 md:left-[270px] md:pl-0 md:pr-4 md:w-[calc(100%-270px)] overflow-y-scroll pt-0 px-0">
+                <div className="md:mt-0">
                     <ProjectContainer />
-                }
+                    <ProjectContainer />
+                </div>
             </div>
         </>
     );

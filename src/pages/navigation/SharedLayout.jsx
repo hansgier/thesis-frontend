@@ -12,17 +12,15 @@ export const SharedLayout = () => {
             <NotifContainer />
             <Feedback />
             <AnimatePresence mode="wait">
-                <motion.div
+                <motion.section
                     key={ location.pathname }
                     initial={ { opacity: 0, y: -30 } }
                     animate={ { opacity: 1, y: 0 } }
                     transition={ { type: "tween" } }
                     className="absolute bg-transparent flex-1 w-full md:w-[calc(100%-100px)] left-0 md:left-[100px] h-[calc(100%-68px)] ml-0 overflow-y-hidden top-[68px] z-0"
                 >
-                    <div className="h-full max-h-full overflow-y-scroll pt-4 px-0 md:px-6">
-                        <Outlet />
-                    </div>
-                </motion.div>
+                    <Outlet />
+                </motion.section>
             </AnimatePresence>
         </main>
     );

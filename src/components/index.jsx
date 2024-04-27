@@ -9,6 +9,8 @@ import { Notification } from "./Notification.jsx";
 import { Feedback } from "./Feedback.jsx";
 import { ContactInfo } from "./ContactInfo.jsx";
 import { LogViewProfilePopup } from "./LogViewProfilePopup.jsx";
+import { Modal } from "./Modal.jsx";
+import { Popup } from "./Popup.jsx";
 
 export {
     Sidebar,
@@ -21,5 +23,7 @@ export {
     Notification,
     Feedback,
     ContactInfo,
-    LogViewProfilePopup
+    LogViewProfilePopup,
+    Modal,
+    Popup
 };

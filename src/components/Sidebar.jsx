@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { toggleSidebar } from "../app/features/user/userSlice.js";
 import { NavLink, useLocation } from "react-router-dom";
 import { sideLinks } from "../utils/data-components.jsx";
-import logo from "/public/logo.png";
+import logo from "/src/assets/logo.png";
 import { AnimatePresence, motion } from "framer-motion";
 import { NavProfile } from "./NavProfile.jsx";
 
@@ -58,7 +58,7 @@ export const Sidebar = () => {
     return (
         <>
             {/*Desktop version*/ }
-            <div>
+            <aside>
                 <div
                     className="bg-white fixed hidden h-full md:h-[calc(100%-68px)] left-0 top-0 md:top-[68px] w-4/6 z-50 sm:w-1/2 md:bg-opacity-100 md:bg-transparent md:flex md:flex-col md:w-[100px]">
                     <div className="flex flex-1 flex-col h-full items-center justify-between p-6">
@@ -97,12 +97,13 @@ export const Sidebar = () => {
                         <NavProfile mode="desktop" onClick={ (e) => e.stopPropagation() } />
                     </div>
                 </div>
-            </div>
-
+            </aside>
+            {/*Mobile version*/ }
             <AnimatePresence>
                 { isSidebarOpen && (
-                    <div>
+                    <aside>
                         <motion.div
+                            layout
                             initial={ { opacity: 0 } }
                             animate={ { opacity: 1 } }
                             exit={ { opacity: 0 } }
@@ -111,7 +112,7 @@ export const Sidebar = () => {
                             onClick={ () => toggleSide() }></motion.div>
                         <motion.div
                             initial={ { width: 0, opacity: 0 } }
-                            animate={ { width: "70%", opacity: 1 } }
+                            animate={ { width: "auto", opacity: 1 } }
                             exit={ { width: 0, opacity: 0 } }
                             transition={ { type: "spring", duration: 0.5 } }
                             className="bg-white fixed h-full left-0 top-0 w-4/6 z-50 sm:w-1/2 md:bg-opacity-100 md:bg-transparent md:hidden md:flex-col md:w-[100px]">
@@ -139,7 +140,8 @@ export const Sidebar = () => {
                                                         : "bg-white duration-150 flex font-normal group hover:bg-gradient-to-tr hover:from-pink-100 hover:to-blue-100 items-center justify-center p-4 rounded-full transition-all";
                                                 } }>
                                         <span
-                                            id="project-link" className="border-none flex items-center justify-center">
+                                            id="project-link"
+                                            className="border-none flex items-center justify-center p-0 m-0">
                                             { activeNavLink === sideLink.id ? sideLink.svg.active : sideLink.svg.inactive }
                                         </span>
                                             </NavLink>
@@ -178,7 +180,7 @@ export const Sidebar = () => {
                                 <NavProfile mode="mobile" onClick={ (e) => e.stopPropagation() } />
                             </div>
                         </motion.div>
-                    </div>
+                    </aside>
                 ) }
             </AnimatePresence>
         </>

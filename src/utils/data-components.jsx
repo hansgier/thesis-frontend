@@ -2,7 +2,9 @@ import { MdOutlineAnnouncement, MdOutlineSpaceDashboard, MdUpdate } from "react-
 import { GrProjects, GrSystem } from "react-icons/gr";
 import { VscFeedback } from "react-icons/vsc";
 import { RiContactsBook2Line } from "react-icons/ri";
-import { PiUsersThree } from "react-icons/pi";
+import { PiSortAscendingBold, PiSortDescendingBold, PiUsersThree } from "react-icons/pi";
+import { HiOutlineInboxStack } from "react-icons/hi2";
+import { FaListUl, FaSortAlphaDownAlt, FaSortAlphaUp } from "react-icons/fa";
 
 export const sideLinks = [
     {
@@ -22,9 +24,9 @@ export const sideLinks = [
         path: "projects",
         svg: {
             active:
-                <GrProjects size={ 18 } color={ "#ffffff" } />,
+                <GrProjects className="h-5 w-5 md:w-5 md:h-5" size={ 18 } color={ "#ffffff" } />,
             inactive:
-                <GrProjects size={ 18 } color={ "#5c5c5c" } />
+                <GrProjects className="h-5 w-5 md:w-5 md:h-5" size={ 18 } color={ "#5c5c5c" } />
         }
     },
     {
@@ -33,7 +35,7 @@ export const sideLinks = [
         path: "announcements",
         svg: {
             active:
-                <MdOutlineAnnouncement className="h-5 w-5 md:w-5 md:h-5" color={ "#ffffff" } />,
+                <MdOutlineAnnouncement className="h-5 w-5 md:w-5 md:h-5 p-0 m-0" color={ "#ffffff" } />,
             inactive:
                 <MdOutlineAnnouncement className="h-5 w-5 md:w-5 md:h-5" color={ "#5c5c5c" } />
         }
@@ -80,4 +82,48 @@ export const announcements = {
     system: {
         icon: <GrSystem className="h-5 w-5 md:w-6 md:h-6" color={ "#db2777" } />
     }
+};
+
+export const filterSort = {
+    view: [
+        {
+            id: 1,
+            name: "stack",
+            icon: <HiOutlineInboxStack size={ 16 } className="hover:text-Thesis-200 text-gray-700" />
+        },
+        {
+            id: 2,
+            name: "list",
+            icon: <FaListUl size={ 14 } className="hover:text-Thesis-200 text-gray-700" />
+        }
+    ],
+    sort: [
+        {
+            id: 1,
+            name: "Newest",
+            icon: <PiSortDescendingBold />
+        },
+        {
+            id: 2,
+            name: "Oldest",
+            icon: <PiSortAscendingBold />
+        },
+        {
+            id: 3,
+            name: "A-Z",
+            icon: <FaSortAlphaUp />
+        },
+        {
+            id: 4,
+            name: "Z-A",
+            icon: <FaSortAlphaDownAlt />
+        }
+
+    ],
+    filter: [
+        {
+            id: 1,
+            name: "Tags"
+        }
+    ]
 };
