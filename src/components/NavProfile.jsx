@@ -1,8 +1,8 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { LogViewProfilePopup } from "./LogViewProfilePopup.jsx";
 
 
-export const NavProfile = ({ mode }) => {
+export const NavProfile = React.memo(({ mode }) => {
     const [isOpen, setIsOpen] = useState(false);
 
     useEffect(() => {
@@ -62,4 +62,4 @@ export const NavProfile = ({ mode }) => {
             ) }
         </>
     );
-};
+});

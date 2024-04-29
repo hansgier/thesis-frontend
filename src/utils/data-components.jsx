@@ -10,12 +10,10 @@ export const sideLinks = [
     {
         id: 1,
         name: "Dashboard",
-        path: "/",
+        path: "/dashboard",
         svg: {
-            active:
-                <MdOutlineSpaceDashboard className="h-6 w-6 md:w-6 md:h-6" color={ "#ffffff" } />,
-            inactive:
-                <MdOutlineSpaceDashboard className="h-6 w-6 md:w-6 md:h-6" color={ "#5c5c5c" } />
+            active: <MdOutlineSpaceDashboard className="h-6 w-6 md:w-6 md:h-6" color={ "#ffffff" } />,
+            inactive: <MdOutlineSpaceDashboard className="h-6 w-6 md:w-6 md:h-6" color={ "#5c5c5c" } />
         }
     },
     {
@@ -127,3 +125,22 @@ export const filterSort = {
         }
     ]
 };
+
+export const project_tags = [
+    {
+        label: "Education",
+        value: "Education"
+    },
+    {
+        label: "Work",
+        value: "Work"
+    },
+    {
+        label: "Personal",
+        value: "Personal"
+    },
+    {
+        label: "Other",
+        value: "Other"
+    }
+];

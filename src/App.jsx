@@ -6,7 +6,7 @@ function App() {
         <BrowserRouter>
             <Routes>
                 <Route path="/" element={ <SharedLayout /> }>
-                    <Route index element={ <Dashboard /> } />
+                    <Route path="dashboard" element={ <Dashboard /> } />
                     <Route path="projects" element={ <Projects /> } />
                     <Route path="announcements" element={ <Announcements /> } />
                     <Route path="messages" element={ <Messages /> } />

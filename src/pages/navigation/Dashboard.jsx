@@ -67,7 +67,8 @@ export const Dashboard = () => {
                         <div className="flex-col gap-1 grid px-0 py-4 select-none space-y-1.5 md:pl-0">
                             <h3 className="font-bold leading-none text-xl tracking-tight whitespace-normal md:text-2xl">Featured
                                 Projects</h3>
-                            <p className="font-normal text-gray-600 text-xs whitespace-normal md:text-sm">Projects that
+                            <p className="font-normal text-gray-600 text-xs whitespace-normal md:text-sm">Projects
+                                that
                                 need
                                 your attention.</p>
                         </div>
@@ -140,7 +141,8 @@ export const Dashboard = () => {
                             <div className="flex-col gap-1 grid pr-6 py-6 space-y-1.5">
                                 <h3 className="font-bold leading-none text-xl tracking-tight whitespace-normal md:text-2xl">Upcoming
                                     Projects</h3>
-                                <p className="font-normal text-gray-600 text-xs md:text-sm">Get ready for these exciting
+                                <p className="font-normal text-gray-600 text-xs md:text-sm">Get ready for these
+                                    exciting
                                     community events.</p>
                             </div>
                             <div className="bg-white border border-[#b4d8f2] p-0 rounded-3xl">
@@ -212,7 +214,8 @@ export const Dashboard = () => {
                             <div className="flex-col gap-1 grid pr-6 py-6 select-none space-y-1.5">
                                 <h3 className="font-bold leading-none text-xl tracking-tight whitespace-normal md:text-2xl">Recent
                                     Activities</h3>
-                                <p className="font-normal text-gray-600 text-xs md:text-sm">See what's happening in your
+                                <p className="font-normal text-gray-600 text-xs md:text-sm">See what's happening in
+                                    your
                                     community.</p>
                             </div>
                             <div className="p-0">

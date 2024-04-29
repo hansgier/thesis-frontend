@@ -1,11 +1,12 @@
 import { useDispatch, useSelector } from "react-redux";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { toggleSidebar } from "../app/features/user/userSlice.js";
 import { NavLink, useLocation } from "react-router-dom";
 import { sideLinks } from "../utils/data-components.jsx";
 import logo from "/src/assets/logo.png";
 import { AnimatePresence, motion } from "framer-motion";
 import { NavProfile } from "./NavProfile.jsx";
+import { Tooltip } from "antd";
 
 const paths = {
     "/": 1,
@@ -15,6 +16,10 @@ const paths = {
     "/contacts": 5,
     "/users": 6
 };
+
+const MemoizedTooltip = React.memo(React.forwardRef((props, ref) => (
+    <Tooltip { ...props } ref={ ref } />
+)));
 
 export const Sidebar = () => {
     const location = useLocation();
@@ -67,37 +72,40 @@ export const Sidebar = () => {
                                  className="mx-3 select-none w-7 md:block" />
                             <h1 className="flex font-Gilroy font-extrabold h-full items-center select-none text-2xl">ormocpis</h1>
                         </div>
+
                         {/*-----------------------Navigation Bars-----------------------*/ }
                         {/*Desktop version*/ }
                         <nav className="flex-col gap-6 hidden md:flex">
                             { sideLinks.map((sideLink) => {
                                 return (
-                                    <NavLink
-                                        key={ sideLink.id }
-                                        to={ sideLink.path }
-                                        onClick={ () => {
-                                            setActiveNavLink(sideLink.id);
-                                            dispatch(toggleSidebar());
-                                        } }
-                                        className={ ({ isActive }) => {
-                                            return isActive
-                                                ? "bg-gradient-to-r flex font-normal from-Thesis-200 group hover:bg-gradient-to-br hover:duration-150 hover:from-Thesis-100 hover:to-indigo-900 hover:transition-all items-center justify-center p-4 rounded-full to-Thesis-100 w-full"
-                                                : "bg-white duration-150 flex font-normal group hover:bg-gradient-to-tr hover:from-pink-100 hover:to-blue-100 items-center justify-center p-4 rounded-full transition-all";
-                                        } }
-                                    >
+                                    <MemoizedTooltip key={ sideLink.id } placement="right" title={ sideLink.name }>
+                                        <NavLink
+                                            to={ sideLink.path }
+                                            onClick={ () => {
+                                                setActiveNavLink(sideLink.id);
+                                                dispatch(toggleSidebar());
+                                            } }
+                                            className={ ({ isActive }) => {
+                                                return isActive
+                                                    ? "bg-gradient-to-r flex font-normal from-Thesis-200 group hover:bg-gradient-to-br hover:duration-150 hover:from-Thesis-100 hover:to-indigo-900 hover:transition-all items-center justify-center p-4 rounded-full to-Thesis-100 w-full"
+                                                    : "bg-white duration-150 flex font-normal group hover:bg-gradient-to-tr hover:from-pink-100 hover:to-blue-100 items-center justify-center p-4 rounded-full transition-all";
+                                            } }
+                                        >
                                         <span
-                                            id="project-link" className="border-none flex items-center justify-center">
+                                            id="project-link"
+                                            className="border-none flex items-center justify-center">
                                             { activeNavLink === sideLink.id ? sideLink.svg.active : sideLink.svg.inactive }
                                         </span>
-                                    </NavLink>
+                                        </NavLink>
+                                    </MemoizedTooltip>
                                 );
-                            })
-                            }
+                            }) }
                         </nav>
                         <NavProfile mode="desktop" onClick={ (e) => e.stopPropagation() } />
                     </div>
                 </div>
             </aside>
+
             {/*Mobile version*/ }
             <AnimatePresence>
                 { isSidebarOpen && (

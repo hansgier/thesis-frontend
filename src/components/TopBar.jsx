@@ -12,7 +12,8 @@ export const TopBar = () => {
     };
 
     return (
-        <div className="bg-transparent fixed flex items-center left-0 p-3 top-0 w-full z-30 md:space-x-9 lg:space-x-36">
+        <header
+            className="bg-transparent fixed flex items-center left-0 p-3 top-0 w-full z-30 md:space-x-9 lg:space-x-36">
             <div className="cursor-pointer hidden items-center mr-3 md:flex">
                 <img src={ logo } loading="lazy" alt="logo"
                      className="hidden mx-3 select-none w-7 md:block" />
@@ -75,6 +76,6 @@ export const TopBar = () => {
                     </button>
                 </div>
             </div>
-        </div>
+        </header>
     );
 };

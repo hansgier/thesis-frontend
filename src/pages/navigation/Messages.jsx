@@ -1,5 +1,5 @@
 import { AnimatePresence, motion } from "framer-motion";
-import { TEDropdown, TEDropdownItem, TEDropdownMenu, TEDropdownToggle, TERipple } from "tw-elements-react";
+import { TEDropdown, TEDropdownItem, TEDropdownMenu, TEDropdownToggle, TERipple } from "elements-react";
 
 export const Messages = () => {
     return (

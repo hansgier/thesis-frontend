@@ -1,5 +1,5 @@
 import { ContactInfo } from "../../components/index.jsx";
-import { contacts } from "../../utils/data.jsx";
+import { contacts } from "../../utils/data.js";
 
 export const Contacts = () => {
     return (

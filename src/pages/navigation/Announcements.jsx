@@ -40,7 +40,8 @@ export const Announcements = () => {
                             </div>
                         </div>
                         <div className="w-full">
-                            <p className="pl-0 pt-1 select-none text-gray-400 text-xs md:pl-11 md:text-sm">Posted on May
+                            <p className="pl-0 pt-1 select-none text-gray-400 text-xs md:pl-11 md:text-sm">Posted on
+                                May
                                 21, 2023 12:00 PM</p>
                         </div>
                     </div>
@@ -87,7 +88,8 @@ export const Announcements = () => {
                             </div>
                         </div>
                         <div className="w-full">
-                            <p className="pl-0 pt-1 select-none text-gray-400 text-xs md:pl-11 md:text-sm">Posted on May
+                            <p className="pl-0 pt-1 select-none text-gray-400 text-xs md:pl-11 md:text-sm">Posted on
+                                May
                                 21, 2023 12:00 PM</p>
                         </div>
                     </div>
@@ -121,7 +123,8 @@ export const Announcements = () => {
                             </div>
                         </div>
                         <div className="w-full">
-                            <p className="pl-0 pt-1 select-none text-gray-400 text-xs md:pl-11 md:text-sm">Posted on May
+                            <p className="pl-0 pt-1 select-none text-gray-400 text-xs md:pl-11 md:text-sm">Posted on
+                                May
                                 21, 2023 12:00 PM</p>
                         </div>
                     </div>

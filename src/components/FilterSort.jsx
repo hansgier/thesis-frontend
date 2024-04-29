@@ -1,4 +1,6 @@
-import { filterSort } from "../utils/data-components.jsx";
+import { filterSort, project_tags } from "../utils/data-components.jsx";
+import { MultiSelect } from "./MultiSelect.jsx";
+
 
 export const FilterSort = () => {
     return (
@@ -37,17 +39,19 @@ export const FilterSort = () => {
                                 }) }
                             </div>
                         </div>
+
+                        {/*-----------------------FILTER SECTION-----------------------*/ }
                         <form className="space-y-2">
                             <span className="font-extrabold select-none text-pink-700 text-xs">FILTER</span>
-                            <div className="space-y-2 overflow-y-auto">
-                                <select
-                                    className="border-0 focus:border-none focus:outline-none focus:ring-0 focus:ring-offset-0 px-2 py-1 text-gray-600 w-full">
-                                    <option selected disabled hidden>
-                                        Tags
-                                    </option>
-                                </select>
 
+                            {/*Filters*/ }
+                            <div className="space-y-2 overflow-y-auto">
+                                <MultiSelect placeholder="Tags" options={ project_tags } />
+                                <MultiSelect placeholder="Location" options={ project_tags } />
+                                <MultiSelect placeholder="Location" options={ project_tags } />
                             </div>
+
+                            {/*Clear all and Apply buttons*/ }
                             <div className="gap-2 grid grid-cols-2">
                                 <button
                                     className="bg-white border border-pink-700 font-medium hover:bg-pink-50 py-1 rounded-md text-pink-700 text-sm">Clear
