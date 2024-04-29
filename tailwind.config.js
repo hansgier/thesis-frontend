@@ -2,8 +2,7 @@
 export default {
     content: [
         "./index.html",
-        "./src/**/*.{js,ts,jsx,tsx}",
-        "./node_modules/elements-react/dist/js/**/*.js"
+        "./src/**/*.{js,ts,jsx,tsx}"
     ],
     theme: {
         extend: {
@@ -33,6 +32,5 @@ export default {
             }
         }
     },
-    plugins: [require("elements-react/dist/plugin.cjs")],
     darkMode: "class"
 };

@@ -1,5 +1,4 @@
 import { AnimatePresence, motion } from "framer-motion";
-import { TEDropdown, TEDropdownItem, TEDropdownMenu, TEDropdownToggle, TERipple } from "elements-react";
 
 export const Messages = () => {
     return (
@@ -18,41 +17,6 @@ export const Messages = () => {
                                     exit={ { opacity: 0, y: 20 } }
                                     transition={ { duration: 0.05 } }
                                     className="top-16 border-2 absolute bg-transparent backdrop-blur-3xl flex flex-col left-0 p-3 shadow-md rounded-md w-[200px] z-20">
-                                    <TEDropdown className="flex flex-col">
-                                        <TERipple rippleColor="#d9f99d">
-                                            <TEDropdownToggle
-                                                className="flex justify-between p-2 w-full rounded bg-transparent text-sm font-medium uppercase leading-normal text-black transition duration-150 ease-in-out motion-reduce:transition-none">
-                                                Role
-                                                <span className="ml-2 w-5">
-                                                    <svg
-                                                        xmlns="http://www.w3.org/2000/svg"
-                                                        viewBox="0 0 20 20"
-                                                        fill="currentColor"
-                                                    >
-                                                      <path
-                                                          fillRule="evenodd"
-                                                          d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z"
-                                                          clipRule="evenodd"
-                                                      />
-                                                    </svg>
-                                                  </span>
-                                            </TEDropdownToggle>
-                                        </TERipple>
-                                        <TEDropdownMenu>
-                                            <TEDropdownItem>
-                                                <a href="#"
-                                                   className="block w-full min-w-[160px] cursor-pointer whitespace-nowrap bg-transparent px-4 py-2 text-sm text-left font-normal pointer-events-auto text-neutral-700 hover:bg-neutral-100 active:text-neutral-800 active:bg-neutral-100 focus:bg-neutral-100 focus:text-neutral-800 focus:outline-none active:no-underline dark:text-neutral-200 dark:hover:bg-neutral-600 dark:focus:bg-neutral-600 dark:active:bg-neutral-600">
-                                                    Action
-                                                </a>
-                                            </TEDropdownItem>
-                                            <TEDropdownItem>
-                                                <a href="#"
-                                                   className="block w-full min-w-[160px] cursor-pointer whitespace-nowrap bg-transparent px-4 py-2 text-sm text-left font-normal pointer-events-auto text-neutral-700 hover:bg-neutral-100 active:text-neutral-800 active:bg-neutral-100 focus:bg-neutral-100 focus:text-neutral-800 focus:outline-none active:no-underline dark:text-neutral-200 dark:hover:bg-neutral-600 dark:focus:bg-neutral-600 dark:active:bg-neutral-600">
-                                                    Another action
-                                                </a>
-                                            </TEDropdownItem>
-                                        </TEDropdownMenu>
-                                    </TEDropdown>
                                 </motion.div>
                             </AnimatePresence>
                             <svg viewBox="0 0 32 32" enable-background="new 0 0 32 32" id="Filled_Line" version="1.1"
