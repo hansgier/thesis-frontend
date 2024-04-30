@@ -1,6 +1,9 @@
 {
   "tabWidth": 4,
   "plugins": [
+    "prettier-plugin-style-order",
+    "prettier-plugin-organize-attributes",
+    "prettier-plugin-sort-imports",
     "prettier-plugin-tailwindcss"
   ],
   "tailwindConfig": "./tailwind.config.js"

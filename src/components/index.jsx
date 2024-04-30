@@ -11,8 +11,9 @@ import { ContactInfo } from "./ContactInfo.jsx";
 import { LogViewProfilePopup } from "./LogViewProfilePopup.jsx";
 import { Modal } from "./Modal.jsx";
 import { Popup } from "./Popup.jsx";
-import { MultiSelect } from "./MultiSelect.jsx";
+import { InputSelect } from "./InputSelect.jsx";
 import { NavLink } from "./NavLink.jsx";
+import { AnnouncementCard } from "./AnnouncementCard.jsx";
 
 export {
     Sidebar,
@@ -28,6 +29,7 @@ export {
     LogViewProfilePopup,
     Modal,
     Popup,
-    MultiSelect,
-    NavLink
+    InputSelect,
+    NavLink,
+    AnnouncementCard
 };

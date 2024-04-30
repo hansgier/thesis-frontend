@@ -18,7 +18,7 @@ const paths = {
 };
 
 const MemoizedTooltip = React.memo(React.forwardRef((props, ref) => (
-    <Tooltip { ...props } ref={ ref } />
+    <Tooltip { ...props } ref={ ref } color="#003459" />
 )));
 
 export const Sidebar = () => {
@@ -130,6 +130,7 @@ export const Sidebar = () => {
                                          className="mx-3 select-none w-7 md:block" />
                                     <h1 className="flex font-Gilroy font-extrabold h-full items-center select-none text-2xl">ormocpis</h1>
                                 </div>
+
                                 {/*-----------------------Navigation Bars-----------------------*/ }
                                 {/*Desktop version*/ }
                                 <nav className="flex-col gap-6 hidden md:flex">
@@ -157,6 +158,7 @@ export const Sidebar = () => {
                                     })
                                     }
                                 </nav>
+
                                 {/*Mobile version*/ }
                                 <nav className="flex flex-col gap-6 w-full md:hidden">
                                     { sideLinks.map((sideLink) => {

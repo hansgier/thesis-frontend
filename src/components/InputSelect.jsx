@@ -1,6 +1,6 @@
 import { Select, Space } from "antd";
 
-export const MultiSelect = ({ placeholder, options }) => {
+export const InputSelect = ({ placeholder, options, mode }) => {
     return (
         <>
             <Space
@@ -10,7 +10,7 @@ export const MultiSelect = ({ placeholder, options }) => {
                 direction="vertical"
             >
                 <Select
-                    mode="multiple"
+                    mode={ mode || null }
                     allowClear
                     className="text-sm"
                     style={ {

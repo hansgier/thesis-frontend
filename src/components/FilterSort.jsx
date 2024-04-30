@@ -1,15 +1,14 @@
-import { filterSort, project_tags } from "../utils/data-components.jsx";
-import { MultiSelect } from "./MultiSelect.jsx";
+import { filterSort } from "../utils/data-components.jsx";
 
 
-export const FilterSort = () => {
+export const FilterSort = ({ page, filters }) => {
     return (
         <>
             <div
-                className="bg-white border hidden mb-6 overflow-hidden pt-0 relative rounded-2xl md:fixed md:flex md:h-[calc(100%-96px)] md:mr-4 md:p-4 md:w-64 md:z-50"
+                className="bg-white border hidden mb-6 overflow-hidden pt-0 relative rounded-2xl md:fixed md:flex md:h-[calc(100%-84px)] md:mr-4 md:p-4 md:w-64 md:z-50"
             >
                 <div className="w-full">
-                    <h2 className="font-semibold select-none text-2xl">Projects</h2>
+                    <h2 className="font-semibold select-none text-xl">{ page }</h2>
                     <div className="pt-3 px-0 space-y-4">
                         <div className="space-y-2"><span
                             className="font-extrabold select-none text-Thesis-300 text-xs">VIEW</span>
@@ -17,13 +16,13 @@ export const FilterSort = () => {
                                 { filterSort.view.map((view) => {
                                     return (
                                         <button
+                                            key={ view.id }
                                             id={ view.id }
                                             className="border flex focus-visible:ring-Thesis-50 focus:border focus:border-Thesis-200 focus:outline-none group hover:bg-white hover:border-Thesis-300 hover:duration-200 hover:transition-all items-center justify-center p-2 rounded-lg">
                                             { view.icon }
                                         </button>
                                     );
                                 }) }
-
                             </div>
                         </div>
                         <div className="space-y-2">
@@ -45,21 +44,21 @@ export const FilterSort = () => {
                             <span className="font-extrabold select-none text-pink-700 text-xs">FILTER</span>
 
                             {/*Filters*/ }
-                            <div className="space-y-2 overflow-y-auto">
-                                <MultiSelect placeholder="Tags" options={ project_tags } />
-                                <MultiSelect placeholder="Location" options={ project_tags } />
-                                <MultiSelect placeholder="Location" options={ project_tags } />
+                            <div className="space-y-2 overflow-y-scroll">
+                                { filters }
                             </div>
 
                             {/*Clear all and Apply buttons*/ }
                             <div className="gap-2 grid grid-cols-2">
                                 <button
+                                    type="button"
                                     className="bg-white border border-pink-700 font-medium hover:bg-pink-50 py-1 rounded-md text-pink-700 text-sm">Clear
-                                    Filters
+                                                                                                                                                   Filters
                                 </button>
                                 <button
+                                    type="button"
                                     className="bg-pink-700 font-semibold hover:bg-opacity-80 py-1 rounded-md text-sm text-white">Apply
-                                    Filters
+                                                                                                                                 Filters
                                 </button>
                             </div>
                         </form>

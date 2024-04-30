@@ -1,12 +1,12 @@
 import { ComponentPreview, Previews } from "@react-buddy/ide-toolbox";
 import { PaletteTree } from "./palette";
-import { MultiSelect } from "../components/index.jsx";
+import { InputSelect } from "../components/index.jsx";
 
 const ComponentPreviews = () => {
     return (
         <Previews palette={ <PaletteTree /> }>
-            <ComponentPreview path="/MultiSelect">
-                <MultiSelect />
+            <ComponentPreview path="/InputSelect">
+                <InputSelect />
             </ComponentPreview>
         </Previews>
     );

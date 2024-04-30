@@ -1,40 +1,27 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { LogViewProfilePopup } from "./LogViewProfilePopup.jsx";
+import { AnimatePresence } from "framer-motion";
 
 
 export const NavProfile = React.memo(({ mode }) => {
     const [isOpen, setIsOpen] = useState(false);
 
-    useEffect(() => {
-        const handleClickOutside = (event) => {
-            const navProfElement = document.getElementById("navProf-container");
-            const navProfButton = document.getElementById("navProf-button");
-            if (navProfElement && !navProfElement.contains(event.target) && !navProfButton.contains(event.target)) {
-                setIsOpen(!isOpen);
-            }
-        };
-
-        if (isOpen) {
-            document.addEventListener("mousedown", handleClickOutside);
-        }
-
-        return () => {
-            document.removeEventListener("mousedown", handleClickOutside);
-        };
-    }, [isOpen]);
+    const togglePopup = () => {
+        setIsOpen(!isOpen);
+    };
 
     return (
         <>
             { mode === "mobile" ? (
-                <div
-                    onClick={ () => setIsOpen(!isOpen) }
-                    id="navProf-button"
+                <button
+                    onBlur={ () => setIsOpen(false) }
+                    onClick={ togglePopup }
                     className="flex font-normal group hover:cursor-pointer items-center p-2 relative rounded-lg space-x-2 w-full md:hidden">
                     <img src="https://pinegrow.com/placeholders/img20.jpg" alt="prof pic"
                          className="h-10 rounded-full w-10" />
                     <div className="flex-1 h-full">
                         <h4 className="font-semibold max-w-full select-none text-gray-800 text-left text-sm truncate w-full">Hans
-                            Gier</h4>
+                                                                                                                             Gier</h4>
                         <p className="select-none text-gray-500 text-xs">gierhansclement@gmail.com</p>
                     </div>
                     <div className="flex h-full">
@@ -49,16 +36,24 @@ export const NavProfile = React.memo(({ mode }) => {
                             </g>
                         </svg>
                     </div>
-                    <LogViewProfilePopup id="navProf-container" isOpen={ isOpen } mode="mobile" />
-                </div>
+                    <AnimatePresence>
+                        { isOpen && (
+                            <LogViewProfilePopup comp_id="navProf-container" mode="mobile" />
+                        ) }
+                    </AnimatePresence>
+                </button>
             ) : (
-                <div
-                    id="navProf-button"
-                    onClick={ () => setIsOpen(!isOpen) }
+                <button
+                    onClick={ togglePopup }
+                    onBlur={ () => setIsOpen(false) }
                     className="bg-gradient-to-br font-normal from-Thesis-200 group hidden hover:cursor-pointer items-center justify-center p-3 relative rounded-full space-x-2 to-green-900 md:flex">
                     <h4 className="font-semibold max-w-full select-none text-white text-center text-base truncate w-full">HG</h4>
-                    <LogViewProfilePopup id="navProf-container" isOpen={ isOpen } mode="desktop" />
-                </div>
+                    <AnimatePresence>
+                        { isOpen && (
+                            <LogViewProfilePopup comp_id="navProf-container" mode="desktop" />
+                        ) }
+                    </AnimatePresence>
+                </button>
             ) }
         </>
     );
