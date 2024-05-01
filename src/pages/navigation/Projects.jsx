@@ -5,7 +5,7 @@ import { project_tags } from "../../utils/data-components.jsx";
 export const Projects = () => {
     return (
         <>
-            {/*-----------------------FILTER SORT SECTION-----------------------*/ }
+            {/*-----------------------VIEW FILTER SORT SECTION-----------------------*/ }
             <FilterSort page="Projects" filters={ (
                 <>
                     <InputSelect mode="multiple" placeholder="Tags"

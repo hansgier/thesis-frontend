@@ -9,9 +9,11 @@ export const FilterSort = ({ page, filters }) => {
             >
                 <div className="w-full">
                     <h2 className="font-semibold select-none text-xl">{ page }</h2>
-                    <div className="pt-3 px-0 space-y-4">
-                        <div className="space-y-2"><span
-                            className="font-extrabold select-none text-Thesis-300 text-xs">VIEW</span>
+                    <div className="pt-3 pb-3 px-0 space-y-4 flex flex-col">
+
+                        {/*-----------------------VIEW-----------------------*/ }
+                        <div className="space-y-2">
+                            <span className="font-extrabold select-none text-Thesis-300 text-xs">VIEW</span>
                             <div className="gap-2 grid grid-cols-2">
                                 { filterSort.view.map((view) => {
                                     return (
@@ -25,6 +27,8 @@ export const FilterSort = ({ page, filters }) => {
                                 }) }
                             </div>
                         </div>
+
+                        {/*-----------------------SORT-----------------------*/ }
                         <div className="space-y-2">
                             <span className="font-extrabold select-none text-green-700 text-xs">SORT</span>
                             <div className="gap-2 grid grid-cols-2">
@@ -44,7 +48,7 @@ export const FilterSort = ({ page, filters }) => {
                             <span className="font-extrabold select-none text-pink-700 text-xs">FILTER</span>
 
                             {/*Filters*/ }
-                            <div className="space-y-2 overflow-y-scroll">
+                            <div className="space-y-2 overflow-y-auto pr-2 flex flex-col h-[292px]">
                                 { filters }
                             </div>
 

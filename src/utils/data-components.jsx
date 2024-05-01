@@ -10,7 +10,7 @@ export const sideLinks = [
     {
         id: 1,
         name: "Dashboard",
-        path: "/dashboard",
+        path: "dashboard",
         svg: {
             active: <MdOutlineSpaceDashboard className="h-6 w-6 md:w-6 md:h-6" color={ "#ffffff" } />,
             inactive: <MdOutlineSpaceDashboard className="h-6 w-6 md:w-6 md:h-6" color={ "#5c5c5c" } />
