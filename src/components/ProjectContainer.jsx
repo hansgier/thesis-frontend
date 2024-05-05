@@ -1,4 +1,5 @@
 import { useSelector } from "react-redux";
+import { Tooltip } from "antd";
 
 export const ProjectContainer = () => {
     const { view } = useSelector((store) => store.user);
@@ -41,7 +42,8 @@ export const ProjectContainer = () => {
                     </div>
                     <div className="flex flex-col gap-1 md:grid">
                         <h3 className="font-semibold leading-none select-none text-lg tracking-tight md:text-2xl">Linao
-                            Road Construction</h3>
+                                                                                                                  Road
+                                                                                                                  Construction</h3>
                         <div className="flex items-center">
                             <div className="flex group items-center mr-4 space-x-1">
                                 <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" width="14">
@@ -53,8 +55,10 @@ export const ProjectContainer = () => {
                                         <circle cx="12" cy="12" r="9" stroke="#29d2b0" strokeWidth="2"></circle>
                                     </g>
                                 </svg>
-                                <p className="group-hover:underline mr-5 select-none text-[#29d2b0] text-xs font-bold">2d
-                                    ago</p>
+                                <Tooltip title="Posted on March 23, 2023" placement="bottom">
+                                    <p className="group-hover:underline mr-5 select-none text-[#29d2b0] text-xs font-bold">2d
+                                                                                                                           ago</p>
+                                </Tooltip>
                             </div>
                             <div className="gap-1 group hidden hover:cursor-pointer items-center mr-5 lg:flex">
                                 <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" stroke="#9ca3af"
@@ -99,17 +103,83 @@ export const ProjectContainer = () => {
                     <>
                         <div className="mb-4 px-4 md:px-6">
                             <p className="leading-relaxed md:text-base select-none text-gray-700 text-justify text-sm">The
-                                Valley Road Expansion project will widen the existing two-lane road to four lanes over a
-                                5-mile
-                                stretch between Main Street and Interstate 95. Intersection improvements with turn
-                                lanes,
-                                roundabouts, and traffic signals will be added. Drainage, curbs, sidewalks, and paved
-                                shoulders
-                                will also be constructed. The $22 million project is funded by state and federal grants,
-                                with
-                                construction from 2025 to 2027. Once complete, Valley Road will have increased capacity
-                                and
-                                safety enhancements for all transportation modes.</p>
+                                                                                                                       Valley
+                                                                                                                       Road
+                                                                                                                       Expansion
+                                                                                                                       project
+                                                                                                                       will
+                                                                                                                       widen
+                                                                                                                       the
+                                                                                                                       existing
+                                                                                                                       two-lane
+                                                                                                                       road
+                                                                                                                       to
+                                                                                                                       four
+                                                                                                                       lanes
+                                                                                                                       over
+                                                                                                                       a
+                                                                                                                       5-mile
+                                                                                                                       stretch
+                                                                                                                       between
+                                                                                                                       Main
+                                                                                                                       Street
+                                                                                                                       and
+                                                                                                                       Interstate
+                                                                                                                       95.
+                                                                                                                       Intersection
+                                                                                                                       improvements
+                                                                                                                       with
+                                                                                                                       turn
+                                                                                                                       lanes,
+                                                                                                                       roundabouts,
+                                                                                                                       and
+                                                                                                                       traffic
+                                                                                                                       signals
+                                                                                                                       will
+                                                                                                                       be
+                                                                                                                       added.
+                                                                                                                       Drainage,
+                                                                                                                       curbs,
+                                                                                                                       sidewalks,
+                                                                                                                       and
+                                                                                                                       paved
+                                                                                                                       shoulders
+                                                                                                                       will
+                                                                                                                       also
+                                                                                                                       be
+                                                                                                                       constructed.
+                                                                                                                       The
+                                                                                                                       $22
+                                                                                                                       million
+                                                                                                                       project
+                                                                                                                       is
+                                                                                                                       funded
+                                                                                                                       by
+                                                                                                                       state
+                                                                                                                       and
+                                                                                                                       federal
+                                                                                                                       grants,
+                                                                                                                       with
+                                                                                                                       construction
+                                                                                                                       from
+                                                                                                                       2025
+                                                                                                                       to
+                                                                                                                       2027.
+                                                                                                                       Once
+                                                                                                                       complete,
+                                                                                                                       Valley
+                                                                                                                       Road
+                                                                                                                       will
+                                                                                                                       have
+                                                                                                                       increased
+                                                                                                                       capacity
+                                                                                                                       and
+                                                                                                                       safety
+                                                                                                                       enhancements
+                                                                                                                       for
+                                                                                                                       all
+                                                                                                                       transportation
+                                                                                                                       modes.</p>
                         </div>
                         <div className="mx-4 pt-[334px] px-4 relative md:mx-6 md:px-6">
                             <img alt="project_img" src="https://pinegrow.com/placeholders/img18.jpg"

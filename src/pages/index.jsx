@@ -1,5 +1,5 @@
-import { Dashboard } from "./Dashboard.jsx";
+import { Profile } from "./Profile.jsx";
 
 export {
-    Dashboard,
+    Profile
 };

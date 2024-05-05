@@ -1,19 +1,16 @@
-import { Feedback, NotifContainer, Sidebar, TopBar } from "../../components/index.jsx";
-import { Outlet, useLocation } from "react-router-dom";
+import { NotifContainer, Sidebar, TopBar } from "../../components/index.jsx";
+import { Outlet } from "react-router-dom";
 import { AnimatePresence, motion } from "framer-motion";
 
 export const SharedLayout = () => {
-    const location = useLocation();
     return (
         <main>
             <div className="bg-[#f1f4f9] fixed h-full left-0 top-0 w-full z-0"></div>
             <TopBar />
             <Sidebar />
             <NotifContainer />
-            <Feedback />
             <AnimatePresence mode="wait">
                 <motion.section
-                    key={ location.pathname }
                     initial={ { opacity: 0, y: -30 } }
                     animate={ { opacity: 1, y: 0 } }
                     transition={ { type: "tween" } }

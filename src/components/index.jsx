@@ -9,11 +9,12 @@ import { Notification } from "./Notification.jsx";
 import { Feedback } from "./Feedback.jsx";
 import { ContactInfo } from "./ContactInfo.jsx";
 import { LogViewProfilePopup } from "./LogViewProfilePopup.jsx";
-import { Modal } from "./Modal.jsx";
 import { Popup } from "./Popup.jsx";
 import { InputSelect } from "./InputSelect.jsx";
 import { NavLink } from "./NavLink.jsx";
 import { AnnouncementCard } from "./AnnouncementCard.jsx";
+import { AddNewUser } from "./AddNewUser.jsx";
+
 
 export {
     Sidebar,
@@ -27,9 +28,9 @@ export {
     Feedback,
     ContactInfo,
     LogViewProfilePopup,
-    Modal,
     Popup,
     InputSelect,
     NavLink,
-    AnnouncementCard
+    AnnouncementCard,
+    AddNewUser
 };

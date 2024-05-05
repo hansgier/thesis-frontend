@@ -2,6 +2,7 @@ import { useDispatch } from "react-redux";
 import { toggleFeedback, toggleNotifications, toggleSidebar } from "../app/features/user/userSlice.js";
 import { SearchBar } from "./SearchBar.jsx";
 import logo from "/src/assets/logo.png";
+import { Feedback } from "./Feedback.jsx";
 
 export const TopBar = () => {
     const dispatch = useDispatch();
@@ -61,6 +62,7 @@ export const TopBar = () => {
                             </g>
                         </svg>
                     </button>
+                    <Feedback />
                     {/*Notification Button*/ }
                     <button
                         id="notif-button"

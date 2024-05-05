@@ -9,12 +9,13 @@ import { NavProfile } from "./NavProfile.jsx";
 import { Tooltip } from "antd";
 
 const paths = {
-    "/": 1,
+    "/dashboard": 1,
     "/projects": 2,
     "/announcements": 3,
     "/messages": 4,
     "/contacts": 5,
-    "/users": 6
+    "/users": 6,
+    "/feedbacks": 7
 };
 
 const MemoizedTooltip = React.memo(React.forwardRef((props, ref) => (
@@ -25,22 +26,15 @@ export const Sidebar = () => {
     const location = useLocation();
     const { isSidebarOpen } = useSelector((store) => store.user);
     const [activeNavLink, setActiveNavLink] = useState(1);
-    const [NavLinkClicked, setNavLinkClicked] = useState(null);
     const dispatch = useDispatch();
-
-    useEffect(() => {
-        const path = paths[location.pathname];
-        if (path) {
-            setActiveNavLink(path);
-        }
-        if (location.pathname in paths) {
-            setActiveNavLink(paths[location.pathname]);
-        }
-    }, [location]);
 
     const toggleSide = () => {
         dispatch(toggleSidebar());
     };
+
+    useEffect(() => {
+        setActiveNavLink(paths[location.pathname]);
+    }, [location.pathname]);
 
     useEffect(() => {
         const handleClickOutside = (event) => {

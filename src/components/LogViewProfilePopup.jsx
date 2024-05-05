@@ -1,7 +1,12 @@
 import { motion } from "framer-motion";
 import { NavLink } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { toggleSidebar } from "../app/features/user/userSlice.js";
 
 export const LogViewProfilePopup = ({ comp_id, mode }) => {
+    const { isSideBarOpen } = useSelector((store) => store.user);
+    const dispatch = useDispatch();
+
     return (
         <motion.div
             id={ comp_id }
@@ -13,11 +18,12 @@ export const LogViewProfilePopup = ({ comp_id, mode }) => {
                 " w-[200px]" : "right-0 bottom-16 w-full" } p-2 +
             ' rounded-lg shadow-md space-y-2 ` }>
             <NavLink to="/profile"
+                     onClick={ () => dispatch(toggleSidebar()) }
                      className="flex hover:bg-gray-500 hover:bg-opacity-10 items-center justify-between p-2 rounded-md text-gray-700"
                      type="button">
                 View Profile
                 <svg viewBox="0 -3 123 123" version="1.1" xmlns="http://www.w3.org/2000/svg"
-                     xmlns:xlink="http://www.w3.org/1999/xlink" fill="#000000" className="w-5">
+                     xmlnsXlink="http://www.w3.org/1999/xlink" fill="#000000" className="w-5">
                     <g id="SVGRepo_bgCarrier" strokeWidth="0"></g>
                     <g id="SVGRepo_tracerCarrier" strokeLinecap="round" strokeLinejoin="round"></g>
                     <g id="SVGRepo_iconCarrier">

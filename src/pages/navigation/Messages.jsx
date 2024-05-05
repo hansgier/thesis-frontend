@@ -121,15 +121,15 @@ export const Messages = () => {
                                         {/*//TODO: map the conversations here*/ }
                                         <div onClick={ () => setChatMode(true) }
                                              className="flex items-center gap-3 rounded-md bg-white p-3 hover:bg-sky-100 transition-all duration-200">
-                                    <span
-                                        className="relative flex h-10 w-10 shrink-0 overflow-hidden rounded-full"
-                                        data-id="9">
-                                        <span
-                                            className="bg-muted flex h-full items-center justify-center rounded-full select-none w-full"
-                                            data-id="11">
-                                            OD
-                                        </span>
-                                    </span>
+                                            <span
+                                                className="relative flex h-10 w-10 shrink-0 overflow-hidden rounded-full"
+                                                data-id="9">
+                                                <span
+                                                    className="bg-muted flex h-full items-center justify-center rounded-full select-none w-full"
+                                                    data-id="11">
+                                                    OD
+                                                </span>
+                                            </span>
                                             <div className="flex-1 space-y-1" data-id="12">
                                                 <p className="font-medium select-none text-sm md:text-sm" data-id="13">
                                                     Olivia Davis
