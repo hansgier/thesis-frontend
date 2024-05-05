@@ -3,12 +3,13 @@ import {
     Announcements,
     Contacts,
     Dashboard,
+    FeedbacksAdmin,
     Messages,
+    Profile,
     Projects,
     SharedLayout,
     Users
-} from "./pages/navigation/index.jsx";
-import { Profile } from "./pages/index.jsx";
+} from "./pages/index.jsx";
 
 function App() {
     return (
@@ -22,6 +23,7 @@ function App() {
                     <Route path="messages" element={ <Messages /> } />
                     <Route path="contacts" element={ <Contacts /> } />
                     <Route path="profile" element={ <Profile /> } />
+                    <Route path="feedbacks" element={ <FeedbacksAdmin /> } />
                     <Route path="users" element={ <Users /> } />
                 </Route>
             </Routes>

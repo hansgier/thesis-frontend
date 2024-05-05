@@ -13,7 +13,7 @@ import { Popup } from "./Popup.jsx";
 import { InputSelect } from "./InputSelect.jsx";
 import { NavLink } from "./NavLink.jsx";
 import { AnnouncementCard } from "./AnnouncementCard.jsx";
-import { AddNewUser } from "./AddNewUser.jsx";
+import { AddEditUser } from "./AddEditUser.jsx";
 
 
 export {
@@ -32,5 +32,5 @@ export {
     InputSelect,
     NavLink,
     AnnouncementCard,
-    AddNewUser
+    AddEditUser
 };

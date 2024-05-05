@@ -6,7 +6,7 @@ import { LuPhone } from "react-icons/lu";
 export const ContactInfo = ({ logo, name, address, emails, phones }) => {
     return (
         <div
-            className="bg-transparent border-2 hover:duration-300 hover:shadow-lg hover:transition-shadow mx-4 p-5 rounded-xl space-y-2 md:mx-0"
+            className="bg-white border hover:duration-300 hover:shadow-md hover:transition-shadow mx-4 p-5 rounded-xl space-y-2 md:mx-0"
         >
             <div className="flex items-center mb-3 space-x-2">
                 <img src={ logo } loading="lazy"

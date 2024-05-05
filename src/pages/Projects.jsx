@@ -1,6 +1,6 @@
-import { FilterSort } from "../../components/FilterSort.jsx";
-import { InputSelect, ProjectContainer } from "../../components/index.jsx";
-import { project_tags } from "../../utils/data-components.jsx";
+import { FilterSort } from "../components/FilterSort.jsx";
+import { InputSelect, ProjectContainer } from "../components/index.jsx";
+import { project_tags } from "../utils/data-components.jsx";
 
 export const Projects = () => {
     return (

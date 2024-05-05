@@ -1,7 +1,7 @@
 import { FloatButton } from "antd";
-import { FilterSort } from "../../components/FilterSort.jsx";
-import { project_tags } from "../../utils/data-components.jsx";
-import { AnnouncementCard, InputSelect } from "../../components/index.jsx";
+import { FilterSort } from "../components/FilterSort.jsx";
+import { project_tags } from "../utils/data-components.jsx";
+import { AnnouncementCard, InputSelect } from "../components/index.jsx";
 
 export const Announcements = () => {
     return (

@@ -126,35 +126,9 @@ export const Sidebar = () => {
                                 </div>
 
                                 {/*-----------------------Navigation Bars-----------------------*/ }
-                                {/*Desktop version*/ }
-                                <nav className="flex-col gap-6 hidden md:flex">
-                                    { sideLinks.map((sideLink) => {
-                                        return (
-                                            <NavLink
-                                                key={ sideLink.id }
-                                                to={ sideLink.path }
-                                                onClick={ () => {
-                                                    setActiveNavLink(sideLink.id);
-                                                    dispatch(toggleSidebar());
-                                                } }
-                                                className={ ({ isActive }) => {
-                                                    return isActive
-                                                        ? "bg-gradient-to-r flex font-normal from-Thesis-200 group hover:bg-gradient-to-br hover:duration-150 hover:from-Thesis-100 hover:to-indigo-900 hover:transition-all items-center justify-center p-4 rounded-full to-Thesis-100 w-full"
-                                                        : "bg-white duration-150 flex font-normal group hover:bg-gradient-to-tr hover:from-pink-100 hover:to-blue-100 items-center justify-center p-4 rounded-full transition-all";
-                                                } }>
-                                        <span
-                                            id="project-link"
-                                            className="border-none flex items-center justify-center p-0 m-0">
-                                            { activeNavLink === sideLink.id ? sideLink.svg.active : sideLink.svg.inactive }
-                                        </span>
-                                            </NavLink>
-                                        );
-                                    })
-                                    }
-                                </nav>
 
                                 {/*Mobile version*/ }
-                                <nav className="flex flex-col gap-6 w-full md:hidden">
+                                <nav className="flex flex-col gap-2 w-full md:hidden">
                                     { sideLinks.map((sideLink) => {
                                         return (
                                             <NavLink
