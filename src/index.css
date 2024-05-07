@@ -148,3 +148,9 @@
 
 @tailwind components;
 @tailwind utilities;
+
+.imagecarousel-modal .ant-modal-content {
+    margin: 0 !important;
+    padding: 0 !important;
+    background-color: transparent;
+}

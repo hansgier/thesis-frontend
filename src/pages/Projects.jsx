@@ -1,8 +1,42 @@
 import { FilterSort } from "../components/FilterSort.jsx";
 import { InputSelect, ProjectContainer } from "../components/index.jsx";
 import { project_tags } from "../utils/data-components.jsx";
+import { useLocation } from "react-router-dom";
+import { useEffect, useRef } from "react";
 
 export const Projects = () => {
+    const location = useLocation();
+    // Ref for the scrollable div
+    const scrollDivRef = useRef(null);
+
+    // Function to save the scroll position to sessionStorage
+    const saveScrollPosition = () => {
+        const scrollY = scrollDivRef.current.scrollTop;
+        sessionStorage.setItem("scrollPosition", scrollY);
+    };
+
+    // Function to restore the scroll position from sessionStorage
+    const restoreScrollPosition = () => {
+        const savedScrollY = sessionStorage.getItem("scrollPosition");
+        if (savedScrollY) {
+            scrollDivRef.current.scrollTop = parseInt(savedScrollY, 10);
+        }
+    };
+
+    // Effect to add event listener for saving scroll position on unmount
+    useEffect(() => {
+        window.addEventListener("beforeunload", saveScrollPosition);
+
+        // Restore scroll position when component mounts
+        restoreScrollPosition();
+
+        // Cleanup function to remove the event listener
+        return () => {
+            window.removeEventListener("beforeunload", saveScrollPosition);
+        };
+    }, []);
+
+
     return (
         <>
             {/*-----------------------VIEW FILTER SORT SECTION-----------------------*/ }
@@ -27,8 +61,17 @@ export const Projects = () => {
 
             {/*-----------------------PROJECTS SECTION-----------------------*/ }
             <div
+                ref={ scrollDivRef }
+                onScroll={ saveScrollPosition }
                 className="absolute top-16 h-[calc(100%-64px)] md:h-full md:absolute md:flex md:top-0 md:left-[270px] md:pl-0 md:pr-4 md:w-[calc(100%-270px)] overflow-y-scroll pt-0 px-0">
                 <div className="md:mt-0">
+                    <ProjectContainer />
+                    <ProjectContainer />
+                    <ProjectContainer />
+                    <ProjectContainer />
+                    <ProjectContainer />
+                    <ProjectContainer />
+                    <ProjectContainer />
                     <ProjectContainer />
                     <ProjectContainer />
                 </div>

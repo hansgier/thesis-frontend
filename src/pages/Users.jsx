@@ -1,7 +1,8 @@
 import { Button, Pagination, Popover, Select } from "antd";
 import { IoFilter } from "react-icons/io5";
 import { AddEditUser } from "../components/index.jsx";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useLocation } from "react-router-dom";
 
 const roleColors = {
     admin: "bg-pink-200",
@@ -13,6 +14,13 @@ const roleColors = {
 export const Users = () => {
     const [currentPage, setCurrentPage] = useState(1);
     const [selectedUserIds, setSelectedUserIds] = useState([]);
+    const location = useLocation();
+
+    useEffect(() => {
+        if (location.pathname !== "/project" || location.pathname !== "/singleproject") {
+            sessionStorage.setItem("scrollPosition", "0");
+        }
+    }, []);
 
     const user = {
         id: 1

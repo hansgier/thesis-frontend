@@ -1,12 +1,14 @@
 import { useSelector } from "react-redux";
 import { Tooltip } from "antd";
+import { useNavigate } from "react-router-dom";
 
-export const ProjectContainer = () => {
+export const ProjectContainer = ({ onProjectClick }) => {
     const { view } = useSelector((store) => store.user);
+    const navigate = useNavigate();
+
     return (
         <div>
-            <div className="accent-indigo-800 bg-white border hover:cursor-pointer mb-10 md:mx-0 mx-3 rounded-xl"
-                 data-v0-t="card">
+            <div className="accent-indigo-800 bg-white border mb-10 md:mx-0 mx-3 rounded-xl">
                 <div className="flex gap-4 items-center pb-4 pt-6 px-4 md:px-6">
                     <div className="flex items-center justify-center">
                         <svg viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" fill="#000000"
@@ -40,7 +42,8 @@ export const ProjectContainer = () => {
                             </g>
                         </svg>
                     </div>
-                    <div className="flex flex-col gap-1 md:grid">
+                    <div onClick={ () => navigate("/projects/singleprojects") }
+                         className="flex flex-col gap-1 md:grid hover:cursor-pointer">
                         <h3 className="font-semibold leading-none select-none text-lg tracking-tight md:text-2xl">Linao
                                                                                                                   Road
                                                                                                                   Construction</h3>
@@ -183,13 +186,14 @@ export const ProjectContainer = () => {
                         </div>
                         <div className="mx-4 pt-[334px] px-4 relative md:mx-6 md:px-6">
                             <img alt="project_img" src="https://pinegrow.com/placeholders/img18.jpg"
-                                 className="absolute h-full left-0 object-center object-cover rounded-xl top-0 w-full" />
+                                 onClick={ () => navigate("/projects/singleprojects") }
+                                 className="absolute h-full left-0 object-center object-cover rounded-xl top-0 w-full hover:cursor-pointer" />
                         </div>
                         <div className="gap-2 grid pb-3 px-4 md:px-6">
                             <div className="flex gap-2 h-8 items-center mt-4 text-sm md:gap-4">
                                 <div className="flex gap-1 h-full">
                                     <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" width="24"
-                                         className="h-full hover:duration-300 hover:scale-125 hover:transition-all">
+                                         className="h-full hover:duration-300 hover:scale-125 hover:transition-all hover:cursor-pointer">
                                         <g id="SVGRepo_bgCarrier" strokeWidth="0"></g>
                                         <g id="SVGRepo_tracerCarrier" strokeLinecap="round" strokeLinejoin="round"></g>
                                         <g id="SVGRepo_iconCarrier">
@@ -203,7 +207,7 @@ export const ProjectContainer = () => {
                                 </div>
                                 <div className="flex gap-1 h-full items-center justify-center">
                                     <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" width="24"
-                                         className="h-full hover:duration-300 hover:scale-125 hover:transition-all">
+                                         className="h-full hover:duration-300 hover:scale-125 hover:transition-all hover:cursor-pointer">
                                         <g id="SVGRepo_bgCarrier" strokeWidth="0"></g>
                                         <g id="SVGRepo_tracerCarrier" strokeLinecap="round" strokeLinejoin="round"></g>
                                         <g id="SVGRepo_iconCarrier">
@@ -216,8 +220,9 @@ export const ProjectContainer = () => {
                                         className="flex h-full items-center justify-center select-none text-[#454545] text-xs md:text-sm">9</span>
                                 </div>
                                 <div
-                                    className="duration-300 flex gap-1 h-full hover:bg-blue-50 hover:rounded-md items-center px-2 transition-colors"
-                                    data-pg-ia='{"l":[{"name":"Hover Comment Button"}]}'>
+                                    onClick={ () => navigate("/projects/singleprojects") }
+                                    className="duration-300 flex gap-1 h-full hover:bg-blue-50 hover:rounded-md items-center px-2 transition-colors hover:cursor-pointer"
+                                    data-pg-ia='{"l":[{"name":"Hover UserComment Button"}]}'>
                                     <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" width="16">
                                         <g id="SVGRepo_bgCarrier" strokeWidth="0"></g>
                                         <g id="SVGRepo_tracerCarrier" strokeLinecap="round" strokeLinejoin="round"></g>

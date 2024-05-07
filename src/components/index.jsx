@@ -14,6 +14,8 @@ import { InputSelect } from "./InputSelect.jsx";
 import { NavLink } from "./NavLink.jsx";
 import { AnnouncementCard } from "./AnnouncementCard.jsx";
 import { AddEditUser } from "./AddEditUser.jsx";
+import { DetailsUpdate } from "./DetailsUpdate.jsx";
+import { ImageCarousel } from "./ImageCarousel.jsx";
 
 
 export {
@@ -32,5 +34,7 @@ export {
     InputSelect,
     NavLink,
     AnnouncementCard,
-    AddEditUser
+    AddEditUser,
+    DetailsUpdate,
+    ImageCarousel
 };

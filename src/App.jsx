@@ -10,8 +10,11 @@ import {
     SharedLayout,
     Users
 } from "./pages/index.jsx";
+import { SingleProject } from "./pages/project/index.jsx";
 
 function App() {
+
+
     return (
         <BrowserRouter>
             <Routes>
@@ -19,6 +22,7 @@ function App() {
                 <Route path="/" element={ <SharedLayout /> }>
                     <Route path="dashboard" element={ <Dashboard /> } />
                     <Route path="projects" element={ <Projects /> } />
+                    <Route path="projects/singleprojects" element={ <SingleProject /> } />
                     <Route path="announcements" element={ <Announcements /> } />
                     <Route path="messages" element={ <Messages /> } />
                     <Route path="contacts" element={ <Contacts /> } />

@@ -163,3 +163,54 @@ export const announcement_component = {
         </svg>
     }
 };
+
+export const projectDetails_sidebar = [
+    {
+        name: "Start date",
+        value: "start_date",
+        pds_type: "single",
+        color: "bg-slate-600"
+    },
+    {
+        name: "End date",
+        value: "end_date",
+        pds_type: "single",
+        color: "bg-zinc-600"
+    },
+    {
+        name: "Completion date",
+        value: "completion_date",
+        pds_type: "single",
+        color: "bg-lime-600"
+    },
+    {
+        name: "Cost",
+        value: "cost",
+        pds_type: "single",
+        color: "bg-emerald-600"
+    },
+    {
+        name: "Progress",
+        value: "progress",
+        pds_type: "single",
+        color: "bg-sky-600"
+    },
+    {
+        name: "Locations",
+        value: "barangay_iDs",
+        pds_type: "multiple",
+        color: "bg-amber-600"
+    },
+    {
+        name: "Implementing agency",
+        value: "implementing_agency",
+        pds_type: "single",
+        color: "bg-teal-600"
+    },
+    {
+        name: "Contract Term",
+        value: "contract_term",
+        pds_type: "single",
+        color: "bg-fuchsia-600"
+    }
+];

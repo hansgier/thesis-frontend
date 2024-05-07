@@ -22,6 +22,7 @@ const userSlice = createSlice({
         toggleFeedback: (state) => {
             state.isFeedbackOpen = !state.isFeedbackOpen;
         }
+
     }
 });
 

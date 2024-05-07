@@ -1,9 +1,10 @@
 import { useWindowSize } from "../hooks/index.jsx";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { IoReturnDownBack, IoSearch } from "react-icons/io5";
 import { Button, Modal, Select, Tooltip } from "antd";
 import { project_tags } from "../utils/data-components.jsx";
 import { motion } from "framer-motion";
+import { useLocation } from "react-router-dom";
 
 const filterOption = (input, option) =>
     (option?.label ?? "").toLowerCase().includes(input.toLowerCase());
@@ -14,6 +15,13 @@ export const FeedbacksAdmin = () => {
     const [feedbackMode, setFeedbackMode] = useState(false);
     const [value, setValue] = useState();
     const { width } = useWindowSize();
+    const location = useLocation();
+
+    useEffect(() => {
+        if (location.pathname !== "/project" || location.pathname !== "/singleproject") {
+            sessionStorage.setItem("scrollPosition", "0");
+        }
+    }, []);
     const handleSearch = (newValue) => {
         setData(newValue ? [
             {

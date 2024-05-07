@@ -2,8 +2,17 @@ import { FloatButton } from "antd";
 import { FilterSort } from "../components/FilterSort.jsx";
 import { project_tags } from "../utils/data-components.jsx";
 import { AnnouncementCard, InputSelect } from "../components/index.jsx";
+import { useLocation } from "react-router-dom";
+import { useEffect } from "react";
 
 export const Announcements = () => {
+    const location = useLocation();
+
+    useEffect(() => {
+        if (location.pathname !== "/project" || location.pathname !== "/singleproject") {
+            sessionStorage.setItem("scrollPosition", "0");
+        }
+    }, []);
     return (
         <>
             {/*-----------------------FILTER SORT SECTION-----------------------*/ }

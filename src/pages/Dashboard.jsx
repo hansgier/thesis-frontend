@@ -1,6 +1,15 @@
-import React from "react";
+import React, { useEffect } from "react";
+import { useLocation } from "react-router-dom";
 
 export const Dashboard = () => {
+    const location = useLocation();
+
+    useEffect(() => {
+        if (location.pathname !== "/project" || location.pathname !== "/singleproject") {
+            sessionStorage.setItem("scrollPosition", "0");
+        }
+    }, []);
+
     return (
         <>
             <div className="h-full max-h-full overflow-y-scroll pt-4 px-0 md:px-6">
@@ -66,11 +75,12 @@ export const Dashboard = () => {
                     <div className="md:mx-0 mx-4 rounded-xl">
                         <div className="flex-col gap-1 grid px-0 py-4 select-none space-y-1.5 md:pl-0">
                             <h3 className="font-bold leading-none text-xl tracking-tight whitespace-normal md:text-2xl">Featured
-                                Projects</h3>
+                                                                                                                        Projects</h3>
                             <p className="font-normal text-gray-600 text-xs whitespace-normal md:text-sm">Projects
-                                that
-                                need
-                                your attention.</p>
+                                                                                                          that
+                                                                                                          need
+                                                                                                          your
+                                                                                                          attention.</p>
                         </div>
                         <div className="p-0">
                             <ul className="gap-2 grid grid-cols-1 sm:grid-cols-1 md:gap-5 md:grid-cols-3 lg:grid-cols-3">
@@ -85,14 +95,14 @@ export const Dashboard = () => {
                                         </div>
                                         <div className="gap-1 grid h-full ml-2 md:ml-0">
                                             <p className="font-semibold mx-2 select-none text-sm md:text-base">Community
-                                                Garden</p>
+                                                                                                               Garden</p>
                                             <p className="mx-2 select-none text-gray-600 text-xs md:text-gray-600 md:text-sm">
                                                 A project to create a beautiful community garden for everyone to
                                                 enjoy. </p>
                                         </div>
                                         <a href=""
                                            className="border-2 font-bold hidden p-3 rounded-full text-center text-xs w-full md:block hover:border-[#10c9aa] hover:text-[#10c9aa] transition-all duration-200">View
-                                            Project</a>
+                                                                                                                                                                                                              Project</a>
                                     </div>
                                 </li>
                                 <li>
@@ -104,14 +114,14 @@ export const Dashboard = () => {
                                             alt="Project" />
                                         <div className="gap-1 grid h-full ml-2 md:ml-0">
                                             <p className="font-semibold mx-2 select-none text-sm md:text-base">Community
-                                                Garden</p>
+                                                                                                               Garden</p>
                                             <p className="mx-2 select-none text-gray-600 text-xs md:text-gray-600 md:text-sm">
                                                 A project to create a beautiful community garden for everyone to
                                                 enjoy. </p>
                                         </div>
                                         <a href=""
                                            className="border-2 font-bold hidden p-3 rounded-full text-center text-xs w-full md:block hover:border-[#10c9aa] hover:text-[#10c9aa] transition-all duration-200">View
-                                            Project</a>
+                                                                                                                                                                                                              Project</a>
                                     </div>
                                 </li>
                                 <li>
@@ -123,14 +133,14 @@ export const Dashboard = () => {
                                             alt="Project" />
                                         <div className="gap-1 grid h-full ml-2 md:ml-0">
                                             <p className="font-semibold mx-2 select-none text-sm md:text-base">Community
-                                                Garden</p>
+                                                                                                               Garden</p>
                                             <p className="mx-2 select-none text-gray-600 text-xs md:text-gray-600 md:text-sm">
                                                 A project to create a beautiful community garden for everyone to
                                                 enjoy. </p>
                                         </div>
                                         <a href=""
                                            className="border-2 font-bold hidden p-3 rounded-full text-center text-xs w-full md:block hover:border-[#10c9aa] hover:text-[#10c9aa] transition-all duration-200">View
-                                            Project</a>
+                                                                                                                                                                                                              Project</a>
                                     </div>
                                 </li>
                             </ul>
@@ -140,10 +150,10 @@ export const Dashboard = () => {
                         <div className="md:mx-0 mx-4 rounded-xl" data-v0-t="card">
                             <div className="flex-col gap-1 grid pr-6 py-6 space-y-1.5">
                                 <h3 className="font-bold leading-none text-xl tracking-tight whitespace-normal md:text-2xl">Upcoming
-                                    Projects</h3>
+                                                                                                                            Projects</h3>
                                 <p className="font-normal text-gray-600 text-xs md:text-sm">Get ready for these
-                                    exciting
-                                    community events.</p>
+                                                                                            exciting
+                                                                                            community events.</p>
                             </div>
                             <div className="bg-white border border-[#b4d8f2] p-0 rounded-3xl">
                                 <ul className="divide-y">
@@ -157,19 +167,37 @@ export const Dashboard = () => {
                                                 alt="Event" />
                                             <div className="grid gap-1">
                                                 <p className="font-semibold text-sm whitespace-normal md:text-base">Music
-                                                    in
-                                                    the
-                                                    Park</p>
+                                                                                                                    in
+                                                                                                                    the
+                                                                                                                    Park</p>
                                                 <p className="text-gray-600 text-xs truncate md:text-sm">Enjoy live
-                                                    music in
-                                                    our
-                                                    beautiful park. Date: July 15thEnjoy live music in our beautiful
-                                                    park.
-                                                    Date: July 15thEnjoy live music in our beautiful park. Date: July
-                                                    15thEnjoy live music in our beautiful park. Date: July 15thEnjoy
-                                                    live
-                                                    music in our beautiful park. Date: July 15thEnjoy live music in our
-                                                    beautiful park. Date: July 15th</p>
+                                                                                                         music in
+                                                                                                         our
+                                                                                                         beautiful park.
+                                                                                                         Date: July
+                                                                                                         15thEnjoy live
+                                                                                                         music in our
+                                                                                                         beautiful
+                                                                                                         park.
+                                                                                                         Date: July
+                                                                                                         15thEnjoy live
+                                                                                                         music in our
+                                                                                                         beautiful park.
+                                                                                                         Date: July
+                                                                                                         15thEnjoy live
+                                                                                                         music in our
+                                                                                                         beautiful park.
+                                                                                                         Date: July
+                                                                                                         15thEnjoy
+                                                                                                         live
+                                                                                                         music in our
+                                                                                                         beautiful park.
+                                                                                                         Date: July
+                                                                                                         15thEnjoy live
+                                                                                                         music in our
+                                                                                                         beautiful park.
+                                                                                                         Date: July
+                                                                                                         15th</p>
                                             </div>
                                         </div>
                                     </li>
@@ -184,7 +212,7 @@ export const Dashboard = () => {
                                             />
                                             <div className="grid gap-1">
                                                 <p className="font-semibold text-sm whitespace-normal md:text-base">Community
-                                                    Cleanup</p>
+                                                                                                                    Cleanup</p>
                                                 <p className="text-gray-600 text-xs truncate md:text-sm">
                                                     Let's work together to keep our beaches clean. Date: July 20th </p>
                                             </div>
@@ -201,7 +229,7 @@ export const Dashboard = () => {
                                             />
                                             <div className="grid gap-1">
                                                 <p className="font-semibold text-sm whitespace-normal md:text-base">Movie
-                                                    Night</p>
+                                                                                                                    Night</p>
                                                 <p className="text-gray-600 text-xs truncate md:text-sm">
                                                     Family-friendly movie under the stars. Date: July 25th </p>
                                             </div>
@@ -213,10 +241,10 @@ export const Dashboard = () => {
                         <div className="md:mx-0 mx-4 rounded-xl" data-v0-t="card">
                             <div className="flex-col gap-1 grid pr-6 py-6 select-none space-y-1.5">
                                 <h3 className="font-bold leading-none text-xl tracking-tight whitespace-normal md:text-2xl">Recent
-                                    Activities</h3>
+                                                                                                                            Activities</h3>
                                 <p className="font-normal text-gray-600 text-xs md:text-sm">See what's happening in
-                                    your
-                                    community.</p>
+                                                                                            your
+                                                                                            community.</p>
                             </div>
                             <div className="p-0">
                                 <ul className="bg-white border border-[#d2b4f2] divide-y rounded-3xl">
@@ -229,8 +257,10 @@ export const Dashboard = () => {
                                                 className="rounded-md w-10 md:w-20 aspect-[40/40] object-cover" />
                                             <div className="grid gap-1">
                                                 <p className="font-medium text-sm whitespace-normal md:text-base">Bgry.
-                                                    Linao
-                                                    posted a new project</p>
+                                                                                                                  Linao
+                                                                                                                  posted
+                                                                                                                  a new
+                                                                                                                  project</p>
                                                 <p className="text-gray-400 text-xs md:text-sm">2m ago</p>
                                             </div>
                                         </div>
@@ -244,7 +274,10 @@ export const Dashboard = () => {
                                                 className="rounded-md w-10 md:w-20 aspect-[40/40] object-cover" />
                                             <div className="grid gap-1">
                                                 <p className="font-medium text-sm whitespace-normal md:text-base">City
-                                                    Government updated a project</p>
+                                                                                                                  Government
+                                                                                                                  updated
+                                                                                                                  a
+                                                                                                                  project</p>
                                                 <p className="text-gray-400 text-xs md:text-sm">5m ago</p>
                                             </div>
                                         </div>
@@ -258,7 +291,10 @@ export const Dashboard = () => {
                                                 className="rounded-md w-10 md:w-20 aspect-[40/40] object-cover" />
                                             <div className="grid gap-1">
                                                 <p className="font-medium text-sm whitespace-normal md:text-base">Brgy.
-                                                    Tambullilid posted a new announcement</p>
+                                                                                                                  Tambullilid
+                                                                                                                  posted
+                                                                                                                  a new
+                                                                                                                  announcement</p>
                                                 <p className="text-gray-400 text-xs md:text-sm">10m ago</p>
                                             </div>
                                         </div>
@@ -272,8 +308,8 @@ export const Dashboard = () => {
                             <h3 className="font-bold leading-none text-xl tracking-tight whitespace-normal md:text-2xl">
                                 Important Announcements </h3>
                             <p className="font-normal text-gray-600 text-xs md:text-sm">Stay informed with these
-                                important
-                                updates.</p>
+                                                                                        important
+                                                                                        updates.</p>
                         </div>
                         <div className="bg-white p-0 rounded-3xl border border-[#96d7cf]">
                             <ul className="divide-y ">
@@ -282,16 +318,50 @@ export const Dashboard = () => {
                                         className="cursor-pointer flex gap-4 hover:bg-Thesis-50 hover:bg-opacity-5 hover:duration-300 hover:ease-out hover:transition-all items-center">
                                         <div className="grid gap-1">
                                             <p className="font-semibold text-sm whitespace-normal md:text-base">New
-                                                Playground</p>
+                                                                                                                Playground</p>
                                             <p className="text-gray-600 text-xs truncate md:max-w-xl md:text-sm">We&apos;re
-                                                building a new playground in the park. The playground will be closed for
-                                                construction from
-                                                July 10th.We&apos;re building a new playground in the park. The
-                                                playground
-                                                will be closed for construction from July 10th.We&apos;re building a new
-                                                playground in the park. The playground will be closed for construction
-                                                from
-                                                July 10th.</p>
+                                                                                                                 building
+                                                                                                                 a new
+                                                                                                                 playground
+                                                                                                                 in the
+                                                                                                                 park.
+                                                                                                                 The
+                                                                                                                 playground
+                                                                                                                 will be
+                                                                                                                 closed
+                                                                                                                 for
+                                                                                                                 construction
+                                                                                                                 from
+                                                                                                                 July
+                                                                                                                 10th.We&apos;re
+                                                                                                                 building
+                                                                                                                 a new
+                                                                                                                 playground
+                                                                                                                 in the
+                                                                                                                 park.
+                                                                                                                 The
+                                                                                                                 playground
+                                                                                                                 will be
+                                                                                                                 closed
+                                                                                                                 for
+                                                                                                                 construction
+                                                                                                                 from
+                                                                                                                 July
+                                                                                                                 10th.We&apos;re
+                                                                                                                 building
+                                                                                                                 a new
+                                                                                                                 playground
+                                                                                                                 in the
+                                                                                                                 park.
+                                                                                                                 The
+                                                                                                                 playground
+                                                                                                                 will be
+                                                                                                                 closed
+                                                                                                                 for
+                                                                                                                 construction
+                                                                                                                 from
+                                                                                                                 July
+                                                                                                                 10th.</p>
                                         </div>
                                     </div>
                                 </li>
@@ -300,7 +370,7 @@ export const Dashboard = () => {
                                         className="cursor-pointer flex gap-4 hover:bg-Thesis-50 hover:bg-opacity-5 hover:duration-300 hover:ease-out hover:transition-all items-center">
                                         <div className="grid gap-1">
                                             <p className="font-semibold text-sm whitespace-normal md:text-base">Road
-                                                Closure</p>
+                                                                                                                Closure</p>
                                             <p className="text-gray-600 text-xs truncate md:max-w-xl md:text-sm">
                                                 Part of Main Street will be closed for repairs from July 15th to July
                                                 20th.
@@ -314,7 +384,7 @@ export const Dashboard = () => {
                                         className="cursor-pointer flex gap-4 hover:bg-Thesis-50 hover:bg-opacity-5 hover:duration-300 hover:ease-out hover:transition-all items-center">
                                         <div className="grid gap-1">
                                             <p className="font-semibold text-sm whitespace-normal md:text-base">Community
-                                                Picnic</p>
+                                                                                                                Picnic</p>
                                             <p className="text-gray-600 text-xs truncate md:max-w-xl md:text-sm">
                                                 Join us for a fun community picnic on July 30th. There will be games,
                                                 food,
@@ -328,10 +398,10 @@ export const Dashboard = () => {
                     <div className="mb-4 md:mx-0 mx-4 rounded-xl" data-v0-t="card">
                         <div className="flex-col gap-1 grid pr-6 py-6 select-none space-y-1.5">
                             <h3 className="font-bold leading-none text-xl tracking-tight whitespace-normal md:text-2xl">Feedback
-                                Summary</h3>
+                                                                                                                        Summary</h3>
                             <p className="font-normal text-gray-600 text-xs md:text-sm">See what the community thinks
-                                about
-                                recent projects.</p>
+                                                                                        about
+                                                                                        recent projects.</p>
                         </div>
                         <div>
                             <div className="overflow-auto relative w-full">
@@ -340,7 +410,7 @@ export const Dashboard = () => {
                                         <div className="p-6 space-y-4">
                                             <div className="flex items-center justify-between">
                                                 <h3 className="bg-[#daf4aa] font-semibold px-3 py-1 rounded-xl select-none text-sm md:text-base">Project
-                                                    A</h3>
+                                                                                                                                                 A</h3>
                                                 <div className="flex items-center space-x-2">
                                                     <div className="flex items-center space-x-1">
                                                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
@@ -381,7 +451,7 @@ export const Dashboard = () => {
                                         <div className="p-6 space-y-4">
                                             <div className="flex items-center justify-between">
                                                 <h3 className="bg-[#96d7cf] font-semibold px-3 py-1 rounded-xl select-none text-sm md:text-base">Project
-                                                    A</h3>
+                                                                                                                                                 A</h3>
                                                 <div className="flex items-center space-x-2">
                                                     <div className="flex items-center space-x-1">
                                                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
@@ -422,7 +492,7 @@ export const Dashboard = () => {
                                         <div className="p-6 space-y-4">
                                             <div className="flex items-center justify-between">
                                                 <h3 className="bg-[#d2b4f2] font-semibold px-3 py-1 rounded-xl select-none text-sm md:text-base">Project
-                                                    A</h3>
+                                                                                                                                                 A</h3>
                                                 <div className="flex items-center space-x-2">
                                                     <div className="flex items-center space-x-1">
                                                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"

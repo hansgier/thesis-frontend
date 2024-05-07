@@ -1,9 +1,17 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { project_tags } from "../utils/data-components.jsx";
 import { Input, Select } from "antd";
+import { useLocation } from "react-router-dom";
 
 export const Profile = () => {
     const [isEditMode, setIsEditMode] = useState(false);
+    const location = useLocation();
+
+    useEffect(() => {
+        if (location.pathname !== "/project" || location.pathname !== "/singleproject") {
+            sessionStorage.setItem("scrollPosition", "0");
+        }
+    }, []);
     return (
         <div className="h-full max-h-full overflow-y-scroll pt-4 px-0 md:px-6">
             <div>

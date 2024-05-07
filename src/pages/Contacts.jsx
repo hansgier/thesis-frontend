@@ -1,7 +1,16 @@
 import { ContactInfo } from "../components/index.jsx";
 import { contacts } from "../utils/data.js";
+import { useLocation } from "react-router-dom";
+import { useEffect } from "react";
 
 export const Contacts = () => {
+    const location = useLocation();
+
+    useEffect(() => {
+        if (location.pathname !== "/project" || location.pathname !== "/singleproject") {
+            sessionStorage.setItem("scrollPosition", "0");
+        }
+    }, []);
     return (
         <>
             <div className="h-full max-h-full overflow-y-scroll pt-4 px-0 md:px-6">
