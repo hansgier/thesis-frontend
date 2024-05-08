@@ -18,6 +18,7 @@ export const SingleProject = () => {
                         <div className="accent-indigo-800 bg-white border mb-3 md:mb-7 mx-3 rounded-xl md:mx-0 md:pb-4"
                              data-v0-t="card">
                             <div className="flex gap-2 md:gap-4 items-center pb-4 pt-6 px-4 md:px-6">
+                                {/*Back button (mobile)*/ }
                                 <button
                                     className="bg-white focus:outline-none focus:shadow-inner md:hidden p-1 rounded-full shadow"
                                     type="button">
@@ -49,9 +50,9 @@ export const SingleProject = () => {
                                 </button>
                                 <div className="flex flex-col gap-1 md:grid">
                                     {/*TITLE*/ }
-                                    <h3 className="font-semibold leading-none select-none text-lg tracking-tight md:text-2xl">Linao
-                                                                                                                              Road
-                                                                                                                              Construction</h3>
+                                    <h3 className="font-semibold leading-none select-none text-lg tracking-tight md:text-2xl">
+                                        Linao Road Construction
+                                    </h3>
                                     <div className="flex items-center">
                                         <div className="flex group items-center mr-4 space-x-1">
                                             <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"
