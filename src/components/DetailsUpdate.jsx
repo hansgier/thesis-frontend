@@ -11,7 +11,8 @@ export const DetailsUpdate = () => {
                 className="bg-white border hidden mb-6 mt-4 pt-0 relative rounded-2xl md:fixed md:flex md:h-[calc(100%-96px)] md:mr-2 md:pl-4 md:pr-0 md:py-4 md:w-80 md:z-50">
                 <div className="bg-white flex flex-col pr-4 w-full">
                     <div className="flex items-center w-full">
-                        <h2 className="flex-1 font-semibold select-none text-xl" data-id="15">Details</h2>
+                        <h2 className="flex-1 font-semibold select-none text-xl"
+                            data-id="15">{ isDetailsMode ? "Details" : "Updates" }</h2>
                         {/*-----------Details-Update Switch-----------*/ }
                         <button onClick={ () => setIsDetailsMode(!isDetailsMode) }
                                 className="flex focus:outline-none focus:ring-0 focus:ring-offset-0 font-medium hover:bg-opacity-90 hover:duration-200 hover:shadow-inner hover:text-yellow-900 hover:transition-all items-center p-2 rounded-lg shadow text-black">
@@ -26,7 +27,8 @@ export const DetailsUpdate = () => {
                     </div>
                     {/*-----------PROJECT POST DATE & POSTED BY-----------*/ }
                     <div className="pt-2">
-                        <div className="font-normal select-none text-gray-700 text-sm">Posted on March 23, 2023</div>
+                        <div
+                            className="font-normal select-none text-gray-700 text-sm">{ isDetailsMode ? `Posted on March 23, 2023` : `Last updated on March 23, 2023` }</div>
                         <div className="select-none text-gray-700 text-sm">By City Government</div>
                     </div>
                     {/*-----------DETAILS-----------*/ }
@@ -111,7 +113,6 @@ export const DetailsUpdate = () => {
                                     <ProjectUpdate
                                         content="This is an overview of the current project. It includes updates and progress."
                                         updatePostDate="2 days ago" progress="100%" />
-
                                 </div>
                             </>
                         ) }

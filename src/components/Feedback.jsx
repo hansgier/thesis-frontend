@@ -1,6 +1,5 @@
 import { useDispatch, useSelector } from "react-redux";
-import { Button, Col, Form, Input, Modal, Row, Upload } from "antd";
-import ImgCrop from "antd-img-crop";
+import { Button, Col, Form, Input, Modal, Row } from "antd";
 import { toggleFeedback } from "../app/features/user/userSlice.js";
 import { useEffect, useState } from "react";
 
@@ -69,29 +68,29 @@ export const Feedback = () => {
                         >
                             <Input.TextArea
                                 placeholder="Enter your feedback message..."
-                                autoSize={ { minRows: 2, maxRows: 6 } }
+                                autoSize={ { minRows: 6, maxRows: 10 } }
                             />
                         </Form.Item>
                     </Col>
                 </Row>
-                <Row>
-                    <Col flex="1">
-                        <Form.Item
-                            name="feedback_upload"
-                        >
-                            <ImgCrop rotationSlider>
-                                <Upload
-                                    listType="picture-card"
-                                    fileList={ fileList }
-                                    onChange={ onChange }
-                                    onPreview={ onPreview }
-                                >
-                                    { fileList.length < 5 && "+ Upload" }
-                                </Upload>
-                            </ImgCrop>
-                        </Form.Item>
-                    </Col>
-                </Row>
+                {/*<Row>*/ }
+                {/*    <Col flex="1">*/ }
+                {/*        <Form.Item*/ }
+                {/*            name="feedback_upload"*/ }
+                {/*        >*/ }
+                {/*            <ImgCrop rotationSlider>*/ }
+                {/*                <Upload*/ }
+                {/*                    listType="picture-card"*/ }
+                {/*                    fileList={ fileList }*/ }
+                {/*                    onChange={ onChange }*/ }
+                {/*                    onPreview={ onPreview }*/ }
+                {/*                >*/ }
+                {/*                    { fileList.length < 5 && "+ Upload" }*/ }
+                {/*                </Upload>*/ }
+                {/*            </ImgCrop>*/ }
+                {/*        </Form.Item>*/ }
+                {/*    </Col>*/ }
+                {/*</Row>*/ }
                 <Row>
                     <Col flex="1">
                         <Form.Item className="flex justify-end">

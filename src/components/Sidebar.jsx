@@ -71,7 +71,9 @@ export const Sidebar = () => {
                         {/*Desktop version*/ }
                         <nav className="flex-col gap-6 hidden md:flex">
                             { sideLinks.map((sideLink) => {
-                                return (
+                                if (sideLink.id === 7) {
+                                    return;
+                                } else return (
                                     <MemoizedTooltip key={ sideLink.id } placement="right" title={ sideLink.name }>
                                         <NavLink
                                             to={ sideLink.path }
@@ -88,7 +90,7 @@ export const Sidebar = () => {
                                         <span
                                             id="project-link"
                                             className="border-none flex items-center justify-center">
-                                            { activeNavLink === sideLink.id ? sideLink.svg.active : sideLink.svg.inactive }
+                                            { (activeNavLink === sideLink.id || location.pathname.includes(sideLink.path)) ? sideLink.svg.active : sideLink.svg.inactive }
                                         </span>
                                         </NavLink>
                                     </MemoizedTooltip>
@@ -130,7 +132,9 @@ export const Sidebar = () => {
                                 {/*Mobile version*/ }
                                 <nav className="flex flex-col gap-2 w-full md:hidden">
                                     { sideLinks.map((sideLink) => {
-                                        return (
+                                        if (sideLink.id === 7) {
+                                            return;
+                                        } else return (
                                             <NavLink
                                                 key={ sideLink.id }
                                                 to={ sideLink.path }
@@ -146,8 +150,8 @@ export const Sidebar = () => {
                                                 <span
                                                     id="project-link"
                                                     className="border-none flex items-center justify-center">
-                                                    { activeNavLink === sideLink.id ? sideLink.svg.active : sideLink.svg.inactive }
-                                                    <p className={ `${ activeNavLink === sideLink.id ? "text-white" : "text-gray-800" } font-semibold ml-4 select-none  text-sm` }>
+                                                    { (activeNavLink === sideLink.id || location.pathname.includes(sideLink.path)) ? sideLink.svg.active : sideLink.svg.inactive }
+                                                    <p className={ `${ (activeNavLink === sideLink.id || location.pathname.includes(sideLink.path)) ? "text-white" : "text-gray-800" } font-semibold ml-4 select-none  text-sm` }>
                                                         { sideLink.name }
                                                     </p>
                                                 </span>

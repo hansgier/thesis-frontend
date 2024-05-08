@@ -70,6 +70,17 @@ export const sideLinks = [
             inactive:
                 <PiUsersThree className="h-6 w-6 md:w-6 md:h-6" color={ "#5c5c5c" } />
         }
+    },
+    {
+        id: 7,
+        name: "SingleProject",
+        path: "/projects/",
+        svg: {
+            active:
+                <GrProjects className="h-5 w-5 md:w-5 md:h-5" size={ 18 } color={ "#ffffff" } />,
+            inactive:
+                <GrProjects className="h-5 w-5 md:w-5 md:h-5" size={ 18 } color={ "#5c5c5c" } />
+        }
     }
 ];
 

@@ -16,7 +16,8 @@ import { AnnouncementCard } from "./AnnouncementCard.jsx";
 import { AddEditUser } from "./AddEditUser.jsx";
 import { DetailsUpdate } from "./DetailsUpdate.jsx";
 import { ImageCarousel } from "./ImageCarousel.jsx";
-
+import { LikeDislikeButtons } from "./LikeDislikeButtons.jsx";
+import { FilterSort } from "./FilterSort.jsx";
 
 export {
     Sidebar,
@@ -36,5 +37,7 @@ export {
     AnnouncementCard,
     AddEditUser,
     DetailsUpdate,
-    ImageCarousel
+    ImageCarousel,
+    LikeDislikeButtons,
+    FilterSort
 };

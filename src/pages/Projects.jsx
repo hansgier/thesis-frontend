@@ -1,11 +1,13 @@
-import { FilterSort } from "../components/FilterSort.jsx";
-import { InputSelect, ProjectContainer } from "../components/index.jsx";
+import { FilterSort, InputSelect, ProjectContainer } from "../components/index.jsx";
 import { project_tags } from "../utils/data-components.jsx";
 import { useLocation } from "react-router-dom";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
+import { GoPlus } from "react-icons/go";
+import { Button, FloatButton, Form, Input, Modal, Space } from "antd";
 
 export const Projects = () => {
     const location = useLocation();
+    const [addProjectMode, setAddProjectMode] = useState(false);
     // Ref for the scrollable div
     const scrollDivRef = useRef(null);
 
@@ -76,6 +78,27 @@ export const Projects = () => {
                     <ProjectContainer />
                 </div>
             </div>
+            <FloatButton icon={ <GoPlus /> } type="primary" style={ { right: 24, backgroundColor: "#172554" } }
+                         onClick={ () => setAddProjectMode(!addProjectMode) } />
+            <Modal centered title="Add Project" open={ addProjectMode } onCancel={ () => setAddProjectMode(false) }
+                   footer={ null }>
+                {/*TODO: tiwasi ning add project modal*/ }
+                <div>A</div>
+                <Form scrollToFirstError="">
+                    <Form.Item>
+                        <Input />
+                    </Form.Item>
+
+                    <Form.Item>
+                        <Space>
+                            <Button htmlType="reset">Reset</Button>
+                            <Button type="primary" htmlType="submit">
+                                Submit
+                            </Button>
+                        </Space>
+                    </Form.Item>
+                </Form>
+            </Modal>
         </>
     );
 };
