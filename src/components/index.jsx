@@ -18,6 +18,7 @@ import { DetailsUpdate } from "./DetailsUpdate.jsx";
 import { ImageCarousel } from "./ImageCarousel.jsx";
 import { LikeDislikeButtons } from "./LikeDislikeButtons.jsx";
 import { FilterSort } from "./FilterSort.jsx";
+import { AddComponent } from "./AddComponent.jsx";
 
 export {
     Sidebar,
@@ -39,5 +40,6 @@ export {
     DetailsUpdate,
     ImageCarousel,
     LikeDislikeButtons,
-    FilterSort
+    FilterSort,
+    AddComponent
 };

@@ -1,11 +1,15 @@
-import { FilterSort, InputSelect, ProjectContainer } from "../components/index.jsx";
-import { project_tags } from "../utils/data-components.jsx";
+import { AddComponent, FilterSort, InputSelect, ProjectContainer } from "../components/index.jsx";
+import { project_attributes, project_tags } from "../utils/data-components.jsx";
 import { useLocation } from "react-router-dom";
 import { useEffect, useRef, useState } from "react";
 import { GoPlus } from "react-icons/go";
-import { Button, FloatButton, Form, Input, Modal, Space } from "antd";
+import { FloatButton, Modal } from "antd";
+import { useDispatch, useSelector } from "react-redux";
+import { toggleAddProjectMode } from "../app/features/user/userSlice.js";
 
 export const Projects = () => {
+    const { isAddProjectMode } = useSelector((store) => store.user);
+    const dispatch = useDispatch();
     const location = useLocation();
     const [addProjectMode, setAddProjectMode] = useState(false);
     // Ref for the scrollable div
@@ -79,25 +83,12 @@ export const Projects = () => {
                 </div>
             </div>
             <FloatButton icon={ <GoPlus /> } type="primary" style={ { right: 24, backgroundColor: "#172554" } }
-                         onClick={ () => setAddProjectMode(!addProjectMode) } />
-            <Modal centered title="Add Project" open={ addProjectMode } onCancel={ () => setAddProjectMode(false) }
-                   footer={ null }>
-                {/*TODO: tiwasi ning add project modal*/ }
-                <div>A</div>
-                <Form scrollToFirstError="">
-                    <Form.Item>
-                        <Input />
-                    </Form.Item>
-
-                    <Form.Item>
-                        <Space>
-                            <Button htmlType="reset">Reset</Button>
-                            <Button type="primary" htmlType="submit">
-                                Submit
-                            </Button>
-                        </Space>
-                    </Form.Item>
-                </Form>
+                         onClick={ () => dispatch(toggleAddProjectMode()) } />
+            <Modal centered title="Add Project" open={ isAddProjectMode }
+                   onCancel={ () => dispatch(toggleAddProjectMode()) }
+                   footer={ null } wrapClassName="add-project-modal" width={ 900 }>
+                <div className="pb-1 border-b-2 mb-3 select-none">Fill in the details of the new project.</div>
+                <AddComponent attributes={ project_attributes } />
             </Modal>
         </>
     );

@@ -154,3 +154,15 @@
     padding: 0 !important;
     background-color: transparent;
 }
+
+.ant-modal-title {
+    user-select: none;
+}
+
+.add-project-modal .ant-modal-content {
+    margin: 0 !important;
+    padding-top: 24px !important;
+    padding-right: 8px !important;
+    padding-bottom: 1px !important;
+    padding-left: 24px !important;
+}

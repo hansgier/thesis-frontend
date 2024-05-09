@@ -5,6 +5,7 @@ const initialState = {
     isSidebarOpen: false,
     isNotificationsOpen: false,
     isFeedbackOpen: false,
+    isAddProjectMode: false,
     view: "stack",
     user: null
 };
@@ -21,14 +22,17 @@ const userSlice = createSlice({
         },
         toggleFeedback: (state) => {
             state.isFeedbackOpen = !state.isFeedbackOpen;
+        },
+        toggleAddProjectMode: (state) => {
+            state.isAddProjectMode = !state.isAddProjectMode;
         }
-
     }
 });
 
 export const {
     toggleSidebar,
     toggleNotifications,
-    toggleFeedback
+    toggleFeedback,
+    toggleAddProjectMode
 } = userSlice.actions;
 export default userSlice.reducer;

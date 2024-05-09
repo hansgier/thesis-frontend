@@ -225,3 +225,101 @@ export const projectDetails_sidebar = [
         color: "bg-fuchsia-600"
     }
 ];
+
+export const project_attributes = [
+    {
+        name: "Title",
+        value: "title",
+        placeholder: "Enter title of the project",
+        input_type: "text",
+        display: "block",
+        required: true,
+        required_msg: "Title is required"
+    },
+    {
+        name: "Description",
+        value: "description",
+        placeholder: "Enter description of the project",
+        input_type: "textarea",
+        autoSize: { minRows: 6, maxRows: 10 },
+        display: "block",
+        required: true,
+        required_msg: "Description is required"
+    },
+    {
+        name: "Progress",
+        value: "progress",
+        placeholder: "Enter project progress",
+        input_type: "range",
+        display: "block",
+        required: false
+    },
+    {
+        name: "Locations",
+        value: "barangay_iDs",
+        placeholder: "Enter barangay(s)",
+        input_type: "multiple_select",
+        display: "block",
+        required: true,
+        required_msg: "Title is required"
+    },
+    {
+        name: "Start-End Date",
+        value: "start_date",
+        placeholder: "Enter start date",
+        input_type: "date",
+        display: "grid",
+        required: true,
+        required_msg: "Title is required"
+    },
+    {
+        name: "Completion date",
+        value: "completion_date",
+        placeholder: "Enter completion date",
+        input_type: "completion_date",
+        display: "grid",
+        required: false
+    },
+    {
+        name: "Status",
+        value: "status",
+        placeholder: "Enter status",
+        input_type: "select",
+        display: "grid",
+        required: true,
+        required_msg: "Status is required"
+    },
+    {
+        name: "Cost",
+        value: "cost",
+        placeholder: "Enter cost",
+        input_type: "number",
+        display: "grid",
+        required: false
+    },
+    {
+        name: "Implementing agency",
+        value: "implementing_agency",
+        placeholder: "Enter IA",
+        input_type: "text",
+        display: "grid",
+        required: false
+    },
+    {
+        name: "Contract Term",
+        value: "contract_term",
+        placeholder: "Enter contract term in years",
+        input_type: "number",
+        display: "grid",
+        required: false
+    },
+    {
+        name: "Contractor",
+        value: "contractor",
+        placeholder: "Enter contractor name",
+        input_type: "text",
+        display: "grid",
+        required: false
+    }
+
+];
