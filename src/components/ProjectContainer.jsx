@@ -13,7 +13,7 @@ export const ProjectContainer = ({ onProjectClick }) => {
                 <div className="flex gap-4 items-center pb-4 pt-6 px-4 md:px-6">
                     <div className="flex items-center justify-center">
                         <svg viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" fill="#000000"
-                             preserveAspectRatio className="w-6 md:w-8">
+                             preserveAspectRatio="true" className="w-6 md:w-8">
                             <g id="SVGRepo_bgCarrier" strokeWidth="0"></g>
                             <g id="SVGRepo_tracerCarrier" strokeLinecap="round" strokeLinejoin="round"></g>
                             <g id="SVGRepo_iconCarrier">

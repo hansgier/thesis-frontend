@@ -82,7 +82,13 @@ export const Projects = () => {
                     <ProjectContainer />
                 </div>
             </div>
-            <FloatButton icon={ <GoPlus /> } type="primary" style={ { right: 24, backgroundColor: "#172554" } }
+            <FloatButton icon={ <GoPlus /> } type="primary"
+                         className="float-add-btn"
+                         style={ {
+                             right: 24,
+                             width: "50px",
+                             height: "50px"
+                         } }
                          onClick={ () => dispatch(toggleAddProjectMode()) } />
             <Modal centered title="Add Project" open={ isAddProjectMode }
                    onCancel={ () => dispatch(toggleAddProjectMode()) }

@@ -1,9 +1,9 @@
 import { useDispatch, useSelector } from "react-redux";
 import { Button, Col, Form, Input, Modal, Row } from "antd";
 import { toggleFeedback } from "../app/features/user/userSlice.js";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 
-export const Feedback = () => {
+export const Feedback = React.memo(() => {
     const { isFeedbackOpen } = useSelector((store) => store.user);
     const dispatch = useDispatch();
     const [form] = Form.useForm();
@@ -24,6 +24,9 @@ export const Feedback = () => {
         image.src = src;
         const imgWindow = window.open(src);
         imgWindow?.document.write(image.outerHTML);
+    };
+
+    const resetFields = () => {
     };
 
     useEffect(() => {
@@ -107,4 +110,4 @@ export const Feedback = () => {
             </Form>
         </Modal>
     );
-};
+});

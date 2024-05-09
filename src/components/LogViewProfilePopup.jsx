@@ -19,11 +19,11 @@ export const LogViewProfilePopup = ({ comp_id, mode }) => {
             ' rounded-lg shadow-md space-y-2 ` }>
             <NavLink to="/profile"
                      onClick={ () => dispatch(toggleSidebar()) }
-                     className="flex hover:bg-gray-500 hover:bg-opacity-10 items-center justify-between p-2 rounded-md text-gray-700"
+                     className="flex hover:bg-gray-500 hover:bg-opacity-10 items-center justify-between p-2 rounded-md text-gray-700 text-sm md:text-base"
                      type="button">
                 View Profile
                 <svg viewBox="0 -3 123 123" version="1.1" xmlns="http://www.w3.org/2000/svg"
-                     xmlnsXlink="http://www.w3.org/1999/xlink" fill="#000000" className="w-5">
+                     xmlnsXlink="http://www.w3.org/1999/xlink" fill="#000000" className="w-4 md:w-5">
                     <g id="SVGRepo_bgCarrier" strokeWidth="0"></g>
                     <g id="SVGRepo_tracerCarrier" strokeLinecap="round" strokeLinejoin="round"></g>
                     <g id="SVGRepo_iconCarrier">
@@ -42,11 +42,11 @@ export const LogViewProfilePopup = ({ comp_id, mode }) => {
             </NavLink>
             <NavLink
                 to="/"
-                className="flex hover:bg-gray-500 hover:bg-opacity-10 items-center justify-between p-2 rounded-md text-gray-700"
+                className="flex hover:bg-gray-500 hover:bg-opacity-10 items-center justify-between p-2 rounded-md text-gray-700 text-sm md:text-base"
                 type="button">
                 Log out
                 <svg fill="#000000" viewBox="0 0 24 24" id="sign-out-2" data-name="Line Color"
-                     xmlns="http://www.w3.org/2000/svg" className="icon line-color w-5">
+                     xmlns="http://www.w3.org/2000/svg" className="icon line-color w-4 md:w-5">
                     <g id="SVGRepo_bgCarrier" strokeWidth="0"></g>
                     <g id="SVGRepo_tracerCarrier" strokeLinecap="round" strokeLinejoin="round"></g>
                     <g id="SVGRepo_iconCarrier">

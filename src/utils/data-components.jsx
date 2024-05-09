@@ -3,8 +3,8 @@ import { GrProjects, GrSystem } from "react-icons/gr";
 import { VscFeedback } from "react-icons/vsc";
 import { RiContactsBook2Line } from "react-icons/ri";
 import { PiSortAscendingBold, PiSortDescendingBold, PiUsersThree } from "react-icons/pi";
-import { HiOutlineInboxStack } from "react-icons/hi2";
 import { FaListUl, FaSortAlphaDownAlt, FaSortAlphaUp } from "react-icons/fa";
+import { IoFileTrayStackedOutline } from "react-icons/io5";
 
 export const sideLinks = [
     {
@@ -98,7 +98,7 @@ export const filterSort = {
         {
             id: 1,
             name: "stack",
-            icon: <HiOutlineInboxStack size={ 16 } className="hover:text-Thesis-200 text-gray-700" />
+            icon: <IoFileTrayStackedOutline size={ 16 } className="hover:text-Thesis-200 text-gray-700" />
         },
         {
             id: 2,
@@ -309,7 +309,7 @@ export const project_attributes = [
         name: "Contract Term",
         value: "contract_term",
         placeholder: "Enter contract term in years",
-        input_type: "number",
+        input_type: "text",
         display: "grid",
         required: false
     },
@@ -321,5 +321,4 @@ export const project_attributes = [
         display: "grid",
         required: false
     }
-
 ];

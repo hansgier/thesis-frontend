@@ -35,6 +35,7 @@ export const FilterSort = ({ page, filters }) => {
                                 { filterSort.sort.map((sort) => {
                                     return (
                                         <button
+                                            key={ sort.id }
                                             className="border disabled:opacity-50 focus-visible:ring-Thesis-50 focus:border-Thesis-200 focus:outline-none font-normal h-9 hover:bg-white hover:border-green-800 hover:text-gray-700 items-center justify-center px-3 rounded-md text-gray-700 text-sm transition-colors whitespace-nowrap">
                                             { sort.name }
                                         </button>
@@ -104,13 +105,13 @@ export const FilterSort = ({ page, filters }) => {
                         <button
                             className="flex focus-visible:outline-none focus:border-none focus:outline-none hover:bg-blue-50 hover:duration-200 hover:transition-all items-center mr-1 outline-none p-2 rounded-lg">
                             <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-4">
-                                <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
-                                <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+                                <g id="SVGRepo_bgCarrier" strokeWidth="0"></g>
+                                <g id="SVGRepo_tracerCarrier" strokeLinecap="round" strokeLinejoin="round"></g>
                                 <g id="SVGRepo_iconCarrier">
                                     <path
                                         d="M3 4.6C3 4.03995 3 3.75992 3.10899 3.54601C3.20487 3.35785 3.35785 3.20487 3.54601 3.10899C3.75992 3 4.03995 3 4.6 3H19.4C19.9601 3 20.2401 3 20.454 3.10899C20.6422 3.20487 20.7951 3.35785 20.891 3.54601C21 3.75992 21 4.03995 21 4.6V6.33726C21 6.58185 21 6.70414 20.9724 6.81923C20.9479 6.92127 20.9075 7.01881 20.8526 7.10828C20.7908 7.2092 20.7043 7.29568 20.5314 7.46863L14.4686 13.5314C14.2957 13.7043 14.2092 13.7908 14.1474 13.8917C14.0925 13.9812 14.0521 14.0787 14.0276 14.1808C14 14.2959 14 14.4182 14 14.6627V17L10 21V14.6627C10 14.4182 10 14.2959 9.97237 14.1808C9.94787 14.0787 9.90747 13.9812 9.85264 13.8917C9.7908 13.7908 9.70432 13.7043 9.53137 13.5314L3.46863 7.46863C3.29568 7.29568 3.2092 7.2092 3.14736 7.10828C3.09253 7.01881 3.05213 6.92127 3.02763 6.81923C3 6.70414 3 6.58185 3 6.33726V4.6Z"
-                                        stroke="#5c5c5c" stroke-width="2" stroke-linecap="round"
-                                        stroke-linejoin="round"></path>
+                                        stroke="#5c5c5c" strokeWidth="2" strokeLinecap="round"
+                                        strokeLinejoin="round"></path>
                                 </g>
                             </svg>
                         </button>
@@ -118,8 +119,8 @@ export const FilterSort = ({ page, filters }) => {
                     <div className="flex items-center gap-2">
                         <div className="gap-2 hidden items-center select-none lg:block">
                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                                 fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                 stroke-linejoin="round" className="w-4 h-4">
+                                 fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"
+                                 strokeLinejoin="round" className="w-4 h-4">
                                 <path d="m21 16-4 4-4-4"></path>
                                 <path d="M17 20V4"></path>
                                 <path d="m3 8 4-4 4 4"></path>
@@ -146,11 +147,11 @@ export const FilterSort = ({ page, filters }) => {
                     <button
                         className="flex focus-visible:outline-none focus:border-none focus:outline-none hover:bg-blue-50 hover:duration-200 hover:transition-all items-center mr-4 outline-none p-2 rounded-lg lg:hidden">
                         <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="h-6 w-6">
-                            <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
-                            <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+                            <g id="SVGRepo_bgCarrier" strokeWidth="0"></g>
+                            <g id="SVGRepo_tracerCarrier" strokeLinecap="round" strokeLinejoin="round"></g>
                             <g id="SVGRepo_iconCarrier">
                                 <path d="M13 12H21M13 8H21M13 16H21M6 7V17M6 7L3 10M6 7L9 10" stroke="#5c5c5c"
-                                      stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                                      strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"></path>
                             </g>
                         </svg>
                     </button>

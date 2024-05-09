@@ -166,3 +166,11 @@
     padding-bottom: 1px !important;
     padding-left: 24px !important;
 }
+
+.float-add-btn .ant-float-btn-body {
+    background-color: #0c4a6e !important;
+}
+
+.float-add-btn .ant-float-btn-body:hover {
+    background-color: #1590da !important;
+}
