@@ -1,5 +1,5 @@
 import { AddComponent, FilterSort, InputSelect, ProjectContainer } from "../components/index.jsx";
-import { project_attributes, project_tags } from "../utils/data-components.jsx";
+import { project_tags } from "../utils/data-components.jsx";
 import { useLocation } from "react-router-dom";
 import { useEffect, useRef, useState } from "react";
 import { GoPlus } from "react-icons/go";
@@ -94,7 +94,7 @@ export const Projects = () => {
                    onCancel={ () => dispatch(toggleAddProjectMode()) }
                    footer={ null } wrapClassName="add-project-modal" width={ 900 }>
                 <div className="pb-1 border-b-2 mb-3 select-none">Fill in the details of the new project.</div>
-                <AddComponent attributes={ project_attributes } />
+                <AddComponent />
             </Modal>
         </>
     );

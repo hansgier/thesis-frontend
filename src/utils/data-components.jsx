@@ -226,9 +226,11 @@ export const projectDetails_sidebar = [
     }
 ];
 
+
 export const project_attributes = [
     {
-        name: "Title",
+        label: "Title",
+        name: "title",
         value: "title",
         placeholder: "Enter title of the project",
         input_type: "text",
@@ -237,9 +239,10 @@ export const project_attributes = [
         required_msg: "Title is required"
     },
     {
-        name: "Description",
+        label: "Description",
+        name: "description",
         value: "description",
-        placeholder: "Enter description of the project",
+        placeholder: "Write a description for the project",
         input_type: "textarea",
         autoSize: { minRows: 6, maxRows: 10 },
         display: "block",
@@ -247,7 +250,8 @@ export const project_attributes = [
         required_msg: "Description is required"
     },
     {
-        name: "Progress",
+        label: "Progress",
+        name: "progress",
         value: "progress",
         placeholder: "Enter project progress",
         input_type: "range",
@@ -255,33 +259,54 @@ export const project_attributes = [
         required: false
     },
     {
-        name: "Locations",
-        value: "barangay_iDs",
+        label: "Locations",
+        name: "locations",
+        value: "barangayIds",
         placeholder: "Enter barangay(s)",
         input_type: "multiple_select",
         display: "block",
         required: true,
-        required_msg: "Title is required"
+        required_msg: "Location is required"
     },
     {
-        name: "Start-End Date",
+        label: "Tags",
+        name: "tags",
+        value: "tagsIds",
+        placeholder: "Enter tag(s)",
+        input_type: "multiple_select",
+        display: "block",
+        required: true,
+        required_msg: "Please select tag(s)"
+    },
+    {
+        label: "Start Date",
+        name: "start_date",
         value: "start_date",
-        placeholder: "Enter start date",
         input_type: "date",
         display: "grid",
         required: true,
-        required_msg: "Title is required"
+        required_msg: "Start date is required"
     },
     {
-        name: "Completion date",
-        value: "completion_date",
-        placeholder: "Enter completion date",
-        input_type: "completion_date",
+        label: "Due Date",
+        name: "due_date",
+        value: "due_date",
+        input_type: "date",
         display: "grid",
         required: false
     },
     {
-        name: "Status",
+        label: "Completion date",
+        name: "completion_date",
+        value: "completion_date",
+        placeholder: "Enter completion date",
+        input_type: "date",
+        display: "grid",
+        required: false
+    },
+    {
+        label: "Status",
+        name: "status",
         value: "status",
         placeholder: "Enter status",
         input_type: "select",
@@ -290,15 +315,17 @@ export const project_attributes = [
         required_msg: "Status is required"
     },
     {
-        name: "Cost",
+        label: "Cost",
+        name: "cost",
         value: "cost",
         placeholder: "Enter cost",
-        input_type: "number",
+        input_type: "cost",
         display: "grid",
         required: false
     },
     {
-        name: "Implementing agency",
+        label: "Implementing agency",
+        name: "implementing_agency",
         value: "implementing_agency",
         placeholder: "Enter IA",
         input_type: "text",
@@ -306,19 +333,44 @@ export const project_attributes = [
         required: false
     },
     {
-        name: "Contract Term",
+        label: "Contract Term",
+        name: "contract_term",
         value: "contract_term",
-        placeholder: "Enter contract term in years",
+        placeholder: "Enter contract term",
         input_type: "text",
         display: "grid",
         required: false
     },
     {
-        name: "Contractor",
+        label: "Contractor",
+        name: "contractor",
         value: "contractor",
         placeholder: "Enter contractor name",
         input_type: "text",
         display: "grid",
         required: false
+    }
+];
+
+export const project_status = [
+    {
+        label: "Ongoing",
+        value: "ongoing"
+    },
+    {
+        label: "Completed",
+        value: "completed"
+    },
+    {
+        label: "Cancelled",
+        value: "cancelled"
+    },
+    {
+        label: "On hold",
+        value: "on-hold"
+    },
+    {
+        label: "Planned",
+        value: "planned"
     }
 ];
