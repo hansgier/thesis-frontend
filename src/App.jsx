@@ -3,8 +3,9 @@ import {
     Announcements,
     Contacts,
     Dashboard,
-    FeedbacksAdmin,
+    LoginRegister,
     Messages,
+    NotFound,
     Profile,
     Projects,
     SharedLayout,
@@ -18,7 +19,7 @@ function App() {
     return (
         <BrowserRouter>
             <Routes>
-                <Route path="/" element="" />
+                <Route index element={ <LoginRegister /> } />
                 <Route path="/" element={ <SharedLayout /> }>
                     <Route path="dashboard" element={ <Dashboard /> } />
                     <Route path="projects" element={ <Projects /> } />
@@ -27,9 +28,9 @@ function App() {
                     <Route path="messages" element={ <Messages /> } />
                     <Route path="contacts" element={ <Contacts /> } />
                     <Route path="profile" element={ <Profile /> } />
-                    <Route path="feedbacks" element={ <FeedbacksAdmin /> } />
                     <Route path="users" element={ <Users /> } />
                 </Route>
+                <Route path="*" element={ <NotFound /> } />
             </Routes>
         </BrowserRouter>
     );

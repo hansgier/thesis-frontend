@@ -1,27 +1,74 @@
 import { filterSort } from "../utils/data-components.jsx";
+import { useDispatch, useSelector } from "react-redux";
+import { resetView, toggleView } from "../app/features/user/userSlice.js";
+import { useEffect, useState } from "react";
+import { RiSortAlphabetAsc, RiSortAlphabetDesc, RiSortAsc, RiSortDesc } from "react-icons/ri";
+import { Modal } from "antd";
+import { Filters } from "./Filters.jsx";
 
+const adminMode = true;
+//TODO: admin logic where it will change according to user roles
 
-export const FilterSort = ({ page, filters }) => {
+const sortButtons = {
+    newest: {
+        key: 0,
+        icon: <RiSortAsc />
+    },
+    oldest: {
+        key: 1,
+        icon: <RiSortDesc />
+    },
+    az: {
+        key: 2,
+        icon: <RiSortAlphabetAsc />
+    },
+    za: {
+        key: 3,
+        icon: <RiSortAlphabetDesc />
+    }
+};
+
+export const FilterSort = ({ page }) => {
+    const { view } = useSelector((store) => store.user);
+    const [viewClicked, setViewClicked] = useState(1);
+    const [toggleSort, setToggleSort] = useState(0);
+    const [openFilterMobile, setOpenFilterMobile] = useState(false);
+    const dispatch = useDispatch();
+
+    useEffect(() => {
+        dispatch(resetView());
+    }, []);
+
+    const toggleNextSort = () => {
+        setToggleSort((prevToggleSort) => (prevToggleSort + 1) % 4);
+    };
+
     return (
         <>
             <div
                 className="bg-white border hidden mb-6 overflow-hidden pt-0 relative rounded-2xl md:fixed md:flex md:h-[calc(100%-84px)] md:mr-4 md:p-4 md:w-64 md:z-50"
             >
                 <div className="w-full">
-                    <h2 className="font-semibold select-none text-xl">{ page }</h2>
-                    <div className="pt-3 pb-3 px-0 space-y-4 flex flex-col">
+                    <h2 className="font-semibold select-none text-xl mb-3">{ page }</h2>
+
+                    <div className="pt-0 pb-3 px-0 space-y-4 flex flex-col">
 
                         {/*-----------------------VIEW-----------------------*/ }
                         <div className="space-y-2">
                             <span className="font-extrabold select-none text-Thesis-300 text-xs">VIEW</span>
                             <div className="gap-2 grid grid-cols-2">
-                                { filterSort.view.map((view) => {
+                                { filterSort.view.map((v) => {
                                     return (
                                         <button
-                                            key={ view.id }
-                                            id={ view.id }
-                                            className="border flex focus-visible:ring-Thesis-50 focus:border focus:border-Thesis-200 focus:outline-none group hover:bg-white hover:border-Thesis-300 hover:duration-200 hover:transition-all items-center justify-center p-2 rounded-lg">
-                                            { view.icon }
+                                            key={ v.id }
+                                            id={ v.id }
+                                            onClick={ () => {
+                                                if (v.id !== viewClicked)
+                                                    dispatch(toggleView());
+                                                setViewClicked(v.id);
+                                            } }
+                                            className={ `border ${ (viewClicked === v.id) && "border-sky-900" } flex group hover:bg-white hover:border-Thesis-300 hover:duration-200 hover:transition-all items-center justify-center p-2 rounded-lg` }>
+                                            { v.icon }
                                         </button>
                                     );
                                 }) }
@@ -45,31 +92,12 @@ export const FilterSort = ({ page, filters }) => {
                         </div>
 
                         {/*-----------------------FILTER SECTION-----------------------*/ }
-                        <form className="space-y-2">
-                            <span className="font-extrabold select-none text-pink-700 text-xs">FILTER</span>
-
-                            {/*Filters*/ }
-                            <div className="space-y-2 overflow-y-auto pr-2 flex flex-col h-[292px]">
-                                { filters }
-                            </div>
-
-                            {/*Clear all and Apply buttons*/ }
-                            <div className="gap-2 grid grid-cols-2">
-                                <button
-                                    type="button"
-                                    className="bg-white border border-pink-700 font-medium hover:bg-pink-50 py-1 rounded-md text-pink-700 text-sm">Clear
-                                                                                                                                                   Filters
-                                </button>
-                                <button
-                                    type="button"
-                                    className="bg-pink-700 font-semibold hover:bg-opacity-80 py-1 rounded-md text-sm text-white">Apply
-                                                                                                                                 Filters
-                                </button>
-                            </div>
-                        </form>
+                        <Filters mode="desktop" page={ page } />
                     </div>
                 </div>
             </div>
+
+
             <div className="fixed w-full z-30 md:hidden bg-[#f1f4f9]">
                 <div
                     className="bg-white border-b-2 hidden mb-0 mx-4 overflow-hidden pb-4 pt-0 relative rounded-xl md:hidden md:mx-0 md:pt-3">
@@ -80,8 +108,14 @@ export const FilterSort = ({ page, filters }) => {
                 <div
                     className="bg-white flex flex-row gap-2 justify-between mx-3 my-2 rounded-xl md:hidden lg:flex-row">
                     <div className="flex items-center">
+                        {/*--------------STACK VIEW--------------*/ }
                         <button
-                            className="flex focus-visible:ring-Thesis-50 focus:border focus:border-Thesis-200 focus:outline-none group hover:bg-blue-50 hover:duration-200 hover:transition-all items-center mx-1 p-2 rounded-lg">
+                            onClick={ () => {
+                                if (filterSort.view[0].id !== viewClicked)
+                                    dispatch(toggleView());
+                                setViewClicked(filterSort.view[0].id);
+                            } }
+                            className={ `${ viewClicked === 1 && "border-sky-900 border" } flex group hover:bg-blue-50 hover:duration-200 hover:transition-all items-center mx-1 p-2 rounded-lg` }>
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="1em"
                                  height="1em" className="group-hover:text-gray-700 text-gray-500">
                                 <g>
@@ -91,8 +125,14 @@ export const FilterSort = ({ page, filters }) => {
                                 </g>
                             </svg>
                         </button>
+                        {/*--------------LIST VIEW--------------*/ }
                         <button
-                            className="flex focus-visible:ring-Thesis-50 focus:border focus:border-Thesis-200 focus:outline-none group hover:bg-blue-50 hover:duration-200 hover:transition-all items-center mx-1 p-2 rounded-lg">
+                            onClick={ () => {
+                                if (filterSort.view[1].id !== viewClicked)
+                                    dispatch(toggleView());
+                                setViewClicked(filterSort.view[1].id);
+                            } }
+                            className={ `${ viewClicked === 2 && "border-sky-900 border" } flex group hover:bg-blue-50 hover:duration-200 hover:transition-all items-center mx-1 p-2 rounded-lg` }>
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="1em"
                                  height="1em" className="group-hover:text-gray-700 text-gray-500">
                                 <g>
@@ -102,7 +142,9 @@ export const FilterSort = ({ page, filters }) => {
                                 </g>
                             </svg>
                         </button>
+                        {/*--------------FILTERS--------------*/ }
                         <button
+                            onClick={ () => setOpenFilterMobile(true) }
                             className="flex focus-visible:outline-none focus:border-none focus:outline-none hover:bg-blue-50 hover:duration-200 hover:transition-all items-center mr-1 outline-none p-2 rounded-lg">
                             <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-4">
                                 <g id="SVGRepo_bgCarrier" strokeWidth="0"></g>
@@ -115,6 +157,12 @@ export const FilterSort = ({ page, filters }) => {
                                 </g>
                             </svg>
                         </button>
+                        <Filters mode="desktop" />
+                        <Modal centered footer={ null } title="Filter Projects" open={ openFilterMobile }
+                               onCancel={ () => setOpenFilterMobile(false) }>
+                            {/*-----------------------FILTER SECTION-----------------------*/ }
+                            <Filters mode="mobile" page={ page } />
+                        </Modal>
                     </div>
                     <div className="flex items-center gap-2">
                         <div className="gap-2 hidden items-center select-none lg:block">
@@ -144,16 +192,14 @@ export const FilterSort = ({ page, filters }) => {
                             </button>
                         </div>
                     </div>
+                    {/*--------------SORT BUTTON--------------*/ }
                     <button
+                        onClick={ toggleNextSort }
                         className="flex focus-visible:outline-none focus:border-none focus:outline-none hover:bg-blue-50 hover:duration-200 hover:transition-all items-center mr-4 outline-none p-2 rounded-lg lg:hidden">
-                        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="h-6 w-6">
-                            <g id="SVGRepo_bgCarrier" strokeWidth="0"></g>
-                            <g id="SVGRepo_tracerCarrier" strokeLinecap="round" strokeLinejoin="round"></g>
-                            <g id="SVGRepo_iconCarrier">
-                                <path d="M13 12H21M13 8H21M13 16H21M6 7V17M6 7L3 10M6 7L9 10" stroke="#5c5c5c"
-                                      strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"></path>
-                            </g>
-                        </svg>
+                        { toggleSort === sortButtons.newest.key && sortButtons.newest.icon }
+                        { toggleSort === sortButtons.oldest.key && sortButtons.oldest.icon }
+                        { toggleSort === sortButtons.az.key && sortButtons.az.icon }
+                        { toggleSort === sortButtons.za.key && sortButtons.za.icon }
                     </button>
                 </div>
             </div>

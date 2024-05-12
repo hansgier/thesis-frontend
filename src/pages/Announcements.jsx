@@ -1,11 +1,15 @@
-import { FloatButton } from "antd";
+import { FloatButton, Modal } from "antd";
 import { FilterSort } from "../components/FilterSort.jsx";
-import { project_tags } from "../utils/data-components.jsx";
-import { AnnouncementCard, InputSelect } from "../components/index.jsx";
+import { AddEditAnnouncementComponent, AnnouncementCard } from "../components/index.jsx";
 import { useLocation } from "react-router-dom";
 import { useEffect } from "react";
+import { GoPlus } from "react-icons/go";
+import { toggleAddAnnouncementMode } from "../app/features/user/userSlice.js";
+import { useDispatch, useSelector } from "react-redux";
 
 export const Announcements = () => {
+    const { isAddAnnouncementMode } = useSelector((store) => store.user);
+    const dispatch = useDispatch();
     const location = useLocation();
 
     useEffect(() => {
@@ -16,14 +20,7 @@ export const Announcements = () => {
     return (
         <>
             {/*-----------------------FILTER SORT SECTION-----------------------*/ }
-            <FilterSort page="Projects" filters={ (
-                <>
-                    <InputSelect placeholder="Type"
-                                 options={ project_tags } />
-                    <InputSelect placeholder="Posted By"
-                                 options={ project_tags } />
-                </>
-            ) } />
+            <FilterSort page="Announcements" />
 
             {/*-----------------------ANNOUNCEMENTS SECTION-----------------------*/ }
             <div
@@ -52,8 +49,21 @@ export const Announcements = () => {
                                   postedBy="City Government" dateTime="March 23, 2023" />
                 <AnnouncementCard type="basic" title="Concert unya" content="Dili daw madayon haha"
                                   postedBy="Brgy. Linao" dateTime="March 23, 2023" />
-                <FloatButton.BackTop />
             </div>
+            <FloatButton icon={ <GoPlus /> } type="primary"
+                         className="float-add-btn"
+                         style={ {
+                             right: 24,
+                             width: "50px",
+                             height: "50px"
+                         } }
+                         onClick={ () => dispatch(toggleAddAnnouncementMode()) } />
+            <Modal centered title="Add Announcement" open={ isAddAnnouncementMode }
+                   onCancel={ () => dispatch(toggleAddAnnouncementMode()) }
+                   footer={ null } wrapClassName="add-project-modal" width={ 800 }>
+                <div className="pb-1 border-b-2 mb-3 select-none">Fill in the details of the new announcement.</div>
+                <AddEditAnnouncementComponent mode="add" />
+            </Modal>
         </>
     );
 };

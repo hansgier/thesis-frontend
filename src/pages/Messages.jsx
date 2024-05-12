@@ -1,5 +1,5 @@
 import { useWindowSize } from "../hooks/index.jsx";
-import { useEffect, useState } from "react";
+import { useEffect, useReducer } from "react";
 import { IoReturnDownBack, IoSearch } from "react-icons/io5";
 import { Button, Modal, Select, Tooltip } from "antd";
 import { project_tags } from "../utils/data-components.jsx";
@@ -9,74 +9,105 @@ import { useLocation } from "react-router-dom";
 const filterOption = (input, option) =>
     (option?.label ?? "").toLowerCase().includes(input.toLowerCase());
 
+const initialState = {
+    modalOpen: false,
+    searchData: [],
+    chatMode: false,
+    value: null,
+    convoSelected: null
+};
+
+const reducer = (state, action) => {
+    switch (action.type) {
+        case "toggleModalOpen":
+            return { ...state, modalOpen: !state.modalOpen };
+        case "setModalClose":
+            return { ...state, modalOpen: false };
+        case "setModalOpen":
+            return { ...state, modalOpen: true };
+        case "setSearchData":
+            return { ...state, searchData: action.payload };
+        case "toggleChatMode":
+            return { ...state, chatMode: !state.chatMode };
+        case "setChatMode":
+            return { ...state, chatMode: action.payload };
+        case "setValue":
+            return { ...state, value: action.payload };
+        case "setConvoSelected":
+            return { ...state, convoSelected: action.payload };
+        default:
+            throw new Error;
+    }
+};
+
 export const Messages = () => {
-    const [isModalOpen, setIsModalOpen] = useState(false);
-    const [data, setData] = useState([]);
-    const [chatMode, setChatMode] = useState(false);
-    const [value, setValue] = useState();
     const { width } = useWindowSize();
     const location = useLocation();
+    const [state, dispatch] = useReducer(reducer, initialState);
 
     useEffect(() => {
         if (location.pathname !== "/project" || location.pathname !== "/singleproject") {
             sessionStorage.setItem("scrollPosition", "0");
         }
     }, []);
+
     const handleSearch = (newValue) => {
-        setData(newValue ? [
-            {
-                value: "1",
-                text: "Brgy. Linao"
-            },
-            {
-                value: "2",
-                text: "Brgy. Linao"
-            },
-            {
-                value: "3",
-                text: "Brgy. Linao"
-            },
-            {
-                value: "4",
-                text: "Brgy. Linao"
-            },
-            {
-                value: "5",
-                text: "Brgy. Linao"
-            },
-            {
-                value: "6",
-                text: "Brgy. Linao"
-            },
-            {
-                value: "7",
-                text: "Brgy. Linao"
-            },
-            {
-                value: "8",
-                text: "Brgy. Linao"
-            },
-            {
-                value: "9",
-                text: "Brgy. Linao"
-            },
-            {
-                value: "10",
-                text: "Brgy. Linao"
-            },
-            {
-                value: "11",
-                text: "Brgy. Linao"
-            },
-            {
-                value: "12",
-                text: "Brgy. Linao"
-            }
-        ] : []);
+        dispatch({
+            type: "setSearchData", payload: newValue ? [
+                {
+                    value: "1",
+                    text: "Brgy. Linao"
+                },
+                {
+                    value: "2",
+                    text: "Brgy. Linao"
+                },
+                {
+                    value: "3",
+                    text: "Brgy. Linao"
+                },
+                {
+                    value: "4",
+                    text: "Brgy. Linao"
+                },
+                {
+                    value: "5",
+                    text: "Brgy. Linao"
+                },
+                {
+                    value: "6",
+                    text: "Brgy. Linao"
+                },
+                {
+                    value: "7",
+                    text: "Brgy. Linao"
+                },
+                {
+                    value: "8",
+                    text: "Brgy. Linao"
+                },
+                {
+                    value: "9",
+                    text: "Brgy. Linao"
+                },
+                {
+                    value: "10",
+                    text: "Brgy. Linao"
+                },
+                {
+                    value: "11",
+                    text: "Brgy. Linao"
+                },
+                {
+                    value: "12",
+                    text: "Brgy. Linao"
+                }
+            ] : []
+        });
     };
     const handleChange = (newValue) => {
-        setValue(newValue);
-        setIsModalOpen(false);
+        dispatch({ type: "setValue", payload: newValue });
+        dispatch({ type: "setModalClose" });
     };
 
     return (
@@ -91,7 +122,7 @@ export const Messages = () => {
                                 <h2 className="font-semibold select-none text-base md:text-lg"
                                     data-id="4">Conversations</h2>
                                 <button
-                                    onClick={ () => setIsModalOpen(!isModalOpen) }
+                                    onClick={ () => dispatch({ type: "toggleModalOpen" }) }
                                     className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-10 w-10"
                                     data-id="5">
                                     <IoSearch />
@@ -99,17 +130,17 @@ export const Messages = () => {
                                 <Modal
                                     title="Search a Conversation"
                                     centered
-                                    open={ isModalOpen }
+                                    open={ state.modalOpen }
                                     onOk={ () => {
-                                        setIsModalOpen(false);
+                                        dispatch({ type: "setModalClose" });
                                     } }
-                                    onCancel={ () => setIsModalOpen(false) }
+                                    onCancel={ () => dispatch({ type: "setModalClose" }) }
                                     footer={ null }
                                     styles={ { header: { userSelect: "none" } } }
                                 >
                                     <Select
                                         showSearch
-                                        value={ value }
+                                        value={ state.value }
                                         style={ { width: "100%" } }
                                         dropdownStyle={ { maxHeight: 400 } }
                                         placeholder="Search for barangay or city government"
@@ -126,7 +157,7 @@ export const Messages = () => {
                                 {/*-----------------------CONVERSATIONS-----------------------*/ }
                                 <div className="h-full space-y-2" data-id="7">
                                     {/*//TODO: map the conversations here*/ }
-                                    <div onClick={ () => setChatMode(true) }
+                                    <div onClick={ () => dispatch({ type: "setChatMode", payload: true }) }
                                          className="flex items-center gap-3 rounded-md bg-white p-3 hover:bg-sky-100 transition-all duration-200">
                                             <span
                                                 className="relative flex h-10 w-10 shrink-0 overflow-hidden rounded-full"
@@ -154,16 +185,18 @@ export const Messages = () => {
                                 </div>
                             </div>
                         </div>
-                        <div className="flex-1 md:flex flex-col" data-id="24">
+                        { state.convoSelected ? <div className="flex-1 md:flex flex-col" data-id="24">
                             <div
-                                className="bg-gradient-to-r from-cyan-800 to-sky-700 border-b border-gray-200 flex p-4"
+                                className="border-b border-gray-200 flex p-4"
                                 data-id="25">
-                                <h2 className="flex-1 font-semibold select-none text-lg text-white"
+                                {/*--------NAME OF WHO YOU WANT TO CHAT--------*/ }
+                                <h2 className="flex-1 font-semibold select-none text-lg"
                                     data-id="26">Brgy.
                                                  Linao</h2>
                                 { width < 768 && (
                                     <Tooltip title="Back">
-                                        <Button type="text" onClick={ () => setChatMode(false) }
+                                        <Button type="text"
+                                                onClick={ () => dispatch({ type: "setChatMode", payload: false }) }
                                                 icon={ <IoReturnDownBack /> } />
                                     </Tooltip>
                                 ) }
@@ -318,6 +351,7 @@ export const Messages = () => {
                                 </div>
                             </div>
 
+
                             {/*-----------------------TYPE YOUR MESSAGE SECTION-----------------------*/ }
                             <div
                                 className="bg-white border-gray-200 bottom-0 fixed p-4 w-full md:w-[calc(100%-464px)]"
@@ -339,12 +373,19 @@ export const Messages = () => {
                                     </button>
                                 </form>
                             </div>
-                        </div>
+                        </div> : (
+                            <div className="flex flex-col items-center justify-center select-none w-full " data-id="24">
+
+                                <h2 className="text-xl">Search or select a barangay/city government to start
+                                                        chatting</h2>
+                            </div>
+                        ) }
+
                     </>
                 ) : (
                     <>
                         {/*-----------------------CONVERSATIONS SECTION-----------------------*/ }
-                        { !chatMode && (
+                        { !state.chatMode && (
                             <div
                                 className="bg-gray-100 border-gray-200 border-r flex-col mb-0 pb-4 pl-4 pr-2 pt-0 w-full md:flex md:pl-0 md:py-4 md:w-[300px]"
                                 data-id="2">
@@ -352,7 +393,7 @@ export const Messages = () => {
                                     <h2 className="font-semibold select-none text-base md:text-lg"
                                         data-id="4">Conversations</h2>
                                     <button
-                                        onClick={ () => setIsModalOpen(!isModalOpen) }
+                                        onClick={ () => dispatch({ type: "toggleModalOpen" }) }
                                         className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-10 w-10"
                                         data-id="5">
                                         <IoSearch />
@@ -360,17 +401,17 @@ export const Messages = () => {
                                     <Modal
                                         title="Search a Conversation"
                                         centered
-                                        open={ isModalOpen }
+                                        open={ state.modalOpen }
                                         onOk={ () => {
-                                            setIsModalOpen(false);
+                                            dispatch({ type: "setModalClose" });
                                         } }
-                                        onCancel={ () => setIsModalOpen(false) }
+                                        onCancel={ () => dispatch({ type: "setModalClose" }) }
                                         footer={ null }
                                         styles={ { header: { userSelect: "none" } } }
                                     >
                                         <Select
                                             showSearch
-                                            value={ value }
+                                            value={ state.value }
                                             style={ { width: "100%" } }
                                             dropdownStyle={ { maxHeight: 400 } }
                                             placeholder="Search for barangay or city government"
@@ -387,7 +428,7 @@ export const Messages = () => {
                                     {/*-----------------------CONVERSATIONS-----------------------*/ }
                                     <div className="h-full space-y-2" data-id="7">
                                         {/*//TODO: map the conversations here*/ }
-                                        <div onClick={ () => setChatMode(true) }
+                                        <div onClick={ () => dispatch({ type: "setChatMode", payload: true }) }
                                              className="flex items-center gap-3 rounded-md bg-white p-3 hover:bg-sky-100 transition-all duration-200">
                                     <span
                                         className="relative flex h-10 w-10 shrink-0 overflow-hidden rounded-full"
@@ -419,7 +460,7 @@ export const Messages = () => {
                             </div>
                         ) }
                         {/*-----------------------CHAT SECTION-----------------------*/ }
-                        { chatMode && (
+                        { state.chatMode && (
                             <motion.div
                                 initial={ { opacity: 0, y: -30, x: 0 } }
                                 animate={ { opacity: 1, y: 0, x: 0 } }
@@ -433,7 +474,8 @@ export const Messages = () => {
                                                      Linao</h2>
                                     { width < 768 && (
                                         <Tooltip title="Back">
-                                            <Button type="text" onClick={ () => setChatMode(false) }
+                                            <Button type="text"
+                                                    onClick={ () => dispatch({ type: "setChatMode", payload: false }) }
                                                     icon={ <IoReturnDownBack color={ "white" } size={ 16 } /> } />
                                         </Tooltip>
                                     ) }

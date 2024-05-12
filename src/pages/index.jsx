@@ -6,7 +6,9 @@ import { Projects } from "./Projects.jsx";
 import { SharedLayout } from "./SharedLayout.jsx";
 import { Users } from "./Users.jsx";
 import { Profile } from "./Profile.jsx";
-import { FeedbacksAdmin } from "./FeedbacksAdmin.jsx";
+import { AdminProjects } from "./AdminProjects.jsx";
+import { NotFound } from "./NotFound.jsx";
+import { LoginRegister } from "./LoginRegister.jsx";
 
 export {
     Announcements,
@@ -17,5 +19,7 @@ export {
     Users,
     SharedLayout,
     Profile,
-    FeedbacksAdmin
+    AdminProjects,
+    NotFound,
+    LoginRegister
 };

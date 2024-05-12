@@ -374,3 +374,141 @@ export const project_status = [
         value: "planned"
     }
 ];
+export const project_cost = [
+    {
+        label: "No cost/Free",
+        value: 0
+    },
+    {
+        label: "Less than ₱100",
+        value: 100
+    },
+    {
+        label: "Less than ₱1,000",
+        value: 1000
+    },
+    {
+        label: "Less than ₱10,000",
+        value: 10000
+    },
+    {
+        label: "Less than ₱100,000",
+        value: 100000
+    },
+    {
+        label: "Less than ₱1 million",
+        value: 1000000
+    },
+    {
+        label: "Less than ₱10 million",
+        value: 10000000
+    },
+    {
+        label: "Less than ₱100 million",
+        value: 100000000
+    },
+    {
+        label: "Less than ₱1 billion",
+        value: 1000000000
+    },
+    {
+        label: "₱1 billion and up",
+        value: 1000000001
+    }
+];
+export const project_progress = [
+    {
+        label: "0%",
+        value: 0
+    },
+    {
+        label: "1 - 10%",
+        value: 10
+    },
+    {
+        label: "11 - 20%",
+        value: 20
+    },
+    {
+        label: "21 - 30%",
+        value: 30
+    },
+    {
+        label: "31 - 40%",
+        value: 40
+    },
+    {
+        label: "41 - 50%",
+        value: 50
+    },
+    {
+        label: "51 - 60%",
+        value: 60
+    },
+    {
+        label: "61 - 70%",
+        value: 70
+    },
+    {
+        label: "71 - 80%",
+        value: 80
+    },
+    {
+        label: "81 - 90%",
+        value: 90
+    },
+    {
+        label: "91 - 100%",
+        value: 100
+    }
+];
+export const project_views = [
+    {
+        label: "No views",
+        value: 0
+    },
+    {
+        label: "Less than 10 views",
+        value: 10
+    },
+    {
+        label: "Less than 50 views",
+        value: 50
+    },
+    {
+        label: "Less than 100 views",
+        value: 100
+    },
+    {
+        label: "Less than 1,000 views",
+        value: 1000
+    },
+    {
+        label: "Less than 10,000 views",
+        value: 10000
+    },
+    {
+        label: "Less than 100,000 views",
+        value: 100000
+    },
+    {
+        label: "Less than 1 million views",
+        value: 1000000
+    },
+    {
+        label: "More than 1 million views",
+        value: 1000001
+    }
+];
+
+
+export const announcement_types = [
+    {
+        label: "General",
+        value: "general"
+    },
+    {
+        label: "System",
+        value: "system"
+    }
+];

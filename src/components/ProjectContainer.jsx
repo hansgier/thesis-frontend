@@ -1,15 +1,29 @@
 import { useSelector } from "react-redux";
-import { Tooltip } from "antd";
+import { Button, Modal, Popconfirm, Tooltip } from "antd";
 import { useNavigate } from "react-router-dom";
 import { LikeDislikeButtons } from "./LikeDislikeButtons.jsx";
+import { useState } from "react";
+import { MdDeleteOutline } from "react-icons/md";
+import { AnimatePresence, motion } from "framer-motion";
+import { CiEdit } from "react-icons/ci";
+import { AddEditProjectComponent } from "./AddEditProjectComponent.jsx";
+
 
 export const ProjectContainer = ({ onProjectClick }) => {
     const { view } = useSelector((store) => store.user);
+    const [isHovered, setIsHovered] = useState(false);
+    const [deleteProjectConfirm, setDeleteProjectConfirm] = useState(false);
+    const [editProjectMode, setEditProjectMode] = useState(false);
     const navigate = useNavigate();
 
+    const onDeleteProjectConfirm = () => {
+        setDeleteProjectConfirm(true);
+    };
+
     return (
-        <div>
-            <div className="accent-indigo-800 bg-white border mb-10 md:mx-0 mx-3 rounded-xl">
+        <div onMouseOver={ () => setIsHovered(true) } onMouseLeave={ () => setIsHovered(false) }>
+            <div
+                className={ `accent-indigo-800 bg-white border ${ view === 1 ? "mb-2" : "mb-8" } md:mx-0 mx-3 rounded-xl` }>
                 <div className="flex gap-4 items-center pb-4 pt-6 px-4 md:px-6">
                     <div className="flex items-center justify-center">
                         <svg viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" fill="#000000"
@@ -84,7 +98,20 @@ export const ProjectContainer = ({ onProjectClick }) => {
                             </div>
                         </div>
                     </div>
-                    <div className="flex items-center ml-auto space-x-2 text-Thesis-200 text-xs">
+                    { isHovered ? <div className="flex items-center ml-auto space-x-2 text-Thesis-200 text-xs">
+                        <Button icon={ <CiEdit /> } type="dashed" onClick={ () => setEditProjectMode(true) } />
+                        <Modal centered title="Edit Project" open={ editProjectMode }
+                               onCancel={ () => setEditProjectMode(false) }
+                               footer={ null } wrapClassName="add-project-modal" width={ 800 }>
+                            <div className="pb-1 border-b-2 mb-3 select-none">Edit the details of the project.
+                            </div>
+                            <AddEditProjectComponent mode="edit" />
+                        </Modal>
+                        <Popconfirm title="Delete Project" description="Are you sure you want to delete this project?"
+                                    onConfirm={ onDeleteProjectConfirm }>
+                            <Button icon={ <MdDeleteOutline /> } danger type="primary" />
+                        </Popconfirm>
+                    </div> : <div className="flex items-center ml-auto space-x-2 text-Thesis-200 text-xs">
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
                              stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
                              className="h-4 hidden w-4 lg:block">
@@ -101,134 +128,145 @@ export const ProjectContainer = ({ onProjectClick }) => {
                             <path d="M8 14h.01"></path>
                         </svg>
                         <span className="font-bold hidden select-none lg:block">City Government</span>
-                    </div>
+                    </div> }
+
+
                 </div>
-                { view === "stack" && (
-                    <>
-                        <div className="mb-4 px-4 md:px-6">
-                            <p className="leading-relaxed md:text-base select-none text-gray-700 text-justify text-sm">The
-                                                                                                                       Valley
-                                                                                                                       Road
-                                                                                                                       Expansion
-                                                                                                                       project
-                                                                                                                       will
-                                                                                                                       widen
-                                                                                                                       the
-                                                                                                                       existing
-                                                                                                                       two-lane
-                                                                                                                       road
-                                                                                                                       to
-                                                                                                                       four
-                                                                                                                       lanes
-                                                                                                                       over
-                                                                                                                       a
-                                                                                                                       5-mile
-                                                                                                                       stretch
-                                                                                                                       between
-                                                                                                                       Main
-                                                                                                                       Street
-                                                                                                                       and
-                                                                                                                       Interstate
-                                                                                                                       95.
-                                                                                                                       Intersection
-                                                                                                                       improvements
-                                                                                                                       with
-                                                                                                                       turn
-                                                                                                                       lanes,
-                                                                                                                       roundabouts,
-                                                                                                                       and
-                                                                                                                       traffic
-                                                                                                                       signals
-                                                                                                                       will
-                                                                                                                       be
-                                                                                                                       added.
-                                                                                                                       Drainage,
-                                                                                                                       curbs,
-                                                                                                                       sidewalks,
-                                                                                                                       and
-                                                                                                                       paved
-                                                                                                                       shoulders
-                                                                                                                       will
-                                                                                                                       also
-                                                                                                                       be
-                                                                                                                       constructed.
-                                                                                                                       The
-                                                                                                                       $22
-                                                                                                                       million
-                                                                                                                       project
-                                                                                                                       is
-                                                                                                                       funded
-                                                                                                                       by
-                                                                                                                       state
-                                                                                                                       and
-                                                                                                                       federal
-                                                                                                                       grants,
-                                                                                                                       with
-                                                                                                                       construction
-                                                                                                                       from
-                                                                                                                       2025
-                                                                                                                       to
-                                                                                                                       2027.
-                                                                                                                       Once
-                                                                                                                       complete,
-                                                                                                                       Valley
-                                                                                                                       Road
-                                                                                                                       will
-                                                                                                                       have
-                                                                                                                       increased
-                                                                                                                       capacity
-                                                                                                                       and
-                                                                                                                       safety
-                                                                                                                       enhancements
-                                                                                                                       for
-                                                                                                                       all
-                                                                                                                       transportation
-                                                                                                                       modes.</p>
-                        </div>
-                        <div className="mx-4 pt-[334px] px-4 relative md:mx-6 md:px-6">
-                            <img alt="project_img" src="https://pinegrow.com/placeholders/img18.jpg"
-                                 onClick={ () => navigate("/projects/singleprojects") }
-                                 className="absolute h-full left-0 object-center object-cover rounded-xl top-0 w-full hover:cursor-pointer" />
-                        </div>
-                        <div className="gap-2 grid pb-3 px-4 md:px-6">
-                            <div className="flex gap-2 h-8 items-center mt-4 text-sm md:gap-4">
-                                <LikeDislikeButtons likes="23" dislikes="9" />
-                                <div
-                                    onClick={ () => navigate("/projects/singleprojects") }
-                                    className="duration-300 flex gap-1 h-full hover:bg-blue-50 hover:rounded-md items-center px-2 transition-colors hover:cursor-pointer"
-                                    data-pg-ia='{"l":[{"name":"Hover UserComment Button"}]}'>
-                                    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" width="16">
-                                        <g id="SVGRepo_bgCarrier" strokeWidth="0"></g>
-                                        <g id="SVGRepo_tracerCarrier" strokeLinecap="round" strokeLinejoin="round"></g>
-                                        <g id="SVGRepo_iconCarrier">
-                                            <g clipPath="url(#clip0_429_11233)">
-                                                <path
-                                                    d="M12 21C16.9706 21 21 16.9706 21 12C21 7.02944 16.9706 3 12 3C7.02944 3 3 7.02944 3 12C3 13.4876 3.36093 14.891 4 16.1272L3 21L7.8728 20C9.10904 20.6391 10.5124 21 12 21Z"
-                                                    stroke="#292929" strokeWidth="2.5" strokeLinecap="round"
-                                                    strokeLinejoin="round"></path>
+                <AnimatePresence>
+                    { view === 0 && (
+                        <>
+                            <motion.div
+                                initial={ { opacity: 0 } }
+                                animate={ { opacity: 1 } }
+                                exit={ { opacity: 0 } }
+                                className="mb-4 px-4 md:px-6">
+                                <p className="leading-relaxed md:text-base select-none text-gray-700 text-justify text-sm">The
+                                                                                                                           Valley
+                                                                                                                           Road
+                                                                                                                           Expansion
+                                                                                                                           project
+                                                                                                                           will
+                                                                                                                           widen
+                                                                                                                           the
+                                                                                                                           existing
+                                                                                                                           two-lane
+                                                                                                                           road
+                                                                                                                           to
+                                                                                                                           four
+                                                                                                                           lanes
+                                                                                                                           over
+                                                                                                                           a
+                                                                                                                           5-mile
+                                                                                                                           stretch
+                                                                                                                           between
+                                                                                                                           Main
+                                                                                                                           Street
+                                                                                                                           and
+                                                                                                                           Interstate
+                                                                                                                           95.
+                                                                                                                           Intersection
+                                                                                                                           improvements
+                                                                                                                           with
+                                                                                                                           turn
+                                                                                                                           lanes,
+                                                                                                                           roundabouts,
+                                                                                                                           and
+                                                                                                                           traffic
+                                                                                                                           signals
+                                                                                                                           will
+                                                                                                                           be
+                                                                                                                           added.
+                                                                                                                           Drainage,
+                                                                                                                           curbs,
+                                                                                                                           sidewalks,
+                                                                                                                           and
+                                                                                                                           paved
+                                                                                                                           shoulders
+                                                                                                                           will
+                                                                                                                           also
+                                                                                                                           be
+                                                                                                                           constructed.
+                                                                                                                           The
+                                                                                                                           $22
+                                                                                                                           million
+                                                                                                                           project
+                                                                                                                           is
+                                                                                                                           funded
+                                                                                                                           by
+                                                                                                                           state
+                                                                                                                           and
+                                                                                                                           federal
+                                                                                                                           grants,
+                                                                                                                           with
+                                                                                                                           construction
+                                                                                                                           from
+                                                                                                                           2025
+                                                                                                                           to
+                                                                                                                           2027.
+                                                                                                                           Once
+                                                                                                                           complete,
+                                                                                                                           Valley
+                                                                                                                           Road
+                                                                                                                           will
+                                                                                                                           have
+                                                                                                                           increased
+                                                                                                                           capacity
+                                                                                                                           and
+                                                                                                                           safety
+                                                                                                                           enhancements
+                                                                                                                           for
+                                                                                                                           all
+                                                                                                                           transportation
+                                                                                                                           modes.</p>
+                            </motion.div>
+                            <div className="mx-4 pt-[334px] px-4 relative md:mx-6 md:px-6">
+                                <img alt="project_img" src="https://pinegrow.com/placeholders/img18.jpg"
+                                     onClick={ () => navigate("/projects/singleprojects") }
+                                     className="absolute h-full left-0 object-center object-cover rounded-xl top-0 w-full hover:cursor-pointer" />
+                            </div>
+                            <div className="gap-2 grid pb-3 px-4 md:px-6">
+                                <div className="flex gap-2 h-8 items-center mt-4 text-sm md:gap-4">
+                                    <LikeDislikeButtons likes="23" dislikes="9" />
+                                    <div
+                                        onClick={ () => navigate("/projects/singleprojects") }
+                                        className="duration-300 flex gap-1 h-full hover:bg-blue-50 hover:rounded-md items-center px-2 transition-colors hover:cursor-pointer"
+                                        data-pg-ia='{"l":[{"name":"Hover UserComment Button"}]}'>
+                                        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"
+                                             width="16">
+                                            <g id="SVGRepo_bgCarrier" strokeWidth="0"></g>
+                                            <g id="SVGRepo_tracerCarrier" strokeLinecap="round"
+                                               strokeLinejoin="round"></g>
+                                            <g id="SVGRepo_iconCarrier">
+                                                <g clipPath="url(#clip0_429_11233)">
+                                                    <path
+                                                        d="M12 21C16.9706 21 21 16.9706 21 12C21 7.02944 16.9706 3 12 3C7.02944 3 3 7.02944 3 12C3 13.4876 3.36093 14.891 4 16.1272L3 21L7.8728 20C9.10904 20.6391 10.5124 21 12 21Z"
+                                                        stroke="#292929" strokeWidth="2.5" strokeLinecap="round"
+                                                        strokeLinejoin="round"></path>
+                                                </g>
+                                                <defs>
+                                                    <clipPath id="clip0_429_11233">
+                                                        <rect width="24" height="24" fill="white"></rect>
+                                                    </clipPath>
+                                                </defs>
                                             </g>
-                                            <defs>
-                                                <clipPath id="clip0_429_11233">
-                                                    <rect width="24" height="24" fill="white"></rect>
-                                                </clipPath>
-                                            </defs>
-                                        </g>
-                                    </svg>
-                                    <span className="select-none text-[#454545] text-xs md:text-sm">12</span>
-                                </div>
-                                <div className="flex gap-1 h-full items-center">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                                         fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"
-                                         strokeLinejoin="round" className="w-4 h-4">
-                                        <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"></path>
-                                        <circle cx="12" cy="12" r="3"></circle>
-                                    </svg>
-                                    <span className="select-none text-[#454545] text-xs md:text-sm">23</span>
+                                        </svg>
+                                        <span className="select-none text-[#454545] text-xs md:text-sm">12</span>
+                                    </div>
+                                    <div className="flex gap-1 h-full items-center">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                             viewBox="0 0 24 24"
+                                             fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"
+                                             strokeLinejoin="round" className="w-4 h-4">
+                                            <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"></path>
+                                            <circle cx="12" cy="12" r="3"></circle>
+                                        </svg>
+                                        <span className="select-none text-[#454545] text-xs md:text-sm">23</span>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    </>
-                ) }
+                        </>
+                    ) }
+                </AnimatePresence>
             </div>
         </div>
     );

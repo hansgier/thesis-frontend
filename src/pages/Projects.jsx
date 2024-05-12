@@ -1,5 +1,4 @@
-import { AddComponent, FilterSort, InputSelect, ProjectContainer } from "../components/index.jsx";
-import { project_tags } from "../utils/data-components.jsx";
+import { AddEditProjectComponent, FilterSort, ProjectContainer } from "../components/index.jsx";
 import { useLocation } from "react-router-dom";
 import { useEffect, useRef, useState } from "react";
 import { GoPlus } from "react-icons/go";
@@ -46,31 +45,15 @@ export const Projects = () => {
     return (
         <>
             {/*-----------------------VIEW FILTER SORT SECTION-----------------------*/ }
-            <FilterSort page="Projects" filters={ (
-                <>
-                    <InputSelect mode="multiple" placeholder="Tags"
-                                 options={ project_tags } />
-                    <InputSelect mode="multiple" placeholder="Location(s)"
-                                 options={ project_tags } />
-                    <InputSelect placeholder="Posted By"
-                                 options={ project_tags } />
-                    <InputSelect placeholder="Status"
-                                 options={ project_tags } />
-                    <InputSelect placeholder="Cost"
-                                 options={ project_tags } />
-                    <InputSelect placeholder="Progress"
-                                 options={ project_tags } />
-                    <InputSelect placeholder="Views"
-                                 options={ project_tags } />
-                </>
-            ) } />
+            <FilterSort page="Projects" />
 
             {/*-----------------------PROJECTS SECTION-----------------------*/ }
+            {/*TODO: map the projects here from the server*/ }
             <div
                 ref={ scrollDivRef }
                 onScroll={ saveScrollPosition }
-                className="absolute top-16 h-[calc(100%-64px)] md:h-full md:absolute md:flex md:top-0 md:left-[270px] md:pl-0 md:pr-4 md:w-[calc(100%-270px)] overflow-y-scroll pt-0 px-0">
-                <div className="md:mt-0">
+                className="absolute top-16 h-[calc(100%-64px)] md:h-full md:absolute md:flex md:top-0 md:left-[270px] md:pl-0 md:pr-4 md:w-[calc(100%-270px)] overflow-y-scroll pt-0 px-0 w-full">
+                <div className="md:mt-0 w-full">
                     <ProjectContainer />
                     <ProjectContainer />
                     <ProjectContainer />
@@ -92,10 +75,12 @@ export const Projects = () => {
                          onClick={ () => dispatch(toggleAddProjectMode()) } />
             <Modal centered title="Add Project" open={ isAddProjectMode }
                    onCancel={ () => dispatch(toggleAddProjectMode()) }
-                   footer={ null } wrapClassName="add-project-modal" width={ 900 }>
+                   footer={ null } wrapClassName="add-project-modal" width={ 800 }>
                 <div className="pb-1 border-b-2 mb-3 select-none">Fill in the details of the new project.</div>
-                <AddComponent />
+                <AddEditProjectComponent mode="add" />
             </Modal>
         </>
+
+
     );
 };
