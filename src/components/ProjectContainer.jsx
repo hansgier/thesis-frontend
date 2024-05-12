@@ -20,6 +20,10 @@ export const ProjectContainer = ({ onProjectClick }) => {
         setDeleteProjectConfirm(true);
     };
 
+    const handleTabChange = (key) => {
+        setTab(key);
+    };
+
     return (
         <div onMouseOver={ () => setIsHovered(true) } onMouseLeave={ () => setIsHovered(false) }>
             <div

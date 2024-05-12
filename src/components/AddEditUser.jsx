@@ -50,7 +50,7 @@ export const AddEditUser = ({ mode }) => {
                  initial values*/ }
                 <Form form={ form } onFinish={ handleSubmit } layout="vertical">
                     <Row gutter={ 16 }>
-                        <Col flex="1">
+                        <Col xs={ { flex: "100%" } } md={ { flex: "50%" } }>
                             <Form.Item
                                 name="addnewuser_username"
                                 label="Username"
@@ -61,7 +61,7 @@ export const AddEditUser = ({ mode }) => {
                                 <Input placeholder="Enter username" />
                             </Form.Item>
                         </Col>
-                        <Col flex="1">
+                        <Col xs={ { flex: "100%" } } md={ { flex: "50%" } }>
                             <Form.Item
                                 name="addnewuser_email"
                                 label="Email"
@@ -74,7 +74,7 @@ export const AddEditUser = ({ mode }) => {
                         </Col>
                     </Row>
                     <Row gutter={ 16 }>
-                        <Col flex="1">
+                        <Col xs={ { flex: "100%" } } md={ { flex: "50%" } }>
                             <Form.Item
                                 name="addnewuser_password"
                                 label="Password"
@@ -85,7 +85,7 @@ export const AddEditUser = ({ mode }) => {
                                 <Input.Password placeholder="Enter password" visibilityToggle="false" />
                             </Form.Item>
                         </Col>
-                        <Col flex="1">
+                        <Col xs={ { flex: "100%" } } md={ { flex: "50%" } }>
                             <Form.Item
                                 name="addnewuser_barangay"
                                 label="Barangay"

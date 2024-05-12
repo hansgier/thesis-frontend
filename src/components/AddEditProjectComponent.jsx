@@ -1,7 +1,7 @@
 import { Button, Col, DatePicker, Form, Input, InputNumber, Row, Select, Slider, Upload } from "antd";
 import { project_attributes, project_status, project_tags } from "../utils/data-components.jsx";
 import { useSelector } from "react-redux";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { CloudinaryContext } from "cloudinary-react";
 import { FaCloudUploadAlt } from "react-icons/fa";
 //TODO: get the values of project for editing mode
@@ -9,7 +9,7 @@ const { Dragger } = Upload;
 
 const range_formatter = (value) => `${ value }%`;
 
-export const AddEditProjectComponent = ({ mode }) => {
+export const AddEditProjectComponent = React.memo(({ mode }) => {
     const [form] = Form.useForm();
     const { isAddProjectMode } = useSelector((store) => store.user);
     const [status, setStatus] = useState(null);
@@ -56,7 +56,8 @@ export const AddEditProjectComponent = ({ mode }) => {
             <div className="h-[500px] overflow-y-auto pr-3">
                 {/*----------TITLE----------*/ }
 
-                <div className="text-xs mb-1 uppercase font-bold select-none">{ project_attributes[0].label }</div>
+                <div
+                    className="text-xs mb-1 uppercase font-bold select-none">{ project_attributes[0].label }</div>
                 <Form.Item
                     name="title"
                     rules={ [{ required: true, message: project_attributes[0].required_msg }] }
@@ -65,7 +66,8 @@ export const AddEditProjectComponent = ({ mode }) => {
                 </Form.Item>
 
                 {/*----------DESCRIPTION----------*/ }
-                <div className="text-xs mb-1 uppercase font-bold select-none">{ project_attributes[1].label }</div>
+                <div
+                    className="text-xs mb-1 uppercase font-bold select-none">{ project_attributes[1].label }</div>
                 <Form.Item
                     name="description"
                     rules={ [{ required: true, message: project_attributes[1].required_msg }] }
@@ -75,7 +77,8 @@ export const AddEditProjectComponent = ({ mode }) => {
                 </Form.Item>
 
                 {/*----------PROGRESS----------*/ }
-                <div className="text-xs mb-1 uppercase font-bold select-none">{ project_attributes[2].label }</div>
+                <div
+                    className="text-xs mb-1 uppercase font-bold select-none">{ project_attributes[2].label }</div>
                 <Form.Item
                     name="progress"
                 >
@@ -83,7 +86,8 @@ export const AddEditProjectComponent = ({ mode }) => {
                 </Form.Item>
 
                 {/*----------LOCATIONS----------*/ }
-                <div className="text-xs mb-1 uppercase font-bold select-none">{ project_attributes[3].label }</div>
+                <div
+                    className="text-xs mb-1 uppercase font-bold select-none">{ project_attributes[3].label }</div>
                 <Form.Item
                     name="locations"
                     rules={ [{ required: true, message: project_attributes[3].required_msg }] }
@@ -96,7 +100,8 @@ export const AddEditProjectComponent = ({ mode }) => {
                 </Form.Item>
 
                 {/*----------TAGS----------*/ }
-                <div className="text-xs mb-1 uppercase font-bold select-none">{ project_attributes[4].label }</div>
+                <div
+                    className="text-xs mb-1 uppercase font-bold select-none">{ project_attributes[4].label }</div>
                 <Form.Item
                     name="tags"
                     rules={ [{ required: true, message: project_attributes[4].required_msg }] }
@@ -292,7 +297,8 @@ export const AddEditProjectComponent = ({ mode }) => {
                             className="flex items-center justify-center"
                         >
                             <FaCloudUploadAlt size={ 50 } className="w-full mt-8" />
-                            <p className="mb-8 mt-2 text-gray-600">Click or drag file to this area to upload.</p>
+                            <p className="mb-8 mt-2 text-gray-600">Click or drag file to this area to
+                                                                   upload.</p>
                         </Dragger>
                     </Form.Item>
                 </CloudinaryContext>
@@ -309,10 +315,10 @@ export const AddEditProjectComponent = ({ mode }) => {
                 <Form.Item>
                     <Button type="default" htmlType="submit"
                             className="bg-cyan-600 text-white">
-                        Submit
+                        { mode === "add" ? "Submit" : mode === "edit" && "Save" }
                     </Button>
                 </Form.Item>
             </div>
         </Form>
     );
-};
+});

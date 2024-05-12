@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { project_tags } from "../utils/data-components.jsx";
-import { Input, Select } from "antd";
+import { Button, Form, Input, Select } from "antd";
 import { useLocation } from "react-router-dom";
 
 export const Profile = () => {
@@ -54,7 +54,7 @@ export const Profile = () => {
                                                                                                                               Linao</p>
                         </div>
                     ) : (
-                        <form className=" col-start-1 grid grid-cols-2 pb-6 pt-0 px-6 md:gap-y-4">
+                        <Form className="grid grid-cols-1 md:grid-cols-2 pb-6 pt-0 px-6 md:gap-y-4">
                             <h6 className="font-semibold mb-2 select-none text-Thesis-300 text-xs md:mb-0 md:text-sm">Details</h6>
                             <div className="flex justify-end mb-2 md:justify-start md:mb-0">
                                 <button
@@ -76,28 +76,38 @@ export const Profile = () => {
 
                             {/*Input*/ }
                             <h6 className="col-span-2 select-none text-gray-600 text-sm md:col-span-1 md:text-base">Username</h6>
-                            <Input placeholder="Input username" />
+                            <Form.Item name="username" className="m-0 p-0 mb-4">
+                                <Input placeholder="Input username" />
+                            </Form.Item>
                             <h6 className="col-span-2 select-none text-gray-600 text-sm md:col-span-1 md:text-base">Email</h6>
-                            <Input placeholder="Input email address" />
+                            <Form.Item name="email" className="m-0 p-0 mb-4">
+                                <Input placeholder="Input email address" />
+                            </Form.Item>
                             <h6 className="col-span-2 select-none text-gray-600 text-sm md:col-span-1 md:text-base">Password</h6>
-                            <Input.Password placeholder="Input password" />
+                            <Form.Item name="password" className="m-0 p-0 mb-4">
+                                <Input.Password placeholder="Input password" />
+                            </Form.Item>
                             <h6 className="col-span-2 select-none text-gray-600 text-sm md:col-span-1 md:text-base">Barangay</h6>
-                            <Select placeholder="Input barangay" options={ project_tags } />
+                            <Form.Item name="barangayId" className="m-0 p-0 mb-4">
+                                <Select placeholder="Input barangay" options={ project_tags } />
+                            </Form.Item>
                             {/*Edit mode buttons*/ }
                             <div className="col-span-2 flex justify-end space-x-2">
-                                <button
+                                <Button
                                     onClick={ () => setIsEditMode(false) }
                                     className="border-2 border-gray-500 border-opacity-50 hover:bg-blue-50 hover:duration-300 hover:transition-all md:text-sm px-3 py-1 rounded-3xl text-sm"
                                     type="button">
                                     Cancel
-                                </button>
-                                <button
-                                    className="bg-Thesis-200 border-2 border-Thesis-100 border-opacity-50 hover:bg-opacity-90 hover:duration-300 hover:transition-all px-3 py-1 rounded-3xl text-sm text-white md:text-sm"
-                                    type="submit">
-                                    Save
-                                </button>
+                                </Button>
+                                <Form.Item className="m-0 p-0">
+                                    <Button
+                                        className="bg-Thesis-200 border-2 border-Thesis-100 border-opacity-50 hover:bg-opacity-90 hover:duration-300 hover:transition-all px-3 py-1 rounded-3xl text-sm text-white md:text-sm"
+                                        htmlType="submit">
+                                        Save
+                                    </Button>
+                                </Form.Item>
                             </div>
-                        </form>
+                        </Form>
                     ) }
                 </div>
             </div>

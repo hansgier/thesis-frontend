@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { RiSortAlphabetAsc, RiSortAlphabetDesc, RiSortAsc, RiSortDesc } from "react-icons/ri";
 import { Modal } from "antd";
 import { Filters } from "./Filters.jsx";
+import { useWindowSize } from "../hooks/index.jsx";
 
 const adminMode = true;
 //TODO: admin logic where it will change according to user roles
@@ -34,6 +35,7 @@ export const FilterSort = ({ page }) => {
     const [toggleSort, setToggleSort] = useState(0);
     const [openFilterMobile, setOpenFilterMobile] = useState(false);
     const dispatch = useDispatch();
+    const { width } = useWindowSize();
 
     useEffect(() => {
         dispatch(resetView());
@@ -158,11 +160,15 @@ export const FilterSort = ({ page }) => {
                             </svg>
                         </button>
                         <Filters mode="desktop" />
-                        <Modal centered footer={ null } title="Filter Projects" open={ openFilterMobile }
-                               onCancel={ () => setOpenFilterMobile(false) }>
-                            {/*-----------------------FILTER SECTION-----------------------*/ }
-                            <Filters mode="mobile" page={ page } />
-                        </Modal>
+                        { width <= 768 &&
+                            <Modal centered footer={ null }
+                                   title={ page === "Projects" ? "Filter Projects" : page === "Announcements" && "Filter Announcements" }
+                                   open={ openFilterMobile }
+                                   onCancel={ () => setOpenFilterMobile(false) }>
+                                {/*-----------------------FILTER SECTION-----------------------*/ }
+                                <Filters mode="mobile" page={ page } />
+                            </Modal>
+                        }
                     </div>
                     <div className="flex items-center gap-2">
                         <div className="gap-2 hidden items-center select-none lg:block">
