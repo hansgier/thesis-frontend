@@ -5,6 +5,7 @@ import { Button, Modal, Select, Tooltip } from "antd";
 import { project_tags } from "../utils/data-components.jsx";
 import { motion } from "framer-motion";
 import { useLocation } from "react-router-dom";
+import { Conversations } from "./messages/Conversations.jsx";
 
 const filterOption = (input, option) =>
     (option?.label ?? "").toLowerCase().includes(input.toLowerCase());
@@ -157,22 +158,13 @@ export const Messages = () => {
                                 {/*-----------------------CONVERSATIONS-----------------------*/ }
                                 <div className="h-full space-y-2" data-id="7">
                                     {/*//TODO: map the conversations here*/ }
-                                    <div onClick={ () => dispatch({ type: "setChatMode", payload: true }) }
-                                         className="flex items-center gap-3 rounded-md bg-white p-3 hover:bg-sky-100 transition-all duration-200">
-                                        <div className="flex-1 space-y-1" data-id="12">
-                                            <p className="font-medium select-none text-sm md:text-sm" data-id="13">
-                                                Olivia Davis
-                                            </p>
-                                            <p className="dark:text-gray-400 line-clamp-1 select-none text-gray-500 text-xs md:text-sm"
-                                               data-id="14">
-                                                Hey, let's discuss the project details.
-                                            </p>
-                                        </div>
-                                        <span className="dark:text-gray-400 select-none text-gray-500 text-xs"
-                                              data-id="15">
-                                        9:15 AM
-                                    </span>
-                                    </div>
+                                    <Conversations
+                                        onClick={ () => dispatch({ type: "setChatMode", payload: true }) }
+                                        recipient="Brgy. Linao"
+                                        convoSnippet="Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aliquam beatae enim nam officia quisquam quo recusandae rem suscipit veniam voluptate."
+                                        lastMsgDate="9:05 AM"
+                                    />
+
                                 </div>
                             </div>
                         </div>
@@ -375,6 +367,7 @@ export const Messages = () => {
                     </>
                 ) : (
                     <>
+                        {/*---------------------------------------MOBILE VERSION---------------------------------------*/ }
                         {/*-----------------------CONVERSATIONS SECTION-----------------------*/ }
                         { !state.chatMode && (
                             <div
@@ -419,23 +412,13 @@ export const Messages = () => {
                                     {/*-----------------------CONVERSATIONS-----------------------*/ }
                                     <div className="h-full space-y-2" data-id="7">
                                         {/*//TODO: map the conversations here*/ }
-                                        <div onClick={ () => dispatch({ type: "setChatMode", payload: true }) }
-                                             className="flex items-center gap-3 rounded-md bg-white p-3 hover:bg-sky-100 transition-all duration-200">
-                                            <div className="flex-1 space-y-1" data-id="12">
-                                                <p className="font-medium select-none text-sm md:text-sm"
-                                                   data-id="13">
-                                                    Olivia Davis
-                                                </p>
-                                                <p className="dark:text-gray-400 line-clamp-1 select-none text-gray-500 text-xs md:text-sm"
-                                                   data-id="14">
-                                                    Hey, let's discuss the project details.
-                                                </p>
-                                            </div>
-                                            <span
-                                                className="dark:text-gray-400 select-none text-gray-500 text-xs"
-                                                data-id="15">
-                                        9:15 AM
-                                    </span>
+                                        <div onClick={ () => dispatch({ type: "setChatMode", payload: true }) }>
+                                            <Conversations
+
+                                                recipient="Brgy. Linao"
+                                                convoSnippet="Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aliquam beatae enim nam officia quisquam quo recusandae rem suscipit veniam voluptate."
+                                                lastMsgDate="9:05 AM"
+                                            />
                                         </div>
                                     </div>
                                 </div>

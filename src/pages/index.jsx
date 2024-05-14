@@ -9,6 +9,7 @@ import { Profile } from "./Profile.jsx";
 import { AdminProjects } from "./AdminProjects.jsx";
 import { NotFound } from "./NotFound.jsx";
 import { LoginRegister } from "./LoginRegister.jsx";
+import { Conversations } from "./messages/Conversations.jsx";
 
 export {
     Announcements,
@@ -21,5 +22,6 @@ export {
     Profile,
     AdminProjects,
     NotFound,
-    LoginRegister
+    LoginRegister,
+    Conversations
 };

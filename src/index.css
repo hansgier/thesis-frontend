@@ -174,3 +174,44 @@
 .float-add-btn .ant-float-btn-body:hover {
     background-color: #1590da !important;
 }
+
+#index_input,
+#index_input:focus,
+#index_input:focus-within {
+    border-top: 0 !important;
+    border-right: 0 !important;
+    border-left: 0 !important;
+    outline: none;
+    background-color: transparent !important;
+}
+
+#index_input-password,
+#index_input-password:focus,
+#index_input-password:focus-within {
+    border-top: 0 !important;
+    border-right: 0 !important;
+    border-left: 0 !important;
+    outline: none;
+    background-color: transparent !important;
+}
+
+.index-input-password,
+.index-input-password:focus,
+.index-input-password:focus-within {
+    border-top: 0 !important;
+    border-right: 0 !important;
+    border-left: 0 !important;
+    outline: none;
+    background-color: transparent !important;
+}
+
+.index-select-barangay .ant-select-selector {
+    padding: 4px 16px !important;
+    text-align: left !important;
+    border-top: 0 !important;
+    border-right: 0 !important;
+    border-bottom: 2px solid #d9d9d9 !important;
+    border-left: 0 !important;
+    border-radius: 0;
+    background: transparent !important;
+}

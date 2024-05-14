@@ -1,15 +1,26 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-    isLoading: false,
     isSidebarOpen: false,
     isNotificationsOpen: false,
     isFeedbackOpen: false,
     isAddProjectMode: false,
     isAddAnnouncementMode: false,
     view: 0,
+    isLoading: false,
     user: null
 };
+
+export const registerUser = createAsyncThunk("auth/register", async (user, thunkAPI) => {
+        console.log(`Register user: ${ JSON.stringify(user) }`);
+    }
+);
+
+export const loginUser = createAsyncThunk("auth/login", async (user, thunkAPI) => {
+        console.log(`Login user: ${ JSON.stringify(user) }`);
+    }
+);
+
 
 const userSlice = createSlice({
     name: "user",
