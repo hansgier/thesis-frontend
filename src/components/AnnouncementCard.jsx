@@ -8,7 +8,7 @@ import { CiEdit } from "react-icons/ci";
 import { AddEditAnnouncementComponent } from "./AddEditAnnouncementComponent.jsx";
 
 export const AnnouncementCard = ({ type, title, content, postedBy, dateTime }) => {
-    const { view } = useSelector((store) => store.user);
+    const { view } = useSelector((store) => store.auth);
     const [isHovered, setIsHovered] = useState(false);
     const [deleteAnnouncementConfirm, setDeleteAnnouncementConfirm] = useState(false);
     const [editAnnouncementMode, setEditAnnouncementMode] = useState(false);

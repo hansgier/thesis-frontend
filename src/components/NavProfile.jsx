@@ -1,10 +1,14 @@
 import React, { useState } from "react";
 import { LogViewProfilePopup } from "./LogViewProfilePopup.jsx";
 import { AnimatePresence } from "framer-motion";
+import { useSelector } from "react-redux";
+import { CgProfile } from "react-icons/cg";
+import { Popover } from "antd";
 
 
 export const NavProfile = React.memo(({ mode }) => {
     const [isOpen, setIsOpen] = useState(false);
+    const { user } = useSelector((store) => store.auth);
 
     const togglePopup = () => {
         setIsOpen(!isOpen);
@@ -17,11 +21,12 @@ export const NavProfile = React.memo(({ mode }) => {
                     onBlur={ () => setIsOpen(false) }
                     onClick={ togglePopup }
                     className="flex font-normal group hover:cursor-pointer items-center p-2 relative rounded-lg space-x-2 w-full md:hidden">
-                    <img src="https://pinegrow.com/placeholders/img20.jpg" alt="prof pic"
-                         className="h-10 rounded-full w-10" />
+                    <div
+                        className="bg-gradient-to-br from-Thesis-200 items-center justify-center p-0 rounded-full  to-green-900 flex">
+                        <CgProfile color={ "#ffffff" } size={ 34 } />
+                    </div>
                     <div className="flex-1 h-full">
-                        <h4 className="font-semibold max-w-full select-none text-gray-800 text-left text-sm truncate w-full">Hans
-                                                                                                                             Gier</h4>
+                        <h4 className="font-semibold max-w-full select-none text-gray-800 text-left text-sm truncate w-full">{ user.name }</h4>
                         <p className="select-none text-gray-500 text-xs">gierhansclement@gmail.com</p>
                     </div>
                     <div className="flex h-full">
@@ -43,17 +48,20 @@ export const NavProfile = React.memo(({ mode }) => {
                     </AnimatePresence>
                 </button>
             ) : (
-                <button
-                    onClick={ togglePopup }
-                    onBlur={ () => setIsOpen(false) }
-                    className="bg-gradient-to-br font-normal from-Thesis-200 group hidden hover:cursor-pointer items-center justify-center p-3 relative rounded-full space-x-2 to-green-900 md:flex">
-                    <h4 className="font-semibold max-w-full select-none text-white text-center text-base truncate w-full">HG</h4>
-                    <AnimatePresence>
-                        { isOpen && (
-                            <LogViewProfilePopup comp_id="navProf-container" mode="desktop" />
-                        ) }
-                    </AnimatePresence>
-                </button>
+                <Popover content={ <LogViewProfilePopup comp_id="navProf-container" mode="desktop" /> }
+                         trigger="click"
+                         arrow={ false } placement="topLeft" className="m-0 p-0">
+                    <button
+                        onClick={ togglePopup }
+                        className="bg-gradient-to-br font-normal from-Thesis-200 group hidden hover:cursor-pointer items-center justify-center p-0 relative rounded-full space-x-2 to-green-900 md:flex">
+                        <CgProfile color={ "#ffffff" } size={ 40 } />
+
+                        {/*<AnimatePresence>*/ }
+                        {/*    { isOpen && (*/ }
+                        {/*) }*/ }
+                        {/*</AnimatePresence>*/ }
+                    </button>
+                </Popover>
             ) }
         </>
     );

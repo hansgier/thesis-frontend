@@ -10,6 +10,8 @@ import { AdminProjects } from "./AdminProjects.jsx";
 import { NotFound } from "./NotFound.jsx";
 import { LoginRegister } from "./LoginRegister.jsx";
 import { Conversations } from "./messages/Conversations.jsx";
+import { ProtectedRoute } from "./ProtectedRoute.jsx";
+import { AdminRoute } from "./AdminRoute.jsx";
 
 export {
     Announcements,
@@ -23,5 +25,7 @@ export {
     AdminProjects,
     NotFound,
     LoginRegister,
-    Conversations
+    Conversations,
+    ProtectedRoute,
+    AdminRoute
 };

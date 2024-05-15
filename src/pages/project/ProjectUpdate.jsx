@@ -1,6 +1,6 @@
 import React from "react";
 import { Button, Form, Image, Input, Upload } from "antd";
-import { FaCheck, FaCloudUploadAlt } from "react-icons/fa";
+import { FaCheck, FaCloudUploadAlt, FaTrash } from "react-icons/fa";
 import { CloudinaryContext } from "cloudinary-react";
 
 const { Dragger } = Upload;
@@ -101,9 +101,17 @@ export const ProjectUpdate = React.memo(({ content, updatePostDate, progress, ed
                     </span>
                             </>
                         ) : (
-                            <Form.Item className="m-0">
-                                <Button icon={ <FaCheck color="green" /> } type="text" size="small" className="m-0" />
-                            </Form.Item>
+                            <>
+                                <Form.Item className="m-0">
+                                    <Button icon={ <FaTrash color="red" /> } type="text" size="small"
+                                            className="m-0" />
+                                </Form.Item>
+                                <Form.Item className="m-0">
+                                    <Button icon={ <FaCheck color="green" /> } type="text" size="small"
+                                            className="m-0" />
+                                </Form.Item>
+                            </>
+
                         ) }
 
                     </div>

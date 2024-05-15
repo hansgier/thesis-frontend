@@ -10,7 +10,7 @@ import { AddEditProjectComponent } from "./AddEditProjectComponent.jsx";
 
 
 export const ProjectContainer = ({ onProjectClick }) => {
-    const { view } = useSelector((store) => store.user);
+    const { view } = useSelector((store) => store.auth);
     const [isHovered, setIsHovered] = useState(false);
     const [deleteProjectConfirm, setDeleteProjectConfirm] = useState(false);
     const [editProjectMode, setEditProjectMode] = useState(false);

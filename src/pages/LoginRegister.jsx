@@ -1,9 +1,10 @@
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { useState } from "react";
-import { Form, Input, Select } from "antd";
-import { loginUser, registerUser } from "../app/features/user/userSlice.js";
+import { useEffect, useState } from "react";
+import { Form, Input, Select, Spin } from "antd";
+import { loginUser, registerUser } from "../app/features/user/authSlice.js";
 import indexbg from "../assets/indexbg.png";
+import { barangaysList } from "../utils/barangaysList.js";
 
 const initialState = {
     username: "",
@@ -14,11 +15,18 @@ const initialState = {
 };
 
 export const LoginRegister = () => {
-    const { isLoading, user } = useSelector((store) => store.user);
+    const { isLoading, user, authError, authSuccess } = useSelector((store) => store.auth);
     const dispatch = useDispatch();
     const [form] = Form.useForm();
-
+    const navigate = useNavigate();
     const [isLoginMode, setIsLoginMode] = useState(true);
+
+    useEffect(() => {
+        if (user) {
+            navigate("/dashboard");
+        }
+    }, [user, navigate]);
+
 
     const onFinish = (values) => {
         if (isLoginMode) {
@@ -28,7 +36,7 @@ export const LoginRegister = () => {
                 username: values.username,
                 email: values.email,
                 password: values.password,
-                barangay: values.barangay
+                barangay_id: values.barangay_id
             }));
         }
     };
@@ -75,18 +83,29 @@ export const LoginRegister = () => {
                     <div className="space-y-4">
                         { isLoginMode ? (
                             <>
-                                <Form.Item name="email" rules={ [{
-                                    required: true,
-                                    message: "Email is required"
-                                }] }>
+                                <Form.Item
+                                    name="email"
+                                    rules={ [{
+                                        required: true,
+                                        message: "Email is required"
+                                    }] }
+                                    validateStatus={ isLoading ? "validating" : authError ? "error" : null }
+                                    help={ authError ? "Incorrect email address" : null }
+                                >
                                     <Input placeholder="Email Address"
                                            id="index_input"
+                                           rootClassName="index-input-password"
                                            className="bg-transparent hover:bg-transparent focus:bg-transparent focus-within:bg-transparent indexinput border-t-0 border-l-0 border-r-0 border-b-2 rounded-none px-4 py-2 outline-0 focus-within:outline-0 focus-within:ring-0 focus:!outline-0 focus:border-t-0 ring-0" />
                                 </Form.Item>
-                                <Form.Item name="password" rules={ [{
-                                    required: true,
-                                    message: "Password is required"
-                                }] }>
+                                <Form.Item
+                                    name="password"
+                                    rules={ [{
+                                        required: true,
+                                        message: "Password is required"
+                                    }] }
+                                    validateStatus={ isLoading ? "validating" : authError ? "error" : null }
+                                    help={ authError ? "Incorrect password" : null }
+                                >
                                     <Input.Password placeholder="Password"
                                                     rootClassName="index-input-password"
                                                     className="bg-transparent hover:bg-transparent focus:bg-transparent focus-within:bg-transparent indexinput border-t-0 border-l-0 border-r-0 border-b-2 rounded-none px-4 py-2 outline-0 focus-within:outline-0 focus-within:ring-0 focus:!outline-0 focus:border-t-0" />
@@ -118,47 +137,53 @@ export const LoginRegister = () => {
                                                     rootClassName="index-input-password"
                                                     className="bg-transparent hover:bg-transparent focus:bg-transparent focus-within:bg-transparent indexinput border-t-0 border-l-0 border-r-0 border-b-2 rounded-none px-4 py-2 outline-0 focus-within:outline-0 focus-within:ring-0 focus:!outline-0 focus:border-t-0" />
                                 </Form.Item>
-                                <Form.Item name="barangay" rules={ [{
+                                <Form.Item name="barangay_id" rules={ [{
                                     required: true,
                                     message: "Please select a barangay. Choose guest if you're a visitor"
                                 }] }>
                                     <Select placeholder="Barangay"
-                                            options={ [
-                                                {
-                                                    label: "Guest",
-                                                    value: "guest"
-                                                },
-                                                {
-                                                    label: "Linao",
-                                                    value: "linao"
-                                                }
-                                            ] }
+                                            options={ barangaysList }
                                             rootClassName="index-select-barangay"
                                             popupClassName="tae"
+
                                     />
                                 </Form.Item>
                             </>
                         ) }
                     </div>
-                    <Form.Item>
-                        <button
-                            className="bg-gradient-to-r font-bold font-sans from-[#24C6DC] h-11 hover:bg-gradient-to-l hover:duration-300 hover:ease-in-out hover:from-Thesis-300 hover:to-blue-300 hover:transition-all px-4 py-2 rounded-sm text-base text-indigo-100 to-[#514A9D] tracking-widest uppercase w-full"
-                            type="submit">{ isLoginMode ? "Sign in" : "Register" }
-                        </button>
-                    </Form.Item>
+                    <Spin spinning={ isLoading }>
+                        <Form.Item>
+                            <button
+                                className="bg-gradient-to-r font-bold font-sans from-[#24C6DC] h-11 hover:bg-gradient-to-l hover:duration-300 hover:ease-in-out hover:from-Thesis-300 hover:to-blue-300 hover:transition-all px-4 py-2 rounded-sm text-base text-indigo-100 to-[#514A9D] tracking-widest uppercase w-full"
+                                disabled={ isLoading }
+                                type="submit">{ isLoginMode ? "Sign in" : "Register" }
+                            </button>
+
+                        </Form.Item>
+                    </Spin>
                 </Form>
-                <div className="group max-w-sm mt-4 px-4 space-y-4 w-full sm:px-0 md:px-0">
-                    <NavLink
-                        to="/dashboard"
-                        className="bg-opacity-25border-opacity-100 border-2 border-Thesis-100 border-solid font-medium hover:border-Thesis-300 hover:duration-300 hover:ease-in-out hover:text-Thesis-300 hover:transition-all inline-block px-4 py-2 ring-0 ring-offset-0 rounded-sm text-base text-black w-full md:px-0"
-                    >
-                        Continue as a guest
-                    </NavLink>
+                <div className="group max-w-sm mt-0 px-4 space-y-4 w-full sm:px-0 md:px-0">
+                    { isLoading ? (
+                        <button
+                            disabled={ isLoading }
+                            className="bg-opacity-25border-opacity-100 border-2 opacity-50 border-Thesis-100 border-solid font-medium inline-block px-4 py-2 ring-0 ring-offset-0 rounded-sm text-base text-black w-full md:px-0"
+                        >
+                            Continue as a guest
+                        </button>
+                    ) : (
+                        <NavLink
+                            to="/dashboard"
+                            className="bg-opacity-25border-opacity-100 border-2 border-Thesis-100 border-solid font-medium hover:border-Thesis-300 hover:duration-300 hover:ease-in-out hover:text-Thesis-300 hover:transition-all inline-block px-4 py-2 ring-0 ring-offset-0 rounded-sm text-base text-black w-full md:px-0"
+                        >
+                            Continue as a guest
+                        </NavLink>
+                    ) }
                 </div>
                 <div className="max-w-sm mt-6 space-y-4 w-full" data-id="15">
                     <p className="flex flex-col text-base text-gray-600 sm:block" data-id="16">
-                        { isLoginMode ? "Don't have an account?" : "Already have an account?" }
+                        { isLoginMode ? "Don't have an account? " : "Already have an account? " }
                         <button
+                            disabled={ isLoading }
                             onClick={ () => {
                                 setIsLoginMode(!isLoginMode);
                                 form.resetFields();

@@ -2,16 +2,23 @@ import { useEffect, useState } from "react";
 import { project_tags } from "../utils/data-components.jsx";
 import { Button, Form, Input, Select } from "antd";
 import { useLocation } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { showCurrentUser } from "../app/features/user/authSlice.js";
 
 export const Profile = () => {
     const [isEditMode, setIsEditMode] = useState(false);
+    const { isFetchLoading, isError, userProfile } = useSelector((store) => store.auth);
     const location = useLocation();
+    const dispatch = useDispatch();
 
     useEffect(() => {
         if (location.pathname !== "/project" || location.pathname !== "/singleproject") {
             sessionStorage.setItem("scrollPosition", "0");
         }
+        dispatch(showCurrentUser());
     }, []);
+
+    console.log(userProfile);
     return (
         <div className="h-full max-h-full overflow-y-scroll pt-4 px-0 md:px-6">
             <div>

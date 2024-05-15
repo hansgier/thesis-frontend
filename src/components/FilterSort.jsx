@@ -1,6 +1,6 @@
 import { filterSort } from "../utils/data-components.jsx";
 import { useDispatch, useSelector } from "react-redux";
-import { resetView, toggleView } from "../app/features/user/userSlice.js";
+import { resetView, toggleView } from "../app/features/user/authSlice.js";
 import { useEffect, useState } from "react";
 import { RiSortAlphabetAsc, RiSortAlphabetDesc, RiSortAsc, RiSortDesc } from "react-icons/ri";
 import { Modal } from "antd";
@@ -30,7 +30,7 @@ const sortButtons = {
 };
 
 export const FilterSort = ({ page }) => {
-    const { view } = useSelector((store) => store.user);
+    const { view } = useSelector((store) => store.auth);
     const [viewClicked, setViewClicked] = useState(1);
     const [toggleSort, setToggleSort] = useState(0);
     const [openFilterMobile, setOpenFilterMobile] = useState(false);

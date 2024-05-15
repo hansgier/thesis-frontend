@@ -4,10 +4,10 @@ import { useEffect, useRef, useState } from "react";
 import { GoPlus } from "react-icons/go";
 import { FloatButton, Modal } from "antd";
 import { useDispatch, useSelector } from "react-redux";
-import { toggleAddProjectMode } from "../app/features/user/userSlice.js";
+import { toggleAddProjectMode } from "../app/features/user/authSlice.js";
 
 export const Projects = () => {
-    const { isAddProjectMode } = useSelector((store) => store.user);
+    const { isAddProjectMode } = useSelector((store) => store.auth);
     const dispatch = useDispatch();
     const location = useLocation();
     const [addProjectMode, setAddProjectMode] = useState(false);

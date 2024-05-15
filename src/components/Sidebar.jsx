@@ -1,6 +1,6 @@
 import { useDispatch, useSelector } from "react-redux";
 import React, { useEffect, useState } from "react";
-import { toggleSidebar } from "../app/features/user/userSlice.js";
+import { toggleSidebar } from "../app/features/user/authSlice.js";
 import { NavLink, useLocation } from "react-router-dom";
 import { sideLinks } from "../utils/data-components.jsx";
 import logo from "/src/assets/logo.png";
@@ -24,7 +24,7 @@ const MemoizedTooltip = React.memo(React.forwardRef((props, ref) => (
 
 export const Sidebar = () => {
     const location = useLocation();
-    const { isSidebarOpen } = useSelector((store) => store.user);
+    const { isSidebarOpen } = useSelector((store) => store.auth);
     const [activeNavLink, setActiveNavLink] = useState(1);
     const dispatch = useDispatch();
 

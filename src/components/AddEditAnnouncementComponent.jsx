@@ -7,7 +7,7 @@ import { useEffect } from "react";
 
 export const AddEditAnnouncementComponent = ({ mode }) => {
     const [form] = Form.useForm();
-    const { isAddAnnouncementMode } = useSelector((store) => store.user);
+    const { isAddAnnouncementMode } = useSelector((store) => store.auth);
 
     useEffect(() => {
         if (isAddAnnouncementMode === false) {

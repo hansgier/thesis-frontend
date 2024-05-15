@@ -1,10 +1,10 @@
 import { useDispatch, useSelector } from "react-redux";
-import { toggleNotifications } from "../app/features/user/userSlice.js";
+import { toggleNotifications } from "../app/features/user/authSlice.js";
 import { useEffect } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 
 export const NotifContainer = () => {
-    const { isNotificationsOpen } = useSelector((store) => store.user);
+    const { isNotificationsOpen } = useSelector((store) => store.auth);
     const dispatch = useDispatch();
 
     useEffect(() => {

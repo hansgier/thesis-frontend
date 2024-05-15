@@ -1,5 +1,6 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import {
+    AdminRoute,
     Announcements,
     Contacts,
     Dashboard,
@@ -8,6 +9,7 @@ import {
     NotFound,
     Profile,
     Projects,
+    ProtectedRoute,
     SharedLayout,
     Users
 } from "./pages/index.jsx";
@@ -19,8 +21,11 @@ function App() {
     return (
         <BrowserRouter>
             <Routes>
-                <Route index element={ <LoginRegister /> } />
-                <Route path="/" element={ <SharedLayout /> }>
+                <Route path="/" element={
+                    <ProtectedRoute>
+                        <SharedLayout />
+                    </ProtectedRoute>
+                }>
                     <Route path="dashboard" element={ <Dashboard /> } />
                     <Route path="projects" element={ <Projects /> } />
                     <Route path="projects/singleprojects" element={ <SingleProject /> } />
@@ -28,8 +33,9 @@ function App() {
                     <Route path="messages" element={ <Messages /> } />
                     <Route path="contacts" element={ <Contacts /> } />
                     <Route path="profile" element={ <Profile /> } />
-                    <Route path="users" element={ <Users /> } />
+                    <Route path="users" element={ <AdminRoute><Users /></AdminRoute> } />
                 </Route>
+                <Route index element={ <LoginRegister /> } />
                 <Route path="*" element={ <NotFound /> } />
             </Routes>
         </BrowserRouter>

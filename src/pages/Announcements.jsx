@@ -4,11 +4,11 @@ import { AddEditAnnouncementComponent, AnnouncementCard } from "../components/in
 import { useLocation } from "react-router-dom";
 import { useEffect } from "react";
 import { GoPlus } from "react-icons/go";
-import { toggleAddAnnouncementMode } from "../app/features/user/userSlice.js";
+import { toggleAddAnnouncementMode } from "../app/features/user/authSlice.js";
 import { useDispatch, useSelector } from "react-redux";
 
 export const Announcements = () => {
-    const { isAddAnnouncementMode } = useSelector((store) => store.user);
+    const { isAddAnnouncementMode } = useSelector((store) => store.auth);
     const dispatch = useDispatch();
     const location = useLocation();
 

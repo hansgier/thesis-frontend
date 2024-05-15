@@ -27,15 +27,6 @@ export const Dashboard = () => {
                         <p className="font-semibold mb-4 text-Winter-700 text-sm text-white">Completed</p>
                         <div className="flex justify-between">
                             <h2 className="font-bold text-white text-xl md:text-2xl">12,345</h2>
-                            <div className="flex">
-                                <p className="flex items-center text-Winter-800 text-sm text-white tracking-wide md:text-base">+0.7%</p>
-                                <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
-                                     viewBox="0 0 24 24"
-                                     width="24" className="text-green-700">
-                                    <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round"
-                                          strokeWidth="2" d="M12 6v13m0-13 4 4m-4-4-4 4" />
-                                </svg>
-                            </div>
                         </div>
                     </div>
                     <div
@@ -43,15 +34,6 @@ export const Dashboard = () => {
                         <p className="font-semibold mb-4 text-Winter-700 text-sm text-white">On hold</p>
                         <div className="flex justify-between">
                             <h2 className="font-bold text-white text-xl md:text-2xl">12,345</h2>
-                            <div className="flex">
-                                <p className="flex items-center text-Winter-800 text-sm text-white tracking-wide md:text-base">+0.7%</p>
-                                <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
-                                     viewBox="0 0 24 24"
-                                     width="24" className="text-yellow-700">
-                                    <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round"
-                                          strokeWidth="2" d="M12 6v13m0-13 4 4m-4-4-4 4" />
-                                </svg>
-                            </div>
                         </div>
                     </div>
                     <div
@@ -59,15 +41,6 @@ export const Dashboard = () => {
                         <p className="font-semibold mb-4 text-Winter-700 text-sm text-white">Cancelled</p>
                         <div className="flex justify-between">
                             <h2 className="font-bold text-white text-xl md:text-2xl">12,345</h2>
-                            <div className="flex">
-                                <p className="flex items-center text-Winter-800 text-sm text-white tracking-wide md:text-base">+0.7%</p>
-                                <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
-                                     viewBox="0 0 24 24"
-                                     width="24" className="text-red-700">
-                                    <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round"
-                                          strokeWidth="2" d="M12 6v13m0-13 4 4m-4-4-4 4" />
-                                </svg>
-                            </div>
                         </div>
                     </div>
                 </div>

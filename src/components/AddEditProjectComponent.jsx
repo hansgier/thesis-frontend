@@ -11,7 +11,7 @@ const range_formatter = (value) => `${ value }%`;
 
 export const AddEditProjectComponent = React.memo(({ mode }) => {
     const [form] = Form.useForm();
-    const { isAddProjectMode } = useSelector((store) => store.user);
+    const { isAddProjectMode } = useSelector((store) => store.auth);
     const [status, setStatus] = useState(null);
 
     useEffect(() => {
