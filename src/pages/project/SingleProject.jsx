@@ -1,5 +1,5 @@
 import { DetailsUpdate, ImageCarousel, LikeDislikeButtons } from "../../components/index.jsx";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { CommentSection } from "./CommentSection.jsx";
 import { Button, Modal, Segmented } from "antd";
 import { useWindowSize } from "../../hooks/index.jsx";
@@ -8,6 +8,9 @@ import { ProjectUpdate } from "./ProjectUpdate.jsx";
 import { CiEdit } from "react-icons/ci";
 import { RiSortAsc, RiSortDesc } from "react-icons/ri";
 import { useReducer } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import moment from "moment";
+import { capitalizeFirstLetter } from "../../utils/functions.js";
 
 const uimgsrc = ["/src/assets/logo.png", "/src/assets/logo.png", "/src/assets/logo.png"];
 
@@ -42,10 +45,34 @@ const reducer = (state, action) => {
 };
 
 export const SingleProject = () => {
+    const { projectId } = useParams();
+    const { projects, singleProject } = useSelector((store) => store.projects);
+    const { user } = useSelector((store) => store.auth);
+    const { users4admin } = useSelector((store) => store.users);
+    const { barangays } = useSelector((store) => store.barangays);
+    const { reactions } = useSelector((store) => store.reactions);
+    const dispatchRedux = useDispatch();
     const navigate = useNavigate();
     const { width } = useWindowSize();
     const [state, dispatch] = useReducer(reducer, initialState);
-    
+
+    function getNameByCreatedBy(createdBy) {
+        const user = users4admin.find((user) => user.id === createdBy);
+
+        if (user) {
+            if (user.role === "barangay") {
+                const barangay = barangays.find((b) => b.id === user.barangay_id);
+                return barangay ? barangay.name : "Unknown Barangay";
+            } else if (user.role === "admin") {
+                return "City Government";
+            } else {
+                return user.username;
+            }
+        }
+
+        return "Unknown User";
+    }
+
     return (
         <>
             {/*-----------------------DETAILS-UPDATE SECTION-----------------------*/ }
@@ -67,9 +94,12 @@ export const SingleProject = () => {
                             />
                         </div>
                         <div className="pt-2">
-                            <div className="font-normal select-none text-gray-700 text-xs">Last updated on May 1, 2023
+                            <div className="font-normal select-none text-gray-700 text-xs">
+                                { `Last updated on  ${ moment(singleProject.payload.updatedAt).format("MMMM D, YYYY" +
+                                    " h:mm A") }` }
                             </div>
-                            <div className="select-none text-gray-700 text-xs">By City Government</div>
+                            <div
+                                className="select-none text-gray-700 text-xs">{ `By ${ getNameByCreatedBy(singleProject.payload.createdBy) }` }</div>
                         </div>
                         <div className="border-t mt-4 overflow-y-hidden pt-2 w-full">
                             <div className="h-[474px] overflow-y-scroll">
@@ -200,7 +230,7 @@ export const SingleProject = () => {
                                 <div className="flex flex-col gap-1 md:grid">
                                     {/*TITLE*/ }
                                     <h3 className="font-semibold leading-none select-none text-lg tracking-tight md:text-2xl">
-                                        Linao Road Construction
+                                        { singleProject.payload.title }
                                     </h3>
                                     <div className="flex items-center">
                                         <div className="flex group items-center mr-4 space-x-1">
@@ -217,11 +247,12 @@ export const SingleProject = () => {
                                                 </g>
                                             </svg>
                                             {/*POST MOMENT DATE*/ }
-                                            <p className="mr-5 select-none text-[#29d2b0] text-xs font-bold">2d ago</p>
+                                            <p className="mr-5 select-none text-[#29d2b0] text-xs font-bold">{ moment(singleProject.payload.createdAt).fromNow() }</p>
                                         </div>
                                         {/*STATUS*/ }
                                         <div
-                                            className="bg-gray-100 border border-transparent focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-ring font-semibold hover:bg-secondary/80 inline-flex items-center px-2.5 py-0.5 rounded-full select-none text-secondary-foreground text-xs transition-colors w-fit whitespace-nowrap">Ongoing
+                                            className="bg-gray-100 border border-transparent focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-ring font-semibold hover:bg-secondary/80 inline-flex items-center px-2.5 py-0.5 rounded-full select-none text-secondary-foreground text-xs transition-colors w-fit whitespace-nowrap">
+                                            { capitalizeFirstLetter(singleProject.payload.status) }
                                         </div>
                                     </div>
                                 </div>
@@ -246,104 +277,21 @@ export const SingleProject = () => {
                             </div>
                             <div className="mb-4 px-4 md:px-6">
                                 {/*DESCRIPTION*/ }
-                                <p className="leading-relaxed md:text-base select-none text-gray-700 text-justify text-sm">The
-                                                                                                                           Valley
-                                                                                                                           Road
-                                                                                                                           Expansion
-                                                                                                                           project
-                                                                                                                           will
-                                                                                                                           widen
-                                                                                                                           the
-                                                                                                                           existing
-                                                                                                                           two-lane
-                                                                                                                           road
-                                                                                                                           to
-                                                                                                                           four
-                                                                                                                           lanes
-                                                                                                                           over
-                                                                                                                           a
-                                                                                                                           5-mile
-                                                                                                                           stretch
-                                                                                                                           between
-                                                                                                                           Main
-                                                                                                                           Street
-                                                                                                                           and
-                                                                                                                           Interstate
-                                                                                                                           95.
-                                                                                                                           Intersection
-                                                                                                                           improvements
-                                                                                                                           with
-                                                                                                                           turn
-                                                                                                                           lanes,
-                                                                                                                           roundabouts,
-                                                                                                                           and
-                                                                                                                           traffic
-                                                                                                                           signals
-                                                                                                                           will
-                                                                                                                           be
-                                                                                                                           added.
-                                                                                                                           Drainage,
-                                                                                                                           curbs,
-                                                                                                                           sidewalks,
-                                                                                                                           and
-                                                                                                                           paved
-                                                                                                                           shoulders
-                                                                                                                           will
-                                                                                                                           also
-                                                                                                                           be
-                                                                                                                           constructed.
-                                                                                                                           The
-                                                                                                                           $22
-                                                                                                                           million
-                                                                                                                           project
-                                                                                                                           is
-                                                                                                                           funded
-                                                                                                                           by
-                                                                                                                           state
-                                                                                                                           and
-                                                                                                                           federal
-                                                                                                                           grants,
-                                                                                                                           with
-                                                                                                                           construction
-                                                                                                                           from
-                                                                                                                           2025
-                                                                                                                           to
-                                                                                                                           2027.
-                                                                                                                           Once
-                                                                                                                           complete,
-                                                                                                                           Valley
-                                                                                                                           Road
-                                                                                                                           will
-                                                                                                                           have
-                                                                                                                           increased
-                                                                                                                           capacity
-                                                                                                                           and
-                                                                                                                           safety
-                                                                                                                           enhancements
-                                                                                                                           for
-                                                                                                                           all
-                                                                                                                           transportation
-                                                                                                                           modes.</p>
+                                <p className="leading-relaxed md:text-base select-none text-gray-700 text-justify text-sm">
+                                    { singleProject.payload.description }
+                                </p>
                             </div>
                             {/*PROJECT IMAGE CAROUSEL*/ }
-                            <div className="px-4 md:px-6">
+                            { singleProject.payload.media > 1 && <div className="px-4 md:px-6">
                                 {/*TODO: put the project images array in the images prop for image carousel*/ }
                                 <ImageCarousel images={ [
                                     "https://pinegrow.com/placeholders/img18.jpg"
                                 ] } />
-                            </div>
+                            </div> }
+
                             <div className="border-b gap-2 grid pb-3 px-4 md:px-6">
                                 <div className="flex gap-2 h-8 items-center mt-4 text-sm md:gap-4">
-                                    <LikeDislikeButtons likes="23" dislikes="9" />
-                                    <div className="flex gap-1 h-full items-center">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                             viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"
-                                             strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4">
-                                            <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"></path>
-                                            <circle cx="12" cy="12" r="3"></circle>
-                                        </svg>
-                                        <span className="select-none text-[#454545] text-xs md:text-sm">23</span>
-                                    </div>
+                                    <LikeDislikeButtons reactions={ reactions } />
                                 </div>
                             </div>
                             <CommentSection />

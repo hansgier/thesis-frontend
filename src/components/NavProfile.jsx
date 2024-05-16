@@ -8,7 +8,7 @@ import { Popover } from "antd";
 
 export const NavProfile = React.memo(({ mode }) => {
     const [isOpen, setIsOpen] = useState(false);
-    const { user } = useSelector((store) => store.auth);
+    const { user, userProfile } = useSelector((store) => store.auth);
 
     const togglePopup = () => {
         setIsOpen(!isOpen);
@@ -26,8 +26,8 @@ export const NavProfile = React.memo(({ mode }) => {
                         <CgProfile color={ "#ffffff" } size={ 34 } />
                     </div>
                     <div className="flex-1 h-full">
-                        <h4 className="font-semibold max-w-full select-none text-gray-800 text-left text-sm truncate w-full">{ user.name }</h4>
-                        <p className="select-none text-gray-500 text-xs">gierhansclement@gmail.com</p>
+                        <h4 className="font-semibold max-w-32 select-none text-gray-800 text-left truncate text-sm ">{ userProfile.username }dasdfasdffasdf</h4>
+                        <p className="select-none text-gray-500 text-xs line-clamp-1">{ userProfile.email }</p>
                     </div>
                     <div className="flex h-full">
                         <svg fill="#6b7280" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"

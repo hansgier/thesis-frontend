@@ -1,13 +1,14 @@
 import { motion } from "framer-motion";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { logoutUser, toggleSidebar } from "../app/features/user/authSlice.js";
+import { logoutUser, setGuestMode, setLoading, toggleSidebar } from "../app/features/user/authSlice.js";
 import { Spin } from "antd";
 import React from "react";
 
 export const LogViewProfilePopup = React.memo(({ comp_id, mode }) => {
-    const { isSideBarOpen, isLoading, authSuccess, authError } = useSelector((store) => store.auth);
+    const { isSideBarOpen, isLoading, authSuccess, authError, guestMode } = useSelector((store) => store.auth);
     const dispatch = useDispatch();
+    const navigate = useNavigate();
 
     return (
         <motion.div
@@ -68,7 +69,15 @@ export const LogViewProfilePopup = React.memo(({ comp_id, mode }) => {
             <button
                 disabled={ isLoading }
                 onClick={ () => {
-                    dispatch(logoutUser());
+                    setTimeout(() => {
+                        if (guestMode) {
+                            dispatch(setLoading());
+                            dispatch(setGuestMode({ payload: false }));
+                            navigate("/");
+                        } else {
+                            dispatch(logoutUser());
+                        }
+                    }, 2000);
                 } }
                 className="flex hover:bg-gray-500 hover:bg-opacity-10 items-center justify-between p-2 rounded-md text-gray-700 text-sm md:text-base hover:text-blue-400"
                 type="button">

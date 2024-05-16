@@ -16,12 +16,14 @@ const initialState = {
     view: 0,
     isLoading: false,
     user: getUserFromLocalStorage(),
-    userProfile: null,
+    userProfile: getUserFromLocalStorage(),
     authError: false,
     authErrorMessage: "",
     authSuccess: false,
     isError: false,
-    isFetchLoading: false
+    isFetchLoading: false,
+    guestMode: false,
+    oldPassword: ""
 };
 
 export const registerUser = createAsyncThunk("auth/register", async (user, thunkAPI) => {
@@ -46,26 +48,21 @@ export const loginUser = createAsyncThunk("auth/login", async (user, thunkAPI) =
     }
 );
 
-export const logoutUser = createAsyncThunk("auth/logout", async (user, thunkAPI) => {
-        try {
-            await customFetch.delete(`${ AUTH_URL }/logout`);
-        } catch (e) {
-            console.log(e.response.data.message);
-            return thunkAPI.rejectWithValue(e.response.data.message);
-        }
+export const updateUser = createAsyncThunk("users/updateUser", async (user, thunkAPI) => {
+    try {
+        const state = thunkAPI.getState().auth;
+        const headers = {
+            userId: state.user.id
+        };
+        const resp = await customFetch.patch(`${ USERS_URL }/update-user`, user, {
+            headers
+        });
+        return resp.data;
+    } catch (e) {
+        console.log(e.response.data.message);
+        return thunkAPI.rejectWithValue(e.response.data.message);
     }
-);
-
-export const showCurrentUser = createAsyncThunk("users/me", async (userProfile, thunkAPI) => {
-        try {
-            const response = await customFetch.get(`${ USERS_URL }/me`);
-            return response.data;
-        } catch (e) {
-            console.log(e.response.data.message);
-            return thunkAPI.rejectWithValue(e.response.data.message);
-        }
-    }
-);
+});
 
 
 const authSlice = createSlice({
@@ -92,40 +89,51 @@ const authSlice = createSlice({
         },
         resetView: (state) => {
             state.view = 0;
+        },
+        setOldPassword: (state, { payload }) => {
+            state.oldPassword = payload;
+        },
+        setLoading: (state) => {
+            state.isLoading = false;
+        },
+        logoutUser: (state) => {
+            state.user = null;
+            state.userProfile = null;
+            state.isSidebarOpen = false;
+            state.isLoading = false;
+            removeUserFromLocalStorage();
+        },
+        setGuestMode: (state, { payload }) => {
+            state.guestMode = payload;
         }
     },
     extraReducers(builder) {
         builder
-            .addCase(showCurrentUser.pending, (state) => {
-                state.isFetchLoading = true;
-            })
-            .addCase(showCurrentUser.fulfilled, (state, { payload }) => {
-                state.isFetchLoading = false;
-                state.userProfile = payload;
-                state.isError = false;
-            })
-            .addCase(showCurrentUser.rejected, (state) => {
-                state.isFetchLoading = false;
-                state.isError = true;
-            })
-
-            .addCase(logoutUser.pending, (state) => {
+            .addCase(updateUser.pending, (state) => {
+                state.authError = false;
+                state.authSuccess = false;
                 state.isLoading = true;
             })
-            .addCase(logoutUser.fulfilled, (state) => {
+            .addCase(updateUser.fulfilled, (state, { payload }) => {
+                const { user } = payload;
                 state.isLoading = false;
-                state.isSidebarOpen = false;
+                state.userProfile = user;
+                state.user = user;
                 state.authSuccess = true;
                 state.authError = false;
-                removeUserFromLocalStorage();
+                state.authErrorMessage = "";
+                addUserToLocalStorage(user);
             })
-            .addCase(logoutUser.rejected, (state) => {
+            .addCase(updateUser.rejected, (state, { payload }) => {
                 state.isLoading = false;
                 state.authError = true;
                 state.authSuccess = false;
+                state.authErrorMessage = payload;
             })
 
             .addCase(registerUser.pending, (state) => {
+                state.authSuccess = false;
+                state.authError = false;
                 state.isLoading = true;
             })
             .addCase(registerUser.fulfilled, (state, { payload }) => {
@@ -133,7 +141,9 @@ const authSlice = createSlice({
                 state.isLoading = false;
                 state.user = user;
                 state.authSuccess = true;
+                state.guestMode = false;
                 state.authError = false;
+                state.authErrorMessage = "";
                 addUserToLocalStorage(user);
             })
             .addCase(registerUser.rejected, (state, { payload }) => {
@@ -144,14 +154,19 @@ const authSlice = createSlice({
             })
 
             .addCase(loginUser.pending, (state) => {
+                state.authSuccess = false;
+                state.authError = false;
                 state.isLoading = true;
             })
             .addCase(loginUser.fulfilled, (state, { payload }) => {
                 const { user } = payload;
                 state.isLoading = false;
+                state.userProfile = user;
                 state.user = user;
                 state.authSuccess = true;
                 state.authError = false;
+                state.authErrorMessage = "";
+                state.guestMode = false;
                 addUserToLocalStorage(user);
             })
             .addCase(loginUser.rejected, (state, { payload }) => {
@@ -170,6 +185,10 @@ export const {
     toggleAddProjectMode,
     toggleAddAnnouncementMode,
     toggleView,
-    resetView
+    resetView,
+    logoutUser,
+    setLoading,
+    setGuestMode,
+    setOldPassword
 } = authSlice.actions;
 export default authSlice.reducer;

@@ -1,28 +1,55 @@
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Button, Modal, Popconfirm, Tooltip } from "antd";
 import { useNavigate } from "react-router-dom";
-import { LikeDislikeButtons } from "./LikeDislikeButtons.jsx";
-import { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { MdDeleteOutline } from "react-icons/md";
 import { AnimatePresence, motion } from "framer-motion";
 import { CiEdit } from "react-icons/ci";
 import { AddEditProjectComponent } from "./AddEditProjectComponent.jsx";
+import moment from "moment";
+import { getAllProjectReactions } from "../app/features/reactions/reactionsSlice.js";
+import { capitalizeFirstLetter } from "../utils/functions.js";
+import { setSingleProject } from "../app/features/projects/projectsSlice.js";
 
 
-export const ProjectContainer = ({ onProjectClick }) => {
-    const { view } = useSelector((store) => store.auth);
+export const ProjectContainer = React.memo(({ project }) => {
+    const { view, user } = useSelector((store) => store.auth);
+    const { users4admin } = useSelector((store) => store.users);
+    const { barangays } = useSelector((store) => store.barangays);
+    const { reactions, totalReactions } = useSelector((store) => store.reactions);
     const [isHovered, setIsHovered] = useState(false);
     const [deleteProjectConfirm, setDeleteProjectConfirm] = useState(false);
     const [editProjectMode, setEditProjectMode] = useState(false);
     const navigate = useNavigate();
+    const dispatch = useDispatch();
+
+    useEffect(() => {
+        dispatch(getAllProjectReactions(project.id));
+    }, [totalReactions]);
 
     const onDeleteProjectConfirm = () => {
         setDeleteProjectConfirm(true);
     };
 
-    const handleTabChange = (key) => {
-        setTab(key);
-    };
+    const barangayNames = project.barangays.map(barangay => barangay.name);
+    const formattedBarangayNames = barangayNames.join(" | ");
+
+    function getNameByCreatedBy(createdBy) {
+        const user = users4admin.find((user) => user.id === createdBy);
+
+        if (user) {
+            if (user.role === "barangay") {
+                const barangay = barangays.find((b) => b.id === user.barangay_id);
+                return barangay ? barangay.name : "Unknown Barangay";
+            } else if (user.role === "admin") {
+                return "City Government";
+            } else {
+                return user.username;
+            }
+        }
+
+        return "Unknown User";
+    }
 
     return (
         <div onMouseOver={ () => setIsHovered(true) } onMouseLeave={ () => setIsHovered(false) }>
@@ -61,11 +88,12 @@ export const ProjectContainer = ({ onProjectClick }) => {
                             </g>
                         </svg>
                     </div>
-                    <div onClick={ () => navigate("/projects/singleprojects") }
+                    <div onClick={ () => {
+                        dispatch(setSingleProject({ payload: project }));
+                        navigate(`/projects/${ project.id }`);
+                    } }
                          className="flex flex-col gap-1 md:grid hover:cursor-pointer">
-                        <h3 className="font-semibold leading-none select-none text-lg tracking-tight md:text-2xl">Linao
-                                                                                                                  Road
-                                                                                                                  Construction</h3>
+                        <h3 className="font-semibold leading-none select-none text-lg tracking-tight md:text-2xl">{ project.title }</h3>
                         <div className="flex items-center">
                             <div className="flex group items-center mr-4 space-x-1">
                                 <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" width="14">
@@ -77,9 +105,11 @@ export const ProjectContainer = ({ onProjectClick }) => {
                                         <circle cx="12" cy="12" r="9" stroke="#29d2b0" strokeWidth="2"></circle>
                                     </g>
                                 </svg>
-                                <Tooltip title="Posted on March 23, 2023" placement="bottom">
-                                    <p className="group-hover:underline mr-5 select-none text-[#29d2b0] text-xs font-bold">2d
-                                                                                                                           ago</p>
+                                <Tooltip title={ `Posted on ${ moment(project.createdAt).format("MMMM D, YYYY," +
+                                    " h:mm:ss a") }` } placement="bottom">
+                                    <p className="group-hover:underline mr-5 select-none text-[#29d2b0] text-xs font-bold">
+                                        { moment(project.createdAt).fromNow() }
+                                    </p>
                                 </Tooltip>
                             </div>
                             <div className="gap-1 group hidden hover:cursor-pointer items-center mr-5 lg:flex">
@@ -95,46 +125,52 @@ export const ProjectContainer = ({ onProjectClick }) => {
                                     </g>
                                 </svg>
                                 <span
-                                    className="group-hover:duration-300 group-hover:text-gray-500 group-hover:transition-all max-w-xs overflow-ellipsis overflow-hidden select-none text-gray-400 text-xs">Tambulilid | Linao | Can-adieng |</span>
+                                    className="group-hover:duration-300 group-hover:text-gray-500 group-hover:transition-all max-w-xs overflow-ellipsis overflow-hidden select-none text-gray-400 text-xs">
+                                    { formattedBarangayNames }
+                                </span>
                             </div>
                             <div
-                                className="bg-gray-100 border border-transparent focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-ring font-semibold hover:bg-secondary/80 inline-flex items-center px-2.5 py-0.5 rounded-full select-none text-secondary-foreground text-xs transition-colors w-fit whitespace-nowrap">Ongoing
+                                className="bg-gray-100 border border-transparent focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-ring font-semibold hover:bg-secondary/80 inline-flex items-center px-2.5 py-0.5 rounded-full select-none text-secondary-foreground text-xs transition-colors w-fit whitespace-nowrap">
+                                { capitalizeFirstLetter(project.status) }
                             </div>
                         </div>
                     </div>
-                    { isHovered ? <div className="flex items-center ml-auto space-x-2 text-Thesis-200 text-xs">
-                        <Button icon={ <CiEdit /> } type="dashed" onClick={ () => setEditProjectMode(true) } />
-                        <Modal centered title="Edit Project" open={ editProjectMode }
-                               onCancel={ () => setEditProjectMode(false) }
-                               footer={ null } wrapClassName="add-project-modal" width={ 800 }>
-                            <div className="pb-1 border-b-2 mb-3 select-none">Edit the details of the project.
-                            </div>
-                            <AddEditProjectComponent mode="edit" />
-                        </Modal>
-                        <Popconfirm title="Delete Project" description="Are you sure you want to delete this project?"
-                                    onConfirm={ onDeleteProjectConfirm }>
-                            <Button icon={ <MdDeleteOutline /> } danger type="primary" />
-                        </Popconfirm>
-                    </div> : <div className="flex items-center ml-auto space-x-2 text-Thesis-200 text-xs">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                             stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
-                             className="h-4 hidden w-4 lg:block">
-                            <rect width="16" height="20" x="4" y="2" rx="2" ry="2"></rect>
-                            <path d="M9 22v-4h6v4"></path>
-                            <path d="M8 6h.01"></path>
-                            <path d="M16 6h.01"></path>
-                            <path d="M12 6h.01"></path>
-                            <path d="M12 10h.01"></path>
-                            <path d="M12 14h.01"></path>
-                            <path d="M16 10h.01"></path>
-                            <path d="M16 14h.01"></path>
-                            <path d="M8 10h.01"></path>
-                            <path d="M8 14h.01"></path>
-                        </svg>
-                        <span className="font-bold hidden select-none lg:block">City Government</span>
-                    </div> }
-
-
+                    { isHovered ?
+                        <div className="flex items-center ml-auto space-x-2 text-Thesis-200 text-xs">
+                            <Button icon={ <CiEdit /> } type="dashed" onClick={ () => setEditProjectMode(true) } />
+                            <Modal centered title="Edit Project" open={ editProjectMode }
+                                   onCancel={ () => setEditProjectMode(false) }
+                                   footer={ null } wrapClassName="add-project-modal" width={ 800 }>
+                                <div className="pb-1 border-b-2 mb-3 select-none">Edit the details of the project.
+                                </div>
+                                <AddEditProjectComponent mode="edit" />
+                            </Modal>
+                            <Popconfirm title="Delete Project"
+                                        description="Are you sure you want to delete this project?"
+                                        onConfirm={ onDeleteProjectConfirm }>
+                                <Button icon={ <MdDeleteOutline /> } danger type="primary" />
+                            </Popconfirm>
+                        </div> : <div className="flex items-center ml-auto space-x-2 text-Thesis-200 text-xs">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                 fill="none"
+                                 stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
+                                 className="h-4 hidden w-4 lg:block">
+                                <rect width="16" height="20" x="4" y="2" rx="2" ry="2"></rect>
+                                <path d="M9 22v-4h6v4"></path>
+                                <path d="M8 6h.01"></path>
+                                <path d="M16 6h.01"></path>
+                                <path d="M12 6h.01"></path>
+                                <path d="M12 10h.01"></path>
+                                <path d="M12 14h.01"></path>
+                                <path d="M16 10h.01"></path>
+                                <path d="M16 14h.01"></path>
+                                <path d="M8 10h.01"></path>
+                                <path d="M8 14h.01"></path>
+                            </svg>
+                            <span className="font-bold hidden select-none lg:block">
+                            { getNameByCreatedBy(project.createdBy) }
+                        </span>
+                        </div> }
                 </div>
                 <AnimatePresence>
                     { view === 0 && (
@@ -144,95 +180,28 @@ export const ProjectContainer = ({ onProjectClick }) => {
                                 animate={ { opacity: 1 } }
                                 exit={ { opacity: 0 } }
                                 className="mb-4 px-4 md:px-6">
-                                <p className="leading-relaxed md:text-base select-none text-gray-700 text-justify text-sm">The
-                                                                                                                           Valley
-                                                                                                                           Road
-                                                                                                                           Expansion
-                                                                                                                           project
-                                                                                                                           will
-                                                                                                                           widen
-                                                                                                                           the
-                                                                                                                           existing
-                                                                                                                           two-lane
-                                                                                                                           road
-                                                                                                                           to
-                                                                                                                           four
-                                                                                                                           lanes
-                                                                                                                           over
-                                                                                                                           a
-                                                                                                                           5-mile
-                                                                                                                           stretch
-                                                                                                                           between
-                                                                                                                           Main
-                                                                                                                           Street
-                                                                                                                           and
-                                                                                                                           Interstate
-                                                                                                                           95.
-                                                                                                                           Intersection
-                                                                                                                           improvements
-                                                                                                                           with
-                                                                                                                           turn
-                                                                                                                           lanes,
-                                                                                                                           roundabouts,
-                                                                                                                           and
-                                                                                                                           traffic
-                                                                                                                           signals
-                                                                                                                           will
-                                                                                                                           be
-                                                                                                                           added.
-                                                                                                                           Drainage,
-                                                                                                                           curbs,
-                                                                                                                           sidewalks,
-                                                                                                                           and
-                                                                                                                           paved
-                                                                                                                           shoulders
-                                                                                                                           will
-                                                                                                                           also
-                                                                                                                           be
-                                                                                                                           constructed.
-                                                                                                                           The
-                                                                                                                           $22
-                                                                                                                           million
-                                                                                                                           project
-                                                                                                                           is
-                                                                                                                           funded
-                                                                                                                           by
-                                                                                                                           state
-                                                                                                                           and
-                                                                                                                           federal
-                                                                                                                           grants,
-                                                                                                                           with
-                                                                                                                           construction
-                                                                                                                           from
-                                                                                                                           2025
-                                                                                                                           to
-                                                                                                                           2027.
-                                                                                                                           Once
-                                                                                                                           complete,
-                                                                                                                           Valley
-                                                                                                                           Road
-                                                                                                                           will
-                                                                                                                           have
-                                                                                                                           increased
-                                                                                                                           capacity
-                                                                                                                           and
-                                                                                                                           safety
-                                                                                                                           enhancements
-                                                                                                                           for
-                                                                                                                           all
-                                                                                                                           transportation
-                                                                                                                           modes.</p>
+                                <p className="leading-relaxed md:text-base select-none text-gray-700 text-justify text-sm">
+                                    { project.description }
+                                </p>
                             </motion.div>
-                            <div className="mx-4 pt-[334px] px-4 relative md:mx-6 md:px-6">
-                                <img alt="project_img" src="https://pinegrow.com/placeholders/img18.jpg"
-                                     onClick={ () => navigate("/projects/singleprojects") }
-                                     className="absolute h-full left-0 object-center object-cover rounded-xl top-0 w-full hover:cursor-pointer" />
-                            </div>
+                            { project.media.length > 0 &&
+                                <div className="mx-4 pt-[334px] px-4 relative md:mx-6 md:px-6">
+                                    <img alt="project_img" src={ project.media[0]?.url }
+                                         onClick={ () => {
+                                             dispatch(setSingleProject({ payload: project }));
+                                             navigate(`/projects/${ project.id }`);
+                                         } }
+                                         className="absolute h-full left-0 object-center object-cover rounded-xl top-0 w-full hover:cursor-pointer" />
+                                </div>
+                            }
                             <div className="gap-2 grid pb-3 px-4 md:px-6">
                                 <div className="flex gap-2 h-8 items-center mt-4 text-sm md:gap-4">
-                                    <LikeDislikeButtons likes="23" dislikes="9" />
+                                    {/*<LikeDislikeButtons reactions={ reactions } />*/ }
                                     <div
-                                        onClick={ () => navigate("/projects/singleprojects") }
+                                        onClick={ () => {
+                                            dispatch(setSingleProject({ payload: project }));
+                                            navigate(`/projects/${ project.id }`);
+                                        } }
                                         className="duration-300 flex gap-1 h-full hover:bg-blue-50 hover:rounded-md items-center px-2 transition-colors hover:cursor-pointer"
                                         data-pg-ia='{"l":[{"name":"Hover UserComment Button"}]}'>
                                         <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"
@@ -254,17 +223,8 @@ export const ProjectContainer = ({ onProjectClick }) => {
                                                 </defs>
                                             </g>
                                         </svg>
-                                        <span className="select-none text-[#454545] text-xs md:text-sm">12</span>
-                                    </div>
-                                    <div className="flex gap-1 h-full items-center">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                             viewBox="0 0 24 24"
-                                             fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"
-                                             strokeLinejoin="round" className="w-4 h-4">
-                                            <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"></path>
-                                            <circle cx="12" cy="12" r="3"></circle>
-                                        </svg>
-                                        <span className="select-none text-[#454545] text-xs md:text-sm">23</span>
+                                        <span
+                                            className="select-none text-[#454545] text-xs md:text-sm">{ project.commentCount }</span>
                                     </div>
                                 </div>
                             </div>
@@ -274,4 +234,4 @@ export const ProjectContainer = ({ onProjectClick }) => {
             </div>
         </div>
     );
-};
+});

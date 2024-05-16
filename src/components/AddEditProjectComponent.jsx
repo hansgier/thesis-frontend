@@ -1,15 +1,17 @@
-import { Button, Col, DatePicker, Form, Input, InputNumber, Row, Select, Slider, Upload } from "antd";
+import { Button, Col, DatePicker, Form, Input, InputNumber, message, Row, Select, Slider, Upload } from "antd";
 import { project_attributes, project_status, project_tags } from "../utils/data-components.jsx";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import React, { useEffect, useState } from "react";
-import { CloudinaryContext } from "cloudinary-react";
 import { FaCloudUploadAlt } from "react-icons/fa";
+import { deleteImages, uploadImages } from "../app/features/projects/projectsSlice.js";
 //TODO: get the values of project for editing mode
 const { Dragger } = Upload;
 
 const range_formatter = (value) => `${ value }%`;
 
 export const AddEditProjectComponent = React.memo(({ mode }) => {
+    const { uploadedImages, uploadLoading, uploadError } = useSelector((state) => state.projects);
+    const dispatch = useDispatch();
     const [form] = Form.useForm();
     const { isAddProjectMode } = useSelector((store) => store.auth);
     const [status, setStatus] = useState(null);
@@ -19,6 +21,21 @@ export const AddEditProjectComponent = React.memo(({ mode }) => {
             form.resetFields();
         }
     }, [isAddProjectMode]);
+
+    const handleUpload = async (files) => {
+        try {
+            await dispatch(uploadImages(files));
+            message.success("Images uploaded successfully");
+        } catch (error) {
+            message.error("Failed to upload images");
+        }
+    };
+
+    const handleCancel = async () => {
+        const publicIds = uploadedImages.map((image) => image.id);
+        await dispatch(deleteImages(publicIds));
+        message.info("Images deleted successfully");
+    };
 
     const onFinish = (values) => {
         console.log(values);
@@ -281,27 +298,25 @@ export const AddEditProjectComponent = React.memo(({ mode }) => {
                     </Col>
                 </Row>
 
-                <CloudinaryContext cloudName="your_cloudinary_cloud_name">
-                    <Form.Item
-                        name="media"
-                        valuePropName="fileList"
-                        getValueFromEvent={ normFile }
+                <Form.Item
+                    name="media"
+                    valuePropName="fileList"
+                    getValueFromEvent={ normFile }
+                >
+                    <Dragger
+                        multiple="true"
+                        listType="picture-card"
+                        showUploadList={ {
+                            showRemoveIcon: true
+                        } }
+                        action="https://api.cloudinary.com/v1_1/your_cloudinary_cloud_name/image/upload"
+                        className="flex items-center justify-center"
                     >
-                        <Dragger
-                            multiple="true"
-                            listType="picture-card"
-                            showUploadList={ {
-                                showRemoveIcon: true
-                            } }
-                            action="https://api.cloudinary.com/v1_1/your_cloudinary_cloud_name/image/upload"
-                            className="flex items-center justify-center"
-                        >
-                            <FaCloudUploadAlt size={ 50 } className="w-full mt-8" />
-                            <p className="mb-8 mt-2 text-gray-600">Click or drag file to this area to
-                                                                   upload.</p>
-                        </Dragger>
-                    </Form.Item>
-                </CloudinaryContext>
+                        <FaCloudUploadAlt size={ 50 } className="w-full mt-8" />
+                        <p className="mb-8 mt-2 text-gray-600">Click or drag file to this area to
+                                                               upload.</p>
+                    </Dragger>
+                </Form.Item>
             </div>
             <div className="flex justify-end pr-3">
                 <Form.Item>

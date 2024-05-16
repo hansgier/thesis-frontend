@@ -1,11 +1,21 @@
 import { useWindowSize } from "../hooks/index.jsx";
-import { useEffect, useReducer } from "react";
+import React, { useEffect, useReducer } from "react";
 import { IoReturnDownBack, IoSearch } from "react-icons/io5";
-import { Button, Modal, Select, Tooltip } from "antd";
+import { Button, Form, Input, Modal, Select, Skeleton, Tooltip } from "antd";
 import { project_tags } from "../utils/data-components.jsx";
 import { motion } from "framer-motion";
 import { useLocation } from "react-router-dom";
 import { Conversations } from "./messages/Conversations.jsx";
+import { useDispatch, useSelector } from "react-redux";
+import {
+    createConversation,
+    getAllConversations,
+    getAllMessages,
+    sendMessages,
+    setSelectedConversation
+} from "../app/features/messages/messagesSlice.js";
+import moment from "moment";
+import { barangaysList } from "../utils/barangaysList.js";
 
 const filterOption = (input, option) =>
     (option?.label ?? "").toLowerCase().includes(input.toLowerCase());
@@ -42,73 +52,73 @@ const reducer = (state, action) => {
 };
 
 export const Messages = () => {
+    const [form] = Form.useForm();
+    const {
+        conversations,
+        messages,
+        isMessageFetchLoading,
+        isConversationFetchLoading,
+        selectedConversation
+    } = useSelector((store) => store.messages);
+    const { user } = useSelector((store) => store.auth);
     const { width } = useWindowSize();
     const location = useLocation();
     const [state, dispatch] = useReducer(reducer, initialState);
+    const dispatchRedux = useDispatch();
 
     useEffect(() => {
         if (location.pathname !== "/project" || location.pathname !== "/singleproject") {
             sessionStorage.setItem("scrollPosition", "0");
         }
+        dispatchRedux(getAllConversations());
     }, []);
 
     const handleSearch = (newValue) => {
         dispatch({
-            type: "setSearchData", payload: newValue ? [
-                {
-                    value: "1",
-                    text: "Brgy. Linao"
-                },
-                {
-                    value: "2",
-                    text: "Brgy. Linao"
-                },
-                {
-                    value: "3",
-                    text: "Brgy. Linao"
-                },
-                {
-                    value: "4",
-                    text: "Brgy. Linao"
-                },
-                {
-                    value: "5",
-                    text: "Brgy. Linao"
-                },
-                {
-                    value: "6",
-                    text: "Brgy. Linao"
-                },
-                {
-                    value: "7",
-                    text: "Brgy. Linao"
-                },
-                {
-                    value: "8",
-                    text: "Brgy. Linao"
-                },
-                {
-                    value: "9",
-                    text: "Brgy. Linao"
-                },
-                {
-                    value: "10",
-                    text: "Brgy. Linao"
-                },
-                {
-                    value: "11",
-                    text: "Brgy. Linao"
-                },
-                {
-                    value: "12",
-                    text: "Brgy. Linao"
-                }
-            ] : []
+            type: "setSearchData", payload: newValue ? barangaysList : []
         });
     };
-    const handleChange = (newValue) => {
+    //TODO: tiwasa ning create conversation functionality
+    const handleChange = async (newValue) => {
+        if (newValue) {
+            try {
+                // Create a new conversation with the selected user
+                const response = await dispatchRedux(createConversation({ user2Id: newValue }));
+                const { conversation } = response.payload;
+                console.log(response);
+                // Fetch the updated list of conversations
+                await dispatchRedux(getAllConversations());
+
+                // Remove the selected barangay from the options
+                const updatedBarangaysList = barangaysList.filter(
+                    (barangay) => barangay.value !== newValue
+                );
+                dispatch({ type: "setSearchData", payload: updatedBarangaysList });
+
+                // Set the selected conversation and fetch messages
+                dispatch({ type: "setConvoSelected", payload: conversation.id });
+                dispatchRedux(setSelectedConversation({ payload: conversation.id }));
+                dispatchRedux(getAllMessages(conversation.id));
+
+                // Set the chat mode to true
+                dispatch({ type: "setChatMode", payload: true });
+            } catch (error) {
+                console.error("Error creating conversation:", error);
+            }
+        }
         dispatch({ type: "setValue", payload: newValue });
         dispatch({ type: "setModalClose" });
+    };
+
+    const onFinish = (values) => {
+        if (values.content) {
+            dispatchRedux(sendMessages({
+                conversationId: state.convoSelected, messages: {
+                    content: values.content
+                }
+            }));
+        }
+        form.resetFields();
     };
 
     return (
@@ -150,220 +160,162 @@ export const Messages = () => {
                                         onSearch={ handleSearch }
                                         onChange={ handleChange }
                                         notFoundContent={ null }
-                                        options={ project_tags }
+                                        options={ barangaysList }
                                     />
                                 </Modal>
                             </div>
                             <div className="overflow-y-scroll pr-4">
                                 {/*-----------------------CONVERSATIONS-----------------------*/ }
                                 <div className="h-full space-y-2" data-id="7">
-                                    {/*//TODO: map the conversations here*/ }
-                                    <Conversations
-                                        onClick={ () => dispatch({ type: "setChatMode", payload: true }) }
-                                        recipient="Brgy. Linao"
-                                        convoSnippet="Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aliquam beatae enim nam officia quisquam quo recusandae rem suscipit veniam voluptate."
-                                        lastMsgDate="9:05 AM"
-                                    />
+                                    { isConversationFetchLoading ? <>
+                                            <Skeleton active
+                                                      spinning={ isConversationFetchLoading }
+                                                      block />
+                                            <Skeleton active
+                                                      spinning={ isConversationFetchLoading }
+                                                      block />
+                                            <Skeleton active
+                                                      spinning={ isConversationFetchLoading }
+                                                      block />
+                                            <Skeleton active
+                                                      spinning={ isConversationFetchLoading }
+                                                      block />
 
+                                        </> :
+                                        conversations.map((conversation, i) => (
+                                            <div
+                                                onClick={ () => {
+                                                    dispatch({ type: "setChatMode", payload: true });
+                                                    dispatch({ type: "setConvoSelected", payload: conversation.id });
+                                                    dispatchRedux(setSelectedConversation({ payload: conversation.id }));
+                                                    dispatchRedux(getAllMessages(conversation.id));
+                                                } }
+                                                key={ i }
+                                                className={ `flex items-center gap-3 rounded-md  p-3 ${ state.convoSelected === conversation.id ? "bg-sky-200" : "bg-white" } hover:bg-sky-100 transition-all duration-200` }>
+                                                <div className="flex-1 space-y-1" data-id="12">
+                                                    <p className="font-medium select-none text-sm md:text-sm"
+                                                       data-id="13">
+                                                        { conversation.users.find((c) => c.id !== user.id).username }
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        )) }
                                 </div>
                             </div>
                         </div>
-                        { state.convoSelected ? <div className="flex-1 md:flex flex-col" data-id="24">
-                            <div
-                                className="border-b border-gray-200 flex p-4"
-                                data-id="25">
-                                {/*--------NAME OF WHO YOU WANT TO CHAT--------*/ }
-                                <h2 className="flex-1 font-semibold select-none text-lg"
-                                    data-id="26">Brgy.
-                                                 Linao</h2>
-                                { width < 768 && (
-                                    <Tooltip title="Back">
-                                        <Button type="text"
-                                                onClick={ () => dispatch({ type: "setChatMode", payload: false }) }
-                                                icon={ <IoReturnDownBack /> } />
-                                    </Tooltip>
-                                ) }
-                            </div>
+                        { state.convoSelected ?
+                            <div className="flex-1 md:flex flex-col" data-id="24">
+                                <div
+                                    className="border-b border-gray-200 flex p-4"
+                                    data-id="25">
+                                    {/*--------NAME OF WHO YOU WANT TO CHAT--------*/ }
+                                    <h2 className="flex-1 font-semibold select-none text-lg"
+                                        data-id="26">
+                                        { conversations.find((conversation) => conversation.id === state.convoSelected).users.find((c) => c.id !== user.id).username }
+                                    </h2>
+                                    { width < 768 && (
+                                        <Tooltip title="Back">
+                                            <Button type="text"
+                                                    onClick={ () => dispatch({ type: "setChatMode", payload: false }) }
+                                                    icon={ <IoReturnDownBack /> } />
+                                        </Tooltip>
+                                    ) }
+                                </div>
+                                {/*---------------------------MESSAGES---------------------*/ }
+                                <div className="flex-1 mb-[70px] overflow-y-auto pt-4 px-4 flex flex-col">
+                                    { messages.map((message, index) => {
+                                        if (message.sender_id === user.id) {
+                                            return (
+                                                <div className="flex items-end gap-3 justify-end" data-id="36"
+                                                     key={ `sent-${ index }` }>
+                                                    <div className="flex flex-1 flex-col items-end space-y-2"
+                                                         data-id="37">
+                                                        <div
+                                                            className="bg-gradient-to-tr from-Thesis-200 p-3 rounded-lg text-sm text-white to-Thesis-300 w-3/5"
+                                                            data-id="38"
+                                                        >
+                                                            <p data-id="39">{ message.content }</p>
+                                                        </div>
+                                                        <span
+                                                            className="dark:text-gray-400 select-none text-gray-500 text-xs"
+                                                            data-id="40">
+              { moment(message.createdAt).format("h:mm a") }
+            </span>
+                                                    </div>
+                                                </div>
+                                            );
+                                        } else {
+                                            return (
+                                                <div className="flex items-start gap-3" data-id="28"
+                                                     key={ `received-${ index }` }>
+          <span
+              className="relative flex h-10 w-10 shrink-0 overflow-hidden rounded-full"
+              data-id="29"
+          >
+            <span
+                className="bg-gray-200 flex h-full items-center justify-center rounded-full select-none w-full"
+                data-id="31"
+            >
+              OD
+            </span>
+          </span>
+                                                    <div className="flex-1 space-y-2" data-id="32">
+                                                        <div className="bg-gray-200 p-3 rounded-lg text-sm w-3/5"
+                                                             data-id="33">
+                                                            <p data-id="34">{ message.content }</p>
+                                                        </div>
+                                                        <span
+                                                            className="dark:text-gray-400 select-none text-gray-500 text-xs"
+                                                            data-id="35">
+              { moment(message.createdAt).format("h:mm a") }
+            </span>
+                                                    </div>
+                                                </div>
+                                            );
+                                        }
+                                    }) }
+                                </div>
 
-                            <div className="flex-1 mb-[70px] overflow-y-auto pt-4 px-4 space-y-4" data-id="27">
-                                <div className="flex items-start gap-3" data-id="28">
-                                <span
-                                    className="relative flex h-10 w-10 shrink-0 overflow-hidden rounded-full"
-                                    data-id="29">
-                                    <span
-                                        className="bg-gray-200 flex h-full items-center justify-center rounded-full select-none w-full"
-                                        data-id="31">
-                                        OD
-                                    </span>
-                                </span>
-                                    <div className="flex-1 space-y-2" data-id="32">
-                                        <div className="bg-gray-200 p-3 rounded-lg text-sm w-3/5" data-id="33">
-                                            <p data-id="34">Hey, let's discuss the project details.</p>
-                                        </div>
-                                        <span className="dark:text-gray-400 select-none text-gray-500 text-xs"
-                                              data-id="35">9:15 AM </span>
-                                    </div>
-                                </div>
-                                <div className="flex items-start gap-3 justify-end" data-id="36">
-                                    <div className="flex flex-1 flex-col items-end space-y-2" data-id="37">
-                                        <div
-                                            className="bg-gradient-to-tr from-Thesis-200 p-3 rounded-lg text-sm text-white to-Thesis-300 w-3/5"
-                                            data-id="38">
-                                            <p data-id="39">Sounds good, I'm available anytime.</p>
-                                        </div>
-                                        <span className="dark:text-gray-400 select-none text-gray-500 text-xs"
-                                              data-id="40">
-                9:16 AM </span>
-                                    </div>
-                                    <span className="relative flex h-10 w-10 shrink-0 overflow-hidden rounded-full"
-                                          data-id="41"><span
-                                        className="bg-gray-200 flex h-full items-center justify-center rounded-full select-none w-full"
-                                        data-id="43">JP</span></span>
-                                </div>
-                                <div className="flex items-start gap-3" data-id="44"><span
-                                    className="relative flex h-10 w-10 shrink-0 overflow-hidden rounded-full"
-                                    data-id="45"><span
-                                    className="bg-gray-200 flex h-full items-center justify-center rounded-full select-none w-full"
-                                    data-id="47">OD</span></span>
-                                    <div className="flex-1 space-y-2" data-id="48">
-                                        <div className="bg-gray-200 p-3 rounded-lg text-sm w-3/5" data-id="49">
-                                            <p data-id="50">Great, let's schedule a call for tomorrow at 2pm.</p>
-                                        </div>
-                                        <span className="dark:text-gray-400 select-none text-gray-500 text-xs"
-                                              data-id="51">
-                9:17 AM </span>
-                                    </div>
-                                </div>
-                                <div className="flex items-start gap-3" data-id="44">
-                                <span className="relative flex h-10 w-10 shrink-0 overflow-hidden rounded-full"
-                                      data-id="45"><span
-                                    className="bg-gray-200 flex h-full items-center justify-center rounded-full select-none w-full"
-                                    data-id="47">OD</span></span>
-                                    <div className="flex-1 space-y-2" data-id="48">
-                                        <div className="bg-gray-200 p-3 rounded-lg text-sm w-3/5" data-id="49">
-                                            <p data-id="50">Great, let's schedule a call for tomorrow at 2pm.</p>
-                                        </div>
-                                        <span className="dark:text-gray-400 select-none text-gray-500 text-xs"
-                                              data-id="51">
-                9:17 AM </span>
-                                    </div>
-                                </div>
-                                <div className="flex items-start gap-3" data-id="44">
-                                <span className="relative flex h-10 w-10 shrink-0 overflow-hidden rounded-full"
-                                      data-id="45"><span
-                                    className="bg-gray-200 flex h-full items-center justify-center rounded-full select-none w-full"
-                                    data-id="47">OD</span></span>
-                                    <div className="flex-1 space-y-2" data-id="48">
-                                        <div className="bg-gray-200 p-3 rounded-lg text-sm w-3/5" data-id="49">
-                                            <p data-id="50">Great, let's schedule a call for tomorrow at 2pm.</p>
-                                        </div>
-                                        <span className="dark:text-gray-400 select-none text-gray-500 text-xs"
-                                              data-id="51">
-                9:17 AM </span>
-                                    </div>
-                                </div>
-                                <div className="flex items-start gap-3" data-id="44">
-                                <span className="relative flex h-10 w-10 shrink-0 overflow-hidden rounded-full"
-                                      data-id="45"><span
-                                    className="bg-gray-200 flex h-full items-center justify-center rounded-full select-none w-full"
-                                    data-id="47">OD</span></span>
-                                    <div className="flex-1 space-y-2" data-id="48">
-                                        <div className="bg-gray-200 p-3 rounded-lg text-sm w-3/5" data-id="49">
-                                            <p data-id="50">Great, let's schedule a call for tomorrow at 2pm.</p>
-                                        </div>
-                                        <span className="dark:text-gray-400 select-none text-gray-500 text-xs"
-                                              data-id="51">
-                9:17 AM </span>
-                                    </div>
-                                </div>
-                                <div className="flex items-start gap-3" data-id="44">
-                                <span className="relative flex h-10 w-10 shrink-0 overflow-hidden rounded-full"
-                                      data-id="45"><span
-                                    className="bg-gray-200 flex h-full items-center justify-center rounded-full select-none w-full"
-                                    data-id="47">OD</span></span>
-                                    <div className="flex-1 space-y-2" data-id="48">
-                                        <div className="bg-gray-200 p-3 rounded-lg text-sm w-3/5" data-id="49">
-                                            <p data-id="50">Great, let's schedule a call for tomorrow at 2pm.</p>
-                                        </div>
-                                        <span className="dark:text-gray-400 select-none text-gray-500 text-xs"
-                                              data-id="51">
-                9:17 AM </span>
-                                    </div>
-                                </div>
-                                <div className="flex items-start gap-3" data-id="44">
-                                <span className="relative flex h-10 w-10 shrink-0 overflow-hidden rounded-full"
-                                      data-id="45"><span
-                                    className="bg-gray-200 flex h-full items-center justify-center rounded-full select-none w-full"
-                                    data-id="47">OD</span></span>
-                                    <div className="flex-1 space-y-2" data-id="48">
-                                        <div className="bg-gray-200 p-3 rounded-lg text-sm w-3/5" data-id="49">
-                                            <p data-id="50">Great, let's schedule a call for tomorrow at 2pm.</p>
-                                        </div>
-                                        <span className="dark:text-gray-400 select-none text-gray-500 text-xs"
-                                              data-id="51">
-                9:17 AM </span>
-                                    </div>
-                                </div>
-                                <div className="flex items-start gap-3" data-id="44">
-                                <span className="relative flex h-10 w-10 shrink-0 overflow-hidden rounded-full"
-                                      data-id="45"><span
-                                    className="bg-gray-200 flex h-full items-center justify-center rounded-full select-none w-full"
-                                    data-id="47">OD</span></span>
-                                    <div className="flex-1 space-y-2" data-id="48">
-                                        <div className="bg-gray-200 p-3 rounded-lg text-sm w-3/5" data-id="49">
-                                            <p data-id="50">Great, let's schedule a call for tomorrow at 2pm.</p>
-                                        </div>
-                                        <span className="dark:text-gray-400 select-none text-gray-500 text-xs"
-                                              data-id="51">
-                9:17 AM </span>
-                                    </div>
-                                </div>
-                                <div className="flex items-start gap-3" data-id="44">
-                                <span className="relative flex h-10 w-10 shrink-0 overflow-hidden rounded-full"
-                                      data-id="45"><span
-                                    className="bg-gray-200 flex h-full items-center justify-center rounded-full select-none w-full"
-                                    data-id="47">OD</span></span>
-                                    <div className="flex-1 space-y-2" data-id="48">
-                                        <div className="bg-gray-200 p-3 rounded-lg text-sm w-3/5" data-id="49">
-                                            <p data-id="50">Great, let's schedule a call for tomorrow at 2pm.</p>
-                                        </div>
-                                        <span className="dark:text-gray-400 select-none text-gray-500 text-xs"
-                                              data-id="51">
-                9:17 AM </span>
-                                    </div>
+
+                                {/*-----------------------TYPE YOUR MESSAGE SECTION-----------------------*/ }
+                                <div
+                                    className="bg-white border-gray-200 bottom-0 fixed p-4 w-full md:w-[calc(100%-464px)]"
+                                    data-id="52">
+                                    <Form form={ form } onFinish={ onFinish }
+                                          autoComplete="off"
+                                          className="flex items-center gap-2 m-0 p-0"
+                                          data-id="53">
+                                        <Form.Item name="content" className="m-0 p-0 w-full" required>
+                                            <Input
+                                                className="bg-gray-100 border border-gray-100 disabled:cursor-not-allowed disabled:opacity-50 file:bg-transparent file:border-0 file:font-medium file:text-sm flex flex-1 focus-visible:outline-none focus:border-Thesis-200 focus:outline-none focus:ring-0 focus:ring-offset-0 h-10 px-3 py-2 rounded-md text-gray-700 text-sm w-full placeholder:text-gray-400 placeholder:text-sm placeholder:font-bold"
+                                                placeholder="Type your message..." data-id="54" type="text" />
+                                        </Form.Item>
+                                        <Form.Item className="m-0 p-0">
+                                            <button
+                                                className="bg-gradient-to-b disabled:opacity-50 disabled:pointer-events-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 font-medium from-yellow-400 h-10 hover:bg-gradient-to-r hover:from-yellow-500 hover:to-yellow-600 inline-flex items-center justify-center rounded-md text-sm to-yellow-600 transition-colors w-10 whitespace-nowrap"
+                                                data-id="55" type="submit">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                                     viewBox="0 0 24 24"
+                                                     fill="none" stroke="currentColor" strokeWidth="2"
+                                                     strokeLinecap="round"
+                                                     strokeLinejoin="round" className="h-4 text-white w-4"
+                                                     data-id="56">
+                                                    <path d="m22 2-7 20-4-9-9-4Z"></path>
+                                                    <path d="M22 2 11 13"></path>
+                                                </svg>
+                                            </button>
+                                        </Form.Item>
+                                    </Form>
                                 </div>
                             </div>
-
-
-                            {/*-----------------------TYPE YOUR MESSAGE SECTION-----------------------*/ }
-                            <div
-                                className="bg-white border-gray-200 bottom-0 fixed p-4 w-full md:w-[calc(100%-464px)]"
-                                data-id="52">
-                                <form className="flex items-center gap-2" data-id="53">
-                                    <input
-                                        className="bg-gray-100 border border-gray-100 disabled:cursor-not-allowed disabled:opacity-50 file:bg-transparent file:border-0 file:font-medium file:text-sm flex flex-1 focus-visible:outline-none focus:border-Thesis-200 focus:outline-none focus:ring-0 focus:ring-offset-0 h-10 px-3 py-2 rounded-md text-gray-700 text-sm w-full placeholder:text-gray-400 placeholder:text-sm placeholder:font-bold"
-                                        placeholder="Type your message..." data-id="54" type="text" />
-                                    <button
-                                        className="bg-gradient-to-b disabled:opacity-50 disabled:pointer-events-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 font-medium from-yellow-400 h-10 hover:bg-gradient-to-r hover:from-yellow-500 hover:to-yellow-600 inline-flex items-center justify-center rounded-md text-sm to-yellow-600 transition-colors w-10 whitespace-nowrap"
-                                        data-id="55" type="submit">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                             viewBox="0 0 24 24"
-                                             fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"
-                                             strokeLinejoin="round" className="h-4 text-white w-4" data-id="56">
-                                            <path d="m22 2-7 20-4-9-9-4Z"></path>
-                                            <path d="M22 2 11 13"></path>
-                                        </svg>
-                                    </button>
-                                </form>
-                            </div>
-                        </div> : (
-                            <div className="flex flex-col items-center justify-center select-none w-full " data-id="24">
-
-                                <h2 className="text-xl">Search or select a barangay/city government to start
-                                                        chatting</h2>
-                            </div>
-                        ) }
-
+                            :
+                            (
+                                <div className="flex flex-col items-center justify-center select-none w-full "
+                                     data-id="24">
+                                    <h2 className="text-xl">Search or select a barangay/city government to start
+                                                            chatting</h2>
+                                </div>
+                            ) }
                     </>
                 ) : (
                     <>
@@ -414,9 +366,7 @@ export const Messages = () => {
                                         {/*//TODO: map the conversations here*/ }
                                         <div onClick={ () => dispatch({ type: "setChatMode", payload: true }) }>
                                             <Conversations
-
                                                 recipient="Brgy. Linao"
-                                                convoSnippet="Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aliquam beatae enim nam officia quisquam quo recusandae rem suscipit veniam voluptate."
                                                 lastMsgDate="9:05 AM"
                                             />
                                         </div>

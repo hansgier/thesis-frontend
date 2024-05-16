@@ -1,15 +1,31 @@
-export const FeaturedProject = ({ image, title, description }) => {
+import { Empty } from "antd";
+import React from "react";
+
+export const FeaturedProject = ({ project }) => {
     return (
-        <li className="p-4">
-            <div
-                className="cursor-pointer flex gap-4 hover:bg-Thesis-50 hover:bg-opacity-5 hover:duration-300 hover:ease-out hover:transition-all items-center">
-                <img src={ image } width="80" height="80" className="rounded-lg w-10 md:w-20" alt="ProjectContainer"
-                     style={ { aspectRatio: "80/80", objectFit: "cover" } } />
-                <div className="grid gap-1">
-                    <p className="font-semibold text-sm md:text-base">{ title }</p>
-                    <p className="md:text-gray-600 md:text-sm text-gray-700 text-xs">{ description }</p>
-                </div>
+        <div
+            className="bg-white border-b border-green-400 border-t flex items-center p-2 rounded-lg md:flex md:flex-col md:gap-4 md:pb-2 md:pt-1.5 md:px-1.5 md:rounded-3xl">
+            <div className="relative md:h-64 md:w-full">
+                { project.media.length < 1 ?
+                    <div
+                        className="absolute bg-cover h-12 md:flex hidden items-center justify-center rounded-lg w-12 md:h-full md:rounded-3xl md:w-full">
+                        <Empty description="No image" />
+                    </div>
+                    :
+                    <img
+                        src={ project.media.url }
+                        className="absolute bg-cover h-12 rounded-lg w-12 md:h-full md:rounded-3xl md:w-full"
+                        alt="Project" />
+                }
             </div>
-        </li>
+            <div className="gap-1 grid h-full ml-2 md:ml-0">
+                <p className="font-semibold mx-2 select-none text-sm md:text-base">{ project.title }</p>
+                <p className="mx-2 select-none text-gray-600 text-xs md:text-gray-600 md:text-sm line-clamp-2">
+                    { project.description }</p>
+            </div>
+            <a href={ `/projects/${ project.id }` }
+               className="border-2 font-bold hidden p-3 rounded-full text-center text-xs w-full md:block hover:border-[#10c9aa] hover:text-[#10c9aa] transition-all duration-200">View
+                                                                                                                                                                                  Project</a>
+        </div>
     );
 };

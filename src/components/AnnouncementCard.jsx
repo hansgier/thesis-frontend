@@ -6,9 +6,11 @@ import { Button, Modal, Popconfirm } from "antd";
 import { AnimatePresence, motion } from "framer-motion";
 import { CiEdit } from "react-icons/ci";
 import { AddEditAnnouncementComponent } from "./AddEditAnnouncementComponent.jsx";
+import moment from "moment";
 
-export const AnnouncementCard = ({ type, title, content, postedBy, dateTime }) => {
-    const { view } = useSelector((store) => store.auth);
+export const AnnouncementCard = ({ announcement }) => {
+    const { view, users } = useSelector((store) => store.auth);
+    const { barangays } = useSelector((store) => store.barangays);
     const [isHovered, setIsHovered] = useState(false);
     const [deleteAnnouncementConfirm, setDeleteAnnouncementConfirm] = useState(false);
     const [editAnnouncementMode, setEditAnnouncementMode] = useState(false);
@@ -16,6 +18,23 @@ export const AnnouncementCard = ({ type, title, content, postedBy, dateTime }) =
     const onDeleteAnnouncementConfirm = () => {
         setDeleteAnnouncementConfirm(true);
     };
+
+    function getNameByPostedBy(postedBy) {
+        const user = users.find((user) => user.id === postedBy);
+
+        if (user) {
+            if (user.role === "barangay") {
+                const barangay = barangays.find((b) => b.id === user.barangay_id);
+                return barangay ? barangay.name : "Unknown Barangay";
+            } else if (user.role === "admin") {
+                return "City Government";
+            } else {
+                return user.username;
+            }
+        }
+
+        return "Unknown User";
+    }
 
     return (
         <div
@@ -26,11 +45,11 @@ export const AnnouncementCard = ({ type, title, content, postedBy, dateTime }) =
             <div className="flex flex-col items-center pb-4 pt-6 px-4 md:px-6">
                 <div className="flex w-full">
                     <div className="flex items-center justify-center">
-                        { type === "system" ? announcement_component.system.icon : announcement_component.basic.icon }
+                        { announcement.type === "system" ? announcement_component.system.icon : announcement_component.basic.icon }
                     </div>
                     <div className="flex items-center pl-3">
                         <h3 className="font-semibold leading-none md:text-2xl select-none text-xl tracking-tight whitespace-normal">
-                            { title }
+                            { announcement.title }
                         </h3>
                     </div>
                     { isHovered ? <div
@@ -65,7 +84,8 @@ export const AnnouncementCard = ({ type, title, content, postedBy, dateTime }) =
                             <path d="M8 10h.01"></path>
                             <path d="M8 14h.01"></path>
                         </svg>
-                        <span className="hidden select-none md:block">{ postedBy }</span>
+                        <span
+                            className="hidden select-none md:block">{ getNameByPostedBy(announcement.postedBy) }</span>
                     </div> }
 
                 </div>
@@ -76,7 +96,7 @@ export const AnnouncementCard = ({ type, title, content, postedBy, dateTime }) =
                             animate={ { opacity: 1 } }
                             exit={ { opacity: 0 } }
                             className="pl-0 pt-1 select-none text-gray-400 text-xs md:pl-11 md:text-sm">
-                            Posted on { dateTime }
+                            Posted on { moment(announcement.createdAt).format("MMMM D, YYYY h:mm:ss a") }
                         </motion.p>
                     </div> }
                 </AnimatePresence>
@@ -88,7 +108,7 @@ export const AnnouncementCard = ({ type, title, content, postedBy, dateTime }) =
                         animate={ { opacity: 1 } }
                         exit={ { opacity: 0 } }
                         className="leading-relaxed md:text-base select-none text-gray-700 text-justify text-sm">
-                        { content }
+                        { announcement.content }
                     </motion.p>
                 </div> }
             </AnimatePresence>

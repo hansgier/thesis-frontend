@@ -1,24 +1,52 @@
 import { useEffect, useState } from "react";
-import { project_tags } from "../utils/data-components.jsx";
-import { Button, Form, Input, Select } from "antd";
+import { Button, Form, Input, Select, Spin } from "antd";
 import { useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { showCurrentUser } from "../app/features/user/authSlice.js";
+import { barangaysList } from "../utils/barangaysList.js";
+import { updateUser } from "../app/features/user/authSlice.js";
 
 export const Profile = () => {
     const [isEditMode, setIsEditMode] = useState(false);
-    const { isFetchLoading, isError, userProfile } = useSelector((store) => store.auth);
+    const {
+        isFetchLoading,
+        isError,
+        userProfile,
+        isLoading,
+        authSuccess,
+        oldPassword,
+        authErrorMessage,
+        authError,
+        user
+    } = useSelector((store) => store.auth);
     const location = useLocation();
     const dispatch = useDispatch();
+    const [form] = Form.useForm();
+    const [saved, setSaved] = useState(false);
+
+    function getBarangayLabel(val) {
+        const barangay = barangaysList.find(b => b.value === val);
+        return barangay ? barangay.label : null;
+    }
+
+    useEffect(() => {
+        if (authSuccess) setIsEditMode(false);
+    }, [authSuccess]);
 
     useEffect(() => {
         if (location.pathname !== "/project" || location.pathname !== "/singleproject") {
             sessionStorage.setItem("scrollPosition", "0");
         }
-        dispatch(showCurrentUser());
     }, []);
 
-    console.log(userProfile);
+    const onFinish = (values) => {
+        dispatch(updateUser({
+            username: values.username || user.username,
+            email: values.email || user.email,
+            password: values.password || oldPassword,
+            barangay_id: values.barangay_id || user.barangay_id
+        }));
+    };
+
     return (
         <div className="h-full max-h-full overflow-y-scroll pt-4 px-0 md:px-6">
             <div>
@@ -34,7 +62,10 @@ export const Profile = () => {
                             <h6 className="font-semibold mb-2 select-none text-Thesis-300 text-xs md:mb-0 md:text-sm">Details</h6>
                             <div className="flex justify-end mb-2 md:justify-start md:mb-0">
                                 <button
-                                    onClick={ () => setIsEditMode(!isEditMode) }
+                                    onClick={ () => {
+                                        setIsEditMode(!isEditMode);
+                                        form.resetFields();
+                                    } }
                                     className="flex focus:outline-none focus:ring-0 focus:ring-offset-0 group hover:cursor-pointer hover:text-Thesis-50 items-center justify-center space-x-2"
                                     type="button">
                                     <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"
@@ -51,17 +82,19 @@ export const Profile = () => {
                             </div>
                             {/*Details*/ }
                             <h6 className="col-span-2 select-none text-gray-600 text-sm md:col-span-1 md:text-base">Username</h6>
-                            <p className="break-words col-span-2 mb-4 select-none text-sm md:col-span-1 md:mb-0 md:text-base">hansgier</p>
+                            <p className="break-words col-span-2 mb-4 select-none text-sm md:col-span-1 md:mb-0 md:text-base">{ userProfile.username }</p>
                             <h6 className="col-span-2 max-w-lg select-none text-gray-600 text-sm md:col-span-1 md:text-base">Email</h6>
-                            <p className="break-words col-span-2 mb-4 select-none text-sm md:col-span-1 md:mb-0 md:text-base">gierhansclement@gmail.com</p>
+                            <p className="break-words col-span-2 mb-4 select-none text-sm md:col-span-1 md:mb-0 md:text-base">{ userProfile.email }</p>
                             <h6 className="break-words col-span-2 select-none text-gray-600 text-sm md:col-span-1 md:text-base">Password</h6>
-                            <p className="col-span-2 mb-4 select-none text-sm md:col-span-1 md:mb-0 md:text-base">qetwr13524</p>
+                            <p className="col-span-2 mb-4 select-none text-sm md:col-span-1 md:mb-0 md:text-base">{ userProfile.password.replace(/./g, "*") }</p>
                             <h6 className="col-span-2 select-none text-gray-600 text-sm md:col-span-1 md:text-base">Barangay</h6>
-                            <p className="break-words col-span-2 mb-4 select-none text-sm md:col-span-1 md:mb-0 md:text-base">Brgy.
-                                                                                                                              Linao</p>
+                            <p className="break-words col-span-2 mb-4 select-none text-sm md:col-span-1 md:mb-0 md:text-base">
+                                { getBarangayLabel(userProfile.barangay_id) }
+                            </p>
                         </div>
                     ) : (
-                        <Form className="grid grid-cols-1 md:grid-cols-2 pb-6 pt-0 px-6 md:gap-y-4">
+                        <Form form={ form } onFinish={ onFinish }
+                              className="grid grid-cols-1 md:grid-cols-2 pb-6 pt-0 px-6 md:gap-y-4">
                             <h6 className="font-semibold mb-2 select-none text-Thesis-300 text-xs md:mb-0 md:text-sm">Details</h6>
                             <div className="flex justify-end mb-2 md:justify-start md:mb-0">
                                 <button
@@ -95,23 +128,28 @@ export const Profile = () => {
                                 <Input.Password placeholder="Input password" />
                             </Form.Item>
                             <h6 className="col-span-2 select-none text-gray-600 text-sm md:col-span-1 md:text-base">Barangay</h6>
-                            <Form.Item name="barangayId" className="m-0 p-0 mb-4">
-                                <Select placeholder="Input barangay" options={ project_tags } />
+                            <Form.Item name="barangay_id" className="m-0 p-0 mb-4">
+                                <Select placeholder="Select barangay" options={ barangaysList } />
                             </Form.Item>
                             {/*Edit mode buttons*/ }
                             <div className="col-span-2 flex justify-end space-x-2">
                                 <Button
-                                    onClick={ () => setIsEditMode(false) }
+                                    onClick={ () => {
+                                        setIsEditMode(false);
+                                        form.resetFields();
+                                    } }
                                     className="border-2 border-gray-500 border-opacity-50 hover:bg-blue-50 hover:duration-300 hover:transition-all md:text-sm px-3 py-1 rounded-3xl text-sm"
                                     type="button">
                                     Cancel
                                 </Button>
                                 <Form.Item className="m-0 p-0">
-                                    <Button
-                                        className="bg-Thesis-200 border-2 border-Thesis-100 border-opacity-50 hover:bg-opacity-90 hover:duration-300 hover:transition-all px-3 py-1 rounded-3xl text-sm text-white md:text-sm"
-                                        htmlType="submit">
-                                        Save
-                                    </Button>
+                                    <Spin spinning={ isLoading }>
+                                        <Button
+                                            className="bg-Thesis-200 border-2 border-Thesis-100 border-opacity-50 hover:bg-opacity-90 hover:duration-300 hover:transition-all px-3 py-1 rounded-3xl text-sm text-white md:text-sm"
+                                            htmlType="submit">
+                                            Save
+                                        </Button>
+                                    </Spin>
                                 </Form.Item>
                             </div>
                         </Form>

@@ -208,7 +208,7 @@ export const projectDetails_sidebar = [
     },
     {
         name: "Locations",
-        value: "barangay_iDs",
+        value: "barangays",
         pds_type: "multiple",
         color: "bg-amber-600"
     },

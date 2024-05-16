@@ -1,5 +1,5 @@
 import { useDispatch } from "react-redux";
-import { toggleNotifications, toggleSidebar } from "../app/features/user/authSlice.js";
+import { toggleSidebar } from "../app/features/user/authSlice.js";
 import { SearchBar } from "./SearchBar.jsx";
 import logo from "/src/assets/logo.png";
 
@@ -44,19 +44,19 @@ export const TopBar = () => {
 
                 {/*---------------Button Container---------------*/ }
                 <div className="flex items-center space-x-2 md:pr-4 md:space-x-4">
-                    {/*Notification Button*/ }
-                    <button
-                        id="notif-button"
-                        onClick={ () => dispatch(toggleNotifications()) }
-                        className="bg-white duration-150 flex focus:border-none focus:outline-none focus:ring-0 focus:ring-offset-0 font-normal group hover:bg-gradient-to-tr hover:from-pink-100 hover:to-blue-100 items-center justify-center p-2 rounded-full transition-all md:p-3"
-                        type="button">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                             stroke="#5c5c5c" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
-                             className="h-4 w-4 md:h-5 md:w-5">
-                            <path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"></path>
-                            <path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"></path>
-                        </svg>
-                    </button>
+                    {/*    /!*Notification Button*/ }
+                    {/*    <button*/ }
+                    {/*        id="notif-button"*/ }
+                    {/*        onClick={ () => dispatch(toggleNotifications()) }*/ }
+                    {/*        className="bg-white duration-150 flex focus:border-none focus:outline-none focus:ring-0 focus:ring-offset-0 font-normal group hover:bg-gradient-to-tr hover:from-pink-100 hover:to-blue-100 items-center justify-center p-2 rounded-full transition-all md:p-3"*/ }
+                    {/*        type="button">*/ }
+                    {/*        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"*/ }
+                    {/*             stroke="#5c5c5c" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"*/ }
+                    {/*             className="h-4 w-4 md:h-5 md:w-5">*/ }
+                    {/*            <path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"></path>*/ }
+                    {/*            <path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"></path>*/ }
+                    {/*        </svg>*/ }
+                    {/*    </button>*/ }
                 </div>
             </div>
         </header>

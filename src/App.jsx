@@ -28,7 +28,7 @@ function App() {
                 }>
                     <Route path="dashboard" element={ <Dashboard /> } />
                     <Route path="projects" element={ <Projects /> } />
-                    <Route path="projects/singleprojects" element={ <SingleProject /> } />
+                    <Route path="projects/:projectId" element={ <SingleProject /> } />
                     <Route path="announcements" element={ <Announcements /> } />
                     <Route path="messages" element={ <Messages /> } />
                     <Route path="contacts" element={ <Contacts /> } />

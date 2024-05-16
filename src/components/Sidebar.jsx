@@ -24,7 +24,7 @@ const MemoizedTooltip = React.memo(React.forwardRef((props, ref) => (
 
 export const Sidebar = () => {
     const location = useLocation();
-    const { isSidebarOpen } = useSelector((store) => store.auth);
+    const { isSidebarOpen, user } = useSelector((store) => store.auth);
     const [activeNavLink, setActiveNavLink] = useState(1);
     const dispatch = useDispatch();
 
@@ -71,6 +71,11 @@ export const Sidebar = () => {
                         {/*Desktop version*/ }
                         <nav className="flex-col gap-6 hidden md:flex">
                             { sideLinks.map((sideLink) => {
+                                if (sideLink.id === 6) {
+                                    if (user.role !== "admin") {
+                                        return;
+                                    }
+                                }
                                 if (sideLink.id === 7) {
                                     return;
                                 } else return (
@@ -132,6 +137,11 @@ export const Sidebar = () => {
                                 {/*Mobile version*/ }
                                 <nav className="flex flex-col gap-2 w-full md:hidden">
                                     { sideLinks.map((sideLink) => {
+                                        if (sideLink.id === 6) {
+                                            if (user.role !== "admin") {
+                                                return;
+                                            }
+                                        }
                                         if (sideLink.id === 7) {
                                             return;
                                         } else return (

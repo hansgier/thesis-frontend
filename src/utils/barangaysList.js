@@ -1,446 +1,447 @@
 export const barangaysList = [
     {
+        value: 111,
+        label: "Guest"
+    },
+    {
         value: 1,
-        name: "Airport"
+        label: "Airport"
     },
     {
         value: 2,
-        name: "Alegria"
+        label: "Alegria"
     },
     {
         value: 3,
-        name: "Alta Vista"
+        label: "Alta Vista"
     },
     {
         value: 4,
-        name: "Bagong"
+        label: "Bagong"
     },
     {
         value: 5,
-        name: "Bagong Buhay"
+        label: "Bagong Buhay"
     },
     {
         value: 6,
-        name: "Bantigue"
+        label: "Bantigue"
     },
     {
         value: 7,
-        name: "Barangay 1"
+        label: "Barangay 1"
     },
     {
         value: 8,
-        name: "Barangay 10"
+        label: "Barangay 10"
     },
     {
         value: 9,
-        name: "Barangay 11"
+        label: "Barangay 11"
     },
     {
         value: 10,
-        name: "Barangay 12"
+        label: "Barangay 12"
     },
     {
         value: 11,
-        name: "Barangay 13"
+        label: "Barangay 13"
     },
     {
         value: 12,
-        name: "Barangay 14"
+        label: "Barangay 14"
     },
     {
         value: 13,
-        name: "Barangay 15"
+        label: "Barangay 15"
     },
     {
         value: 14,
-        name: "Barangay 16"
+        label: "Barangay 16"
     },
     {
         value: 15,
-        name: "Barangay 17"
+        label: "Barangay 17"
     },
     {
         value: 16,
-        name: "Barangay 18"
+        label: "Barangay 18"
     },
     {
         value: 17,
-        name: "Barangay 19"
+        label: "Barangay 19"
     },
     {
         value: 18,
-        name: "Barangay 2"
+        label: "Barangay 2"
     },
     {
         value: 19,
-        name: "Barangay 20"
+        label: "Barangay 20"
     },
     {
         value: 20,
-        name: "Barangay 21"
+        label: "Barangay 21"
     },
     {
         value: 21,
-        name: "Barangay 22"
+        label: "Barangay 22"
     },
     {
         value: 22,
-        name: "Barangay 23"
+        label: "Barangay 23"
     },
     {
         value: 23,
-        name: "Barangay 24"
+        label: "Barangay 24"
     },
     {
         value: 24,
-        name: "Barangay 25"
+        label: "Barangay 25"
     },
     {
         value: 25,
-        name: "Barangay 26"
+        label: "Barangay 26"
     },
     {
         value: 26,
-        name: "Barangay 27"
+        label: "Barangay 27"
     },
     {
         value: 27,
-        name: "Barangay 28"
+        label: "Barangay 28"
     },
     {
         value: 28,
-        name: "Barangay 29"
+        label: "Barangay 29"
     },
     {
         value: 29,
-        name: "Barangay 3"
+        label: "Barangay 3"
     },
     {
         value: 30,
-        name: "Barangay 4"
+        label: "Barangay 4"
     },
     {
         value: 31,
-        name: "Barangay 5"
+        label: "Barangay 5"
     },
     {
         value: 32,
-        name: "Barangay 6"
+        label: "Barangay 6"
     },
     {
         value: 33,
-        name: "Barangay 7"
+        label: "Barangay 7"
     },
     {
         value: 34,
-        name: "Barangay 8"
+        label: "Barangay 8"
     },
     {
         value: 35,
-        name: "Barangay 9"
+        label: "Barangay 9"
     },
     {
         value: 36,
-        name: "Batuan"
+        label: "Batuan"
     },
     {
         value: 37,
-        name: "Bayog"
+        label: "Bayog"
     },
     {
         value: 38,
-        name: "Biliboy"
+        label: "Biliboy"
     },
     {
         value: 39,
-        name: "Borok"
+        label: "Borok"
     },
     {
         value: 40,
-        name: "Cabaon-an"
+        label: "Cabaon-an"
     },
     {
         value: 41,
-        name: "Cabintan"
+        label: "Cabintan"
     },
     {
         value: 42,
-        name: "Cabulihan"
+        label: "Cabulihan"
     },
     {
         value: 43,
-        name: "Cagbuhangin"
+        label: "Cagbuhangin"
     },
     {
         value: 44,
-        name: "Camp Downes"
+        label: "Camp Downes"
     },
     {
         value: 45,
-        name: "Can-adieng"
+        label: "Can-adieng"
     },
     {
         value: 46,
-        name: "Can-untog"
+        label: "Can-untog"
     },
     {
         value: 47,
-        name: "Catmon"
+        label: "Catmon"
     },
     {
         value: 48,
-        name: "Cogon Combado"
+        label: "Cogon Combado"
     },
     {
         value: 49,
-        name: "Concepcion"
+        label: "Concepcion"
     },
     {
         value: 50,
-        name: "Curva"
+        label: "Curva"
     },
     {
         value: 51,
-        name: "Danao"
+        label: "Danao"
     },
     {
         value: 52,
-        name: "Danhug"
+        label: "Danhug"
     },
     {
         value: 53,
-        name: "Dayhagan"
+        label: "Dayhagan"
     },
     {
         value: 54,
-        name: "Dolores"
+        label: "Dolores"
     },
     {
         value: 55,
-        name: "Domonar"
+        label: "Domonar"
     },
     {
         value: 56,
-        name: "Don Felipe Larrazabal"
+        label: "Don Felipe Larrazabal"
     },
     {
         value: 57,
-        name: "Don Potenciano Larrazabal"
+        label: "Don Potenciano Larrazabal"
     },
     {
         value: 58,
-        name: "Doña Feliza Z. Mejia"
+        label: "Doña Feliza Z. Mejia"
     },
     {
         value: 59,
-        name: "Donghol"
+        label: "Donghol"
     },
     {
         value: 60,
-        name: "Esperanza"
+        label: "Esperanza"
     },
     {
         value: 61,
-        name: "Gaas"
+        label: "Gaas"
     },
     {
         value: 62,
-        name: "Green Valley"
-    },
-    {
-        value: 111,
-        name: "Guest"
+        label: "Green Valley"
     },
     {
         value: 63,
-        name: "Guintigui-an"
+        label: "Guintigui-an"
     },
     {
         value: 64,
-        name: "Hibunawon"
+        label: "Hibunawon"
     },
     {
         value: 65,
-        name: "Hugpa"
+        label: "Hugpa"
     },
     {
         value: 66,
-        name: "Ipil"
+        label: "Ipil"
     },
     {
         value: 67,
-        name: "Juaton"
+        label: "Juaton"
     },
     {
         value: 68,
-        name: "Kadaohan"
+        label: "Kadaohan"
     },
     {
         value: 69,
-        name: "Labrador"
+        label: "Labrador"
     },
     {
         value: 70,
-        name: "Lao"
+        label: "Lao"
     },
     {
         value: 71,
-        name: "Leondoni"
+        label: "Leondoni"
     },
     {
         value: 72,
-        name: "Libertad"
+        label: "Libertad"
     },
     {
         value: 73,
-        name: "Liberty"
+        label: "Liberty"
     },
     {
         value: 74,
-        name: "Licuma"
+        label: "Licuma"
     },
     {
         value: 75,
-        name: "Liloan"
+        label: "Liloan"
     },
     {
         value: 76,
-        name: "Linao"
+        label: "Linao"
     },
     {
         value: 77,
-        name: "Luna"
+        label: "Luna"
     },
     {
         value: 78,
-        name: "Mabato"
+        label: "Mabato"
     },
     {
         value: 79,
-        name: "Mabini"
+        label: "Mabini"
     },
     {
         value: 80,
-        name: "Macabug"
+        label: "Macabug"
     },
     {
         value: 81,
-        name: "Magaswi"
+        label: "Magaswi"
     },
     {
         value: 82,
-        name: "Mahayag"
+        label: "Mahayag"
     },
     {
         value: 83,
-        name: "Mahayahay"
+        label: "Mahayahay"
     },
     {
         value: 84,
-        name: "Manlilinao"
+        label: "Manlilinao"
     },
     {
         value: 85,
-        name: "Margen"
+        label: "Margen"
     },
     {
         value: 86,
-        name: "Mas-in"
+        label: "Mas-in"
     },
     {
         value: 87,
-        name: "Matica-a"
+        label: "Matica-a"
     },
     {
         value: 88,
-        name: "Milagro"
+        label: "Milagro"
     },
     {
         value: 89,
-        name: "Monterico"
+        label: "Monterico"
     },
     {
         value: 90,
-        name: "Nasunogan"
+        label: "Nasunogan"
     },
     {
         value: 91,
-        name: "Naungan"
+        label: "Naungan"
     },
     {
         value: 92,
-        name: "Nueva Sociedad"
+        label: "Nueva Sociedad"
     },
     {
         value: 93,
-        name: "Nueva Vista"
+        label: "Nueva Vista"
     },
     {
         value: 94,
-        name: "Patag"
+        label: "Patag"
     },
     {
         value: 95,
-        name: "Punta"
+        label: "Punta"
     },
     {
         value: 96,
-        name: "Quezon, Jr."
+        label: "Quezon, Jr."
     },
     {
         value: 97,
-        name: "Rufina M. Tan"
+        label: "Rufina M. Tan"
     },
     {
         value: 98,
-        name: "Sabang Bao"
+        label: "Sabang Bao"
     },
     {
         value: 99,
-        name: "Salvacion"
+        label: "Salvacion"
     },
     {
         value: 100,
-        name: "San Antonio"
+        label: "San Antonio"
     },
     {
         value: 101,
-        name: "San Isidro"
+        label: "San Isidro"
     },
     {
         value: 102,
-        name: "San Jose"
+        label: "San Jose"
     },
     {
         value: 103,
-        name: "San Juan"
+        label: "San Juan"
     },
     {
         value: 104,
-        name: "San Pablo"
+        label: "San Pablo"
     },
     {
         value: 105,
-        name: "San Vicente"
+        label: "San Vicente"
     },
     {
         value: 106,
-        name: "Santo Niño"
+        label: "Santo Niño"
     },
     {
         value: 107,
-        name: "Sumangga"
+        label: "Sumangga"
     },
     {
         value: 108,
-        name: "Tambulilid"
+        label: "Tambulilid"
     },
     {
         value: 109,
-        name: "Tongonan"
+        label: "Tongonan"
     },
     {
         value: 110,
-        name: "Valencia"
+        label: "Valencia"
     }
 ];
+

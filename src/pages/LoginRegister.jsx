@@ -2,7 +2,7 @@ import { NavLink, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import { Form, Input, Select, Spin } from "antd";
-import { loginUser, registerUser } from "../app/features/user/authSlice.js";
+import { loginUser, registerUser, setGuestMode, setOldPassword } from "../app/features/user/authSlice.js";
 import indexbg from "../assets/indexbg.png";
 import { barangaysList } from "../utils/barangaysList.js";
 
@@ -27,8 +27,15 @@ export const LoginRegister = () => {
         }
     }, [user, navigate]);
 
+    useEffect(() => {
+        if (!isLoginMode) {
+            setIsLoginMode(true);
+        }
+    }, [authSuccess]);
+
 
     const onFinish = (values) => {
+        dispatch(setOldPassword({ payload: values.password }));
         if (isLoginMode) {
             dispatch(loginUser({ email: values.email, password: values.password }));
         } else {
@@ -158,7 +165,6 @@ export const LoginRegister = () => {
                                 disabled={ isLoading }
                                 type="submit">{ isLoginMode ? "Sign in" : "Register" }
                             </button>
-
                         </Form.Item>
                     </Spin>
                 </Form>
@@ -173,6 +179,7 @@ export const LoginRegister = () => {
                     ) : (
                         <NavLink
                             to="/dashboard"
+                            onClick={ () => dispatch(setGuestMode({ payload: true })) }
                             className="bg-opacity-25border-opacity-100 border-2 border-Thesis-100 border-solid font-medium hover:border-Thesis-300 hover:duration-300 hover:ease-in-out hover:text-Thesis-300 hover:transition-all inline-block px-4 py-2 ring-0 ring-offset-0 rounded-sm text-base text-black w-full md:px-0"
                         >
                             Continue as a guest

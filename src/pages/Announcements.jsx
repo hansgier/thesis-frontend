@@ -1,4 +1,4 @@
-import { FloatButton, Modal } from "antd";
+import { FloatButton, Modal, Skeleton } from "antd";
 import { FilterSort } from "../components/FilterSort.jsx";
 import { AddEditAnnouncementComponent, AnnouncementCard } from "../components/index.jsx";
 import { useLocation } from "react-router-dom";
@@ -6,11 +6,21 @@ import { useEffect } from "react";
 import { GoPlus } from "react-icons/go";
 import { toggleAddAnnouncementMode } from "../app/features/user/authSlice.js";
 import { useDispatch, useSelector } from "react-redux";
+import { getAllAnnouncements } from "../app/features/announcements/announcementsSlice.js";
 
 export const Announcements = () => {
-    const { isAddAnnouncementMode } = useSelector((store) => store.auth);
+    const {
+        isAddAnnouncementMode,
+        announcements,
+        isAnnouncementFetchLoading,
+        isAnnouncementFetchSuccess
+    } = useSelector((store) => store.auth);
     const dispatch = useDispatch();
     const location = useLocation();
+
+    useEffect(() => {
+        dispatch(getAllAnnouncements());
+    }, []);
 
     useEffect(() => {
         if (location.pathname !== "/project" || location.pathname !== "/singleproject") {
@@ -25,30 +35,19 @@ export const Announcements = () => {
             {/*-----------------------ANNOUNCEMENTS SECTION-----------------------*/ }
             <div
                 className="h-[calc(100%-64px)] mt-16 overflow-y-scroll pt-0 px-0 md:mt-0 md:absolute md:flex md:h-full md:flex-col md:left-[270px] md:pl-0 md:pr-4 md:w-[calc(100%-270px)]">
-                <AnnouncementCard type="system" title="System Update" content="The system has been updated."
-                                  postedBy="City Government" dateTime="March 23, 2023" />
-                <AnnouncementCard type="basic" title="Concert unya" content="Dili daw madayon haha"
-                                  postedBy="Brgy. Linao" dateTime="March 23, 2023" />
-                <AnnouncementCard type="system" title="System Update" content="The system has been updated."
-                                  postedBy="City Government" dateTime="March 23, 2023" />
-                <AnnouncementCard type="basic" title="Concert unya" content="Dili daw madayon haha"
-                                  postedBy="Brgy. Linao" dateTime="March 23, 2023" />
-                <AnnouncementCard type="system" title="System Update" content="The system has been updated."
-                                  postedBy="City Government" dateTime="March 23, 2023" />
-                <AnnouncementCard type="basic" title="Concert unya" content="Dili daw madayon haha"
-                                  postedBy="Brgy. Linao" dateTime="March 23, 2023" />
-                <AnnouncementCard type="system" title="System Update" content="The system has been updated."
-                                  postedBy="City Government" dateTime="March 23, 2023" />
-                <AnnouncementCard type="basic" title="Concert unya" content="Dili daw madayon haha"
-                                  postedBy="Brgy. Linao" dateTime="March 23, 2023" />
-                <AnnouncementCard type="system" title="System Update" content="The system has been updated."
-                                  postedBy="City Government" dateTime="March 23, 2023" />
-                <AnnouncementCard type="basic" title="Concert unya" content="Dili daw madayon haha"
-                                  postedBy="Brgy. Linao" dateTime="March 23, 2023" />
-                <AnnouncementCard type="system" title="System Update" content="The system has been updated."
-                                  postedBy="City Government" dateTime="March 23, 2023" />
-                <AnnouncementCard type="basic" title="Concert unya" content="Dili daw madayon haha"
-                                  postedBy="Brgy. Linao" dateTime="March 23, 2023" />
+                { isAnnouncementFetchLoading ? <>
+                        <Skeleton spinning={ isAnnouncementFetchLoading } block active />
+                        <Skeleton spinning={ isAnnouncementFetchLoading } block active />
+                        <Skeleton spinning={ isAnnouncementFetchLoading } block active />
+                        <Skeleton spinning={ isAnnouncementFetchLoading } block active />
+                        <Skeleton spinning={ isAnnouncementFetchLoading } block active />
+                    </> :
+                    <>
+                        { announcements ? announcements.map((announcement, i) => (
+                            <AnnouncementCard key={ i } announcement={ announcement } />
+                        )) : <div className="h-full flex items-center justify-center bg-white">No announcements</div> }
+                    </>
+                }
             </div>
             <FloatButton icon={ <GoPlus /> } type="primary"
                          className="float-add-btn"
