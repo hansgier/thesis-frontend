@@ -1,5 +1,10 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { getAllAnnouncementsThunk } from "./announcementsThunk.js";
+import {
+    deleteAnnouncementThunk,
+    editAnnouncementThunk,
+    getAllAnnouncementsThunk,
+    postAnnouncementThunk
+} from "./announcementsThunk.js";
 
 const initialFiltersState = {
     search: "",
@@ -19,6 +24,9 @@ const initialState = {
 };
 
 export const getAllAnnouncements = createAsyncThunk("announcements/getAllAnnouncements", getAllAnnouncementsThunk);
+export const editAnnouncement = createAsyncThunk("announcements/editAnnouncement", editAnnouncementThunk);
+export const deleteAnnouncement = createAsyncThunk("announcements/deleteAnnouncement", deleteAnnouncementThunk);
+export const postAnnouncement = createAsyncThunk("announcements/postAnnouncement", postAnnouncementThunk);
 
 
 const announcementSlice = createSlice({
@@ -27,6 +35,57 @@ const announcementSlice = createSlice({
     reducers: {},
     extraReducers: (builder) => {
         builder
+            .addCase(postAnnouncement.pending, (state) => {
+                state.isAnnouncementFetchSuccess = false;
+                state.isAnnouncementFetchError = false;
+                state.isAnnouncementFetchLoading = true;
+            })
+            .addCase(postAnnouncement.fulfilled, (state, { payload }) => {
+                state.isAnnouncementFetchLoading = false;
+                state.isAnnouncementFetchError = false;
+                state.isAnnouncementFetchSuccess = true;
+            })
+            .addCase(postAnnouncement.rejected, (state, { payload }) => {
+                state.isAnnouncementFetchLoading = false;
+                state.isAnnouncementFetchSuccess = false;
+                state.isAnnouncementFetchError = true;
+                state.announcementFetchErrorMessage = payload;
+            })
+
+            .addCase(deleteAnnouncement.pending, (state) => {
+                state.isAnnouncementFetchSuccess = false;
+                state.isAnnouncementFetchError = false;
+                state.isAnnouncementFetchLoading = true;
+            })
+            .addCase(deleteAnnouncement.fulfilled, (state, { payload }) => {
+                state.isAnnouncementFetchLoading = false;
+                state.isAnnouncementFetchError = false;
+                state.isAnnouncementFetchSuccess = true;
+            })
+            .addCase(deleteAnnouncement.rejected, (state, { payload }) => {
+                state.isAnnouncementFetchLoading = false;
+                state.isAnnouncementFetchSuccess = false;
+                state.isAnnouncementFetchError = true;
+                state.announcementFetchErrorMessage = payload;
+            })
+
+            .addCase(editAnnouncement.pending, (state) => {
+                state.isAnnouncementFetchSuccess = false;
+                state.isAnnouncementFetchError = false;
+                state.isAnnouncementFetchLoading = true;
+            })
+            .addCase(editAnnouncement.fulfilled, (state, { payload }) => {
+                state.isAnnouncementFetchLoading = false;
+                state.isAnnouncementFetchError = false;
+                state.isAnnouncementFetchSuccess = true;
+            })
+            .addCase(editAnnouncement.rejected, (state, { payload }) => {
+                state.isAnnouncementFetchLoading = false;
+                state.isAnnouncementFetchSuccess = false;
+                state.isAnnouncementFetchError = true;
+                state.announcementFetchErrorMessage = payload;
+            })
+
             .addCase(getAllAnnouncements.pending, (state) => {
                 state.isAnnouncementFetchSuccess = false;
                 state.isAnnouncementFetchError = false;

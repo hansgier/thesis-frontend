@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { getAllCommentsThunk } from "./commentsThunk.js";
+import { getAllCommentsThunk, postCommentThunk } from "./commentsThunk.js";
 
 const initialFiltersState = {
     search: "",
@@ -18,6 +18,7 @@ const initialState = {
 };
 
 export const getAllComments = createAsyncThunk("comments/getAllComments", getAllCommentsThunk);
+export const postComment = createAsyncThunk("comments/postComment", postCommentThunk);
 
 
 const commentsSlice = createSlice({
@@ -26,6 +27,25 @@ const commentsSlice = createSlice({
     reducers: {},
     extraReducers: (builder) => {
         builder
+            .addCase(postComment.pending, (state) => {
+                state.isCommentFetchSuccess = false;
+                state.isCommentFetchError = false;
+                state.isCommentFetchLoading = true;
+            })
+            .addCase(postComment.fulfilled, (state, { payload }) => {
+                state.isCommentFetchLoading = false;
+                state.isCommentFetchError = false;
+                state.isCommentFetchSuccess = true;
+                console.log(payload);
+                state.totalComments = payload.totalCount;
+            })
+            .addCase(postComment.rejected, (state, { payload }) => {
+                state.isCommentFetchLoading = false;
+                state.isCommentFetchSuccess = false;
+                state.isCommentFetchError = true;
+                state.commentFetchErrorMessage = payload;
+            })
+
             .addCase(getAllComments.pending, (state) => {
                 state.isCommentFetchSuccess = false;
                 state.isCommentFetchError = false;
@@ -35,7 +55,7 @@ const commentsSlice = createSlice({
                 state.isCommentFetchLoading = false;
                 state.isCommentFetchError = false;
                 state.isCommentFetchSuccess = true;
-                state.comments = payload.comments;
+                state.comments = payload.projectComments;
                 state.totalComments = payload.totalCount;
             })
             .addCase(getAllComments.rejected, (state, { payload }) => {
@@ -44,7 +64,6 @@ const commentsSlice = createSlice({
                 state.isCommentFetchError = true;
                 state.commentFetchErrorMessage = payload;
             });
-
     }
 });
 

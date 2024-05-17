@@ -1,5 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { getAllBarangaysThunk } from "./barangaysThunk.js";
+import { addToLocalStorage, getItemLocalStorage } from "../../../utils/localStorage.jsx";
 
 const initialFiltersState = {
     search: "",
@@ -12,7 +13,7 @@ const initialState = {
     barangayFetchErrorBarangay: "",
     isBarangayFetchError: false,
     totalBarangays: 0,
-    barangays: [],
+    barangays: getItemLocalStorage("barangays"),
     ...initialFiltersState
 };
 
@@ -41,6 +42,7 @@ const barangaysSlice = createSlice({
                 state.isBarangayFetchSuccess = true;
                 state.barangays = payload.barangays;
                 state.totalBarangays = payload.count;
+                addToLocalStorage(payload.barangays, "barangays");
             })
             .addCase(getAllBarangays.rejected, (state, { payload }) => {
                 state.isBarangayFetchLoading = false;

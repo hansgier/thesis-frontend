@@ -1,6 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { createProjectThunk, getAllProjectsThunk } from "./projectsThunk.js";
 import cloudinary from "../../../utils/cloudinaryConfig.js";
+import { addToLocalStorage, getItemLocalStorage } from "../../../utils/localStorage.jsx";
 
 const initialFitlersState = {
     search: "",
@@ -20,7 +21,7 @@ const initialState = {
     isProjectFetchError: false,
     totalProjects: 0,
     projects: [],
-    singleProject: null,
+    singleProject: getItemLocalStorage("singleProject"),
     completed: 0,
     ongoing: 0,
     planned: 0,
@@ -89,6 +90,7 @@ const projectsSlice = createSlice({
     reducers: {
         setSingleProject: (state, { payload }) => {
             state.singleProject = payload;
+            addToLocalStorage(payload, "singleProject");
         }
     },
     extraReducers: (builder) => {
@@ -128,7 +130,7 @@ const projectsSlice = createSlice({
                 state.projectFetchErrorMessage = payload;
                 state.isProjectFetchError = true;
             })
-            
+
             .addCase(getAllProjects.pending, (state) => {
                 state.isProjectFetchSuccess = false;
                 state.isProjectFetchError = false;

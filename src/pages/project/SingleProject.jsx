@@ -104,60 +104,69 @@ export const SingleProject = () => {
                         <div className="border-t mt-4 overflow-y-hidden pt-2 w-full">
                             <div className="h-[474px] overflow-y-scroll">
                                 { state.isDetailsMobileMode ? (
-                                    projectDetails_sidebar.map((pds, index) => {
-                                        const { name, pds_type, color } = pds;
-                                        if (pds_type === "single") {
-                                            return (
-                                                <div className="mb-5" key={ index }>
-                                                    <div
-                                                        className="font-bold my-2 select-none text-gray-900 text-xs uppercase">
-                                                        { name }
-                                                    </div>
-                                                    <span
-                                                        className={ `${ color } font-bold px-3 py-1 rounded-2xl select-none text-white text-xs` }>
-                                            10%
-                                        </span>
-                                                </div>
+                                    projectDetails_sidebar
+                                        .filter((pds) => {
+                                            const { value } = pds;
+                                            const projectValue = singleProject.payload[value];
+                                            if (pds.pds_type === "single") {
+                                                return !!projectValue; // Include if projectValue is truthy
+                                            } else if (pds.pds_type === "multiple") {
+                                                return (projectValue || []).length > 0; // Include if projectValue is a non-empty array
+                                            }
+                                            return false; // Exclude all other cases
+                                        })
+                                        .map((pds, index) => {
+                                            const { name, pds_type, color, value } = pds;
+                                            if (!singleProject || !singleProject.payload) {
+                                                return null; // or you can render a placeholder component
+                                            }
 
-                                            );
-                                        } else if (pds_type === "multiple") {
-                                            return (
-                                                <div className="mb-5" key={ index }>
-                                                    <div
-                                                        className="font-bold my-2 select-none text-gray-900 text-xs uppercase">{ name }
-                                                    </div>
-                                                    <div className="flex flex-wrap gap-2 mt-2">
-                                                        {/*TODO: map the barangay ids here or location here from single project*/ }
-                                                        <span
-                                                            className={ `${ color } font-bold px-3 py-1 rounded-2xl select-none text-white text-xs` }>
-                                                Linao
-                                            </span>
-                                                        <span
-                                                            className={ `${ color } font-bold px-3 py-1 rounded-2xl select-none text-white text-xs` }>
-                                                Linao
-                                            </span>
-                                                        <span
-                                                            className={ `${ color } font-bold px-3 py-1 rounded-2xl select-none text-white text-xs` }>
-                                                Linao
-                                            </span>
-                                                        <span
-                                                            className={ `${ color } font-bold px-3 py-1 rounded-2xl select-none text-white text-xs` }>
-                                                Linao
-                                            </span>
-                                                        <span
-                                                            className={ `${ color } font-bold px-3 py-1 rounded-2xl select-none text-white text-xs` }>
-                                                Linao
-                                            </span>
-                                                        <span
-                                                            className={ `${ color } font-bold px-3 py-1 rounded-2xl select-none text-white text-xs` }>
-                                                Linao
-                                            </span>
+                                            if (pds_type === "single") {
+                                                const isDateValue = ["start_date", "due_date", "completion_date"].includes(value);
+                                                const isCostValue = value === "cost";
+                                                const displayValue = isDateValue
+                                                    ? moment(singleProject.payload[value]).format("MMMM D, YYYY")
+                                                    : isCostValue
+                                                        ? `₱ ${ parseFloat(singleProject.payload[value]).toLocaleString("en-PH", {
+                                                            minimumFractionDigits: 2,
+                                                            maximumFractionDigits: 2
+                                                        }) }`
+                                                        : singleProject.payload[value];
 
+                                                return (
+                                                    <div className="mb-5" key={ index }>
+                                                        <div
+                                                            className="font-bold my-2 select-none text-gray-900 text-xs uppercase">
+                                                            { name }
+                                                        </div>
+                                                        <span
+                                                            className={ `${ color } font-bold px-3 py-1 rounded-2xl select-none text-white text-xs` }
+                                                        >
+                        { displayValue }
+                    </span>
                                                     </div>
-                                                </div>
-                                            );
-                                        }
-                                    })
+                                                );
+                                            } else if (pds_type === "multiple") {
+                                                return (
+                                                    <div className="mb-5" key={ index }>
+                                                        <div
+                                                            className="font-bold my-2 select-none text-gray-900 text-xs uppercase">
+                                                            { name }
+                                                        </div>
+                                                        <div className="flex flex-wrap gap-2 mt-2">
+                                                            { singleProject.payload[value].map((item, index) => (
+                                                                <span
+                                                                    key={ index }
+                                                                    className={ `${ color } font-bold px-3 py-1 rounded-2xl select-none text-white text-xs` }
+                                                                >
+                                { item.name }
+                            </span>
+                                                            )) }
+                                                        </div>
+                                                    </div>
+                                                );
+                                            }
+                                        })
                                 ) : (
                                     <>
                                         <div className="pb-2 pt-0 pr-3 flex justify-between">
@@ -291,7 +300,7 @@ export const SingleProject = () => {
 
                             <div className="border-b gap-2 grid pb-3 px-4 md:px-6">
                                 <div className="flex gap-2 h-8 items-center mt-4 text-sm md:gap-4">
-                                    <LikeDislikeButtons reactions={ reactions } />
+                                    <LikeDislikeButtons project={ singleProject.payload } />
                                 </div>
                             </div>
                             <CommentSection />

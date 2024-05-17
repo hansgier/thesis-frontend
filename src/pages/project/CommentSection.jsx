@@ -1,8 +1,26 @@
 import { UserComment } from "./UserComment.jsx";
 import { PostComment } from "./PostComment.jsx";
+import { useDispatch, useSelector } from "react-redux";
+import React, { useEffect } from "react";
+import { getAllComments } from "../../app/features/comments/commentsSlice.js";
+import { Empty, Spin } from "antd";
 
-export const CommentSection = () => {
+export const CommentSection = React.memo(() => {
+    const { projects, singleProject } = useSelector((store) => store.projects);
+    const { user } = useSelector((store) => store.auth);
+    const { users4admin } = useSelector((store) => store.users);
+    const { barangays } = useSelector((store) => store.barangays);
+    const {
+        comments,
+        totalComments,
+        isCommentFetchLoading,
+        isCommentFetchSuccess
+    } = useSelector((store) => store.comments);
+    const dispatch = useDispatch();
 
+    useEffect(() => {
+        dispatch(getAllComments(singleProject.payload.id));
+    }, []);
 
     return (
         <>
@@ -20,74 +38,30 @@ export const CommentSection = () => {
                         data-id="58">
                         Comments
                     </span>
+                    { isCommentFetchLoading ? <Spin spinning={ isCommentFetchLoading } /> : (
+                        <>
                     <span
                         className="bg-[#daf4aa] flex font-bold items-center justify-center px-2 py-0 rounded-full select-none text-black text-xs md:text-sm">
-                        2
+                                { totalComments }
+
                     </span>
+                        </>
+                    ) }
                 </div>
                 {/*------------------COMMENT SECTION------------------*/ }
                 <div data-id="59" className="pb-4 pl-2 pr-4 space-y-6 md:pb-0 md:px-0">
-                    {/*TODO: map the comments here*/ }
-                    <UserComment userName="John Davis" userComment="Great
-                                                                               project! I
-                                                                               love the
-                                                                               design and
-                                                                               the
-                                                                               functionality.Great
-                                                                               project! I
-                                                                               love the
-                                                                               design and
-                                                                               the
-                                                                               functionality.Great
-                                                                               project! I
-                                                                               love the
-                                                                               design and
-                                                                               the
-                                                                               functionality.Great
-                                                                               project! I
-                                                                               love the
-                                                                               design and
-                                                                               the
-                                                                               functionality.Great
-                                                                               project! I
-                                                                               love the
-                                                                               design and
-                                                                               the
-                                                                               functionality.Great
-                                                                               project! I
-                                                                               love the
-                                                                               design and
-                                                                               the
-                                                                               functionality.Great
-                                                                               project! I
-                                                                               love the
-                                                                               design and
-                                                                               the
-                                                                               functionality.Great
-                                                                               project! I
-                                                                               love the
-                                                                               design and
-                                                                               the
-                                                                               functionality.Great
-                                                                               project! I
-                                                                               love the
-                                                                               design and
-                                                                               the
-                                                                               functionality.Great
-                                                                               project! I
-                                                                               love the
-                                                                               design and
-                                                                               the
-                                                                               functionality.Great
-                                                                               project! I
-                                                                               love the
-                                                                               design and
-                                                                               the
-                                                                               functionality." />
-                    <UserComment userName="TravisPorter" userComment="good asdfasdfasdf" />
-                    <UserComment userName="juandelacruz119" userComment="Nice good project!" />
+                    { isCommentFetchLoading || (
+                        <>
+                            { totalComments < 1 ?
+                                <Empty description="No comments" />
+                                :
+                                comments.map((comment) => (
+                                    <UserComment key={ comment.id } comment={ comment } />
+                                )) }
+                        </>
+                    ) }
                 </div>
             </div>
         </>
     );
-};
+});

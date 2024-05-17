@@ -37,6 +37,7 @@ export const getAllProjectsThunk = async (_, thunkAPI) => {
         return checkForUnauthorizedResponse(e, thunkAPI);
     }
 };
+
 // export const getProjectThunk = async (projectId, thunkAPI) => {
 //     try {
 //         const state = thunkAPI.getState().auth;
@@ -47,6 +48,7 @@ export const getAllProjectsThunk = async (_, thunkAPI) => {
 //         return checkForUnauthorizedResponse(e, thunkAPI);
 //     }
 // };
+
 export const createProjectThunk = async (project, thunkAPI) => {
 
     try {
@@ -58,3 +60,16 @@ export const createProjectThunk = async (project, thunkAPI) => {
         return checkForUnauthorizedResponse(e, thunkAPI);
     }
 };
+
+export const editProjectThunk = async ({ id, project }, thunkAPI) => {
+
+    try {
+        const state = thunkAPI.getState().auth;
+        const headers = { userId: state.user.id };
+        const response = await customFetch.patch(`${ PROJECTS_URL }/${ id }`, project, { headers });
+        return response.data;
+    } catch (e) {
+        return checkForUnauthorizedResponse(e, thunkAPI);
+    }
+};
+

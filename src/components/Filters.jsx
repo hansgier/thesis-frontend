@@ -64,10 +64,6 @@ export const Filters = React.memo(({ mode, page }) => {
                         ) }
                         { page === "Announcements" && (
                             <>
-                                <Form.Item name="type" className="m-0 p-0">
-                                    <Select placeholder="Type"
-                                            options={ announcement_types } />
-                                </Form.Item>
                                 <Form.Item name="posted_by" className="m-0 p-0">
                                     <Select placeholder="Posted By"
                                             options={ null } />

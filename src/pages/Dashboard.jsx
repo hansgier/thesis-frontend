@@ -6,6 +6,7 @@ import { Empty, Skeleton } from "antd";
 import { Announcement, FeaturedProject, UpcomingProject } from "./dashboard/index.jsx";
 import { getAllAnnouncements } from "../app/features/announcements/announcementsSlice.js";
 import { getAllBarangays } from "../app/features/users/barangaysSlice.js";
+import { getAllUsers } from "../app/features/users/usersSlice.js";
 
 export const Dashboard = () => {
     const location = useLocation();
@@ -34,6 +35,7 @@ export const Dashboard = () => {
         dispatch(getAllProjects());
         dispatch(getAllAnnouncements());
         dispatch(getAllBarangays());
+        dispatch(getAllUsers());
     }, []);
 
     useEffect(() => {

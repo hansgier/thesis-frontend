@@ -1,10 +1,11 @@
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { toggleSidebar } from "../app/features/user/authSlice.js";
 import { SearchBar } from "./SearchBar.jsx";
 import logo from "/src/assets/logo.png";
 
 export const TopBar = () => {
     const dispatch = useDispatch();
+    const { user } = useSelector((store) => store.auth);
 
 
     const toggleSide = () => {
@@ -21,7 +22,7 @@ export const TopBar = () => {
             </div>
             <div className="hidden select-none w-auto md:block">
                 <h5 className="text-gray-600 text-sm font-normal">Welcome,</h5>
-                <h6 className="font-bold text-black">Hans Gier</h6>
+                <h6 className="font-bold text-black">{ user.username }</h6>
             </div>
             <div className="flex flex-1 justify-between">
                 {/*---------------Menu Bar---------------*/ }

@@ -1,5 +1,5 @@
 import { announcement_component } from "../utils/data-components.jsx";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useState } from "react";
 import { MdDeleteOutline } from "react-icons/md";
 import { Button, Modal, Popconfirm } from "antd";
@@ -7,20 +7,25 @@ import { AnimatePresence, motion } from "framer-motion";
 import { CiEdit } from "react-icons/ci";
 import { AddEditAnnouncementComponent } from "./AddEditAnnouncementComponent.jsx";
 import moment from "moment";
+import { deleteAnnouncement } from "../app/features/announcements/announcementsSlice.js";
 
 export const AnnouncementCard = ({ announcement }) => {
-    const { view, users } = useSelector((store) => store.auth);
+    const { view, user } = useSelector((store) => store.auth);
+    const { users4admin } = useSelector((store) => store.users);
     const { barangays } = useSelector((store) => store.barangays);
+    const { isAnnouncementFetchLoading, isAnnouncementFetchSuccess } = useSelector((store) => store.announcements);
     const [isHovered, setIsHovered] = useState(false);
     const [deleteAnnouncementConfirm, setDeleteAnnouncementConfirm] = useState(false);
     const [editAnnouncementMode, setEditAnnouncementMode] = useState(false);
+    const dispatch = useDispatch();
 
     const onDeleteAnnouncementConfirm = () => {
         setDeleteAnnouncementConfirm(true);
+        dispatch(deleteAnnouncement(announcement.id));
     };
 
     function getNameByPostedBy(postedBy) {
-        const user = users.find((user) => user.id === postedBy);
+        const user = users4admin.find((user) => user.id === postedBy);
 
         if (user) {
             if (user.role === "barangay") {
@@ -56,11 +61,15 @@ export const AnnouncementCard = ({ announcement }) => {
                         className="flex flex-row items-center justify-center ml-auto space-x-2 text-gray-500 text-xs md:flex-row md:items-center">
                         <Button icon={ <CiEdit /> } type="dashed" onClick={ () => setEditAnnouncementMode(true) } />
                         <Modal centered title="Edit Announcement" open={ editAnnouncementMode }
-                               onCancel={ () => setEditAnnouncementMode(false) }
+                               onCancel={ () => {
+                                   if (!isAnnouncementFetchLoading) {
+                                       if (isAnnouncementFetchSuccess) setEditAnnouncementMode(false);
+                                   }
+                               } }
                                footer={ null } wrapClassName="add-project-modal" width={ 800 }>
                             <div className="pb-1 border-b-2 mb-3 select-none">Edit the details of the announcement.
                             </div>
-                            <AddEditAnnouncementComponent mode="edit" />
+                            <AddEditAnnouncementComponent mode="edit" announcement={ announcement } />
                         </Modal>
                         <Popconfirm title="Delete Announcement"
                                     description="Are you sure you want to delete this announcement?"
@@ -85,7 +94,7 @@ export const AnnouncementCard = ({ announcement }) => {
                             <path d="M8 14h.01"></path>
                         </svg>
                         <span
-                            className="hidden select-none md:block">{ getNameByPostedBy(announcement.postedBy) }</span>
+                            className="hidden select-none md:block">{ getNameByPostedBy(announcement.createdBy) }</span>
                     </div> }
 
                 </div>

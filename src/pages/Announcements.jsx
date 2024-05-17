@@ -9,12 +9,13 @@ import { useDispatch, useSelector } from "react-redux";
 import { getAllAnnouncements } from "../app/features/announcements/announcementsSlice.js";
 
 export const Announcements = () => {
+    const { isAddAnnouncementMode } = useSelector((store) => store.auth);
     const {
-        isAddAnnouncementMode,
         announcements,
         isAnnouncementFetchLoading,
-        isAnnouncementFetchSuccess
-    } = useSelector((store) => store.auth);
+        isAnnouncementFetchSuccess,
+        totalAnnouncements
+    } = useSelector((store) => store.announcements);
     const dispatch = useDispatch();
     const location = useLocation();
 
@@ -36,14 +37,18 @@ export const Announcements = () => {
             <div
                 className="h-[calc(100%-64px)] mt-16 overflow-y-scroll pt-0 px-0 md:mt-0 md:absolute md:flex md:h-full md:flex-col md:left-[270px] md:pl-0 md:pr-4 md:w-[calc(100%-270px)]">
                 { isAnnouncementFetchLoading ? <>
-                        <Skeleton spinning={ isAnnouncementFetchLoading } block active />
-                        <Skeleton spinning={ isAnnouncementFetchLoading } block active />
-                        <Skeleton spinning={ isAnnouncementFetchLoading } block active />
-                        <Skeleton spinning={ isAnnouncementFetchLoading } block active />
-                        <Skeleton spinning={ isAnnouncementFetchLoading } block active />
+                        <div className="mb-4 md:ml-0 md:mx-0 mx-4 "><Skeleton spinning={ isAnnouncementFetchLoading } block
+                                                                              active /></div>
+                        <div className="mb-4 md:ml-0 md:mx-0 mx-4 "><Skeleton spinning={ isAnnouncementFetchLoading } block
+                                                                              active /></div>
+                        <div className="mb-4 md:ml-0 md:mx-0 mx-4 "><Skeleton spinning={ isAnnouncementFetchLoading } block
+                                                                              active /></div>
+                        <div className="mb-4 md:ml-0 md:mx-0 mx-4 "><Skeleton spinning={ isAnnouncementFetchLoading } block
+                                                                              active /></div>
+
                     </> :
                     <>
-                        { announcements ? announcements.map((announcement, i) => (
+                        { totalAnnouncements > 0 ? announcements.map((announcement, i) => (
                             <AnnouncementCard key={ i } announcement={ announcement } />
                         )) : <div className="h-full flex items-center justify-center bg-white">No announcements</div> }
                     </>

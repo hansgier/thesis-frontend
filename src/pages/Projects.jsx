@@ -6,6 +6,8 @@ import { FloatButton, Modal, Skeleton } from "antd";
 import { useDispatch, useSelector } from "react-redux";
 import { toggleAddProjectMode } from "../app/features/user/authSlice.js";
 import { getAllProjects } from "../app/features/projects/projectsSlice.js";
+import { getAllUsers } from "../app/features/users/usersSlice.js";
+import { removeItemLocalStorage } from "../utils/localStorage.jsx";
 
 export const Projects = () => {
     const { isAddProjectMode, user } = useSelector((store) => store.auth);
@@ -23,6 +25,8 @@ export const Projects = () => {
 
     useEffect(() => {
         dispatch(getAllProjects());
+        dispatch(getAllUsers());
+        removeItemLocalStorage("singleProject");
     }, []);
 
     // Function to save the scroll position to sessionStorage

@@ -10,6 +10,7 @@ import moment from "moment";
 import { getAllProjectReactions } from "../app/features/reactions/reactionsSlice.js";
 import { capitalizeFirstLetter } from "../utils/functions.js";
 import { setSingleProject } from "../app/features/projects/projectsSlice.js";
+import { LikeDislikeButtons } from "./LikeDislikeButtons.jsx";
 
 
 export const ProjectContainer = React.memo(({ project }) => {
@@ -170,7 +171,8 @@ export const ProjectContainer = React.memo(({ project }) => {
                             <span className="font-bold hidden select-none lg:block">
                             { getNameByCreatedBy(project.createdBy) }
                         </span>
-                        </div> }
+                        </div>
+                    }
                 </div>
                 <AnimatePresence>
                     { view === 0 && (
@@ -196,7 +198,9 @@ export const ProjectContainer = React.memo(({ project }) => {
                             }
                             <div className="gap-2 grid pb-3 px-4 md:px-6">
                                 <div className="flex gap-2 h-8 items-center mt-4 text-sm md:gap-4">
-                                    {/*<LikeDislikeButtons reactions={ reactions } />*/ }
+                                    {/*-----------------------REACTIONS-----------------------*/ }
+                                    <LikeDislikeButtons project={ project } />
+                                    {/*-----------------------COMMENT COUNT-----------------------*/ }
                                     <div
                                         onClick={ () => {
                                             dispatch(setSingleProject({ payload: project }));

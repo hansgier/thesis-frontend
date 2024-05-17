@@ -1,5 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { getAllUsersThunk } from "./usersThunk.js";
+import { addToLocalStorage, getItemLocalStorage } from "../../../utils/localStorage.jsx";
 
 const initialFiltersState = {
     search: "",
@@ -12,7 +13,7 @@ const initialState = {
     userFetchErrorUser: "",
     isUserFetchError: false,
     totalUsers: 0,
-    users4admin: [],
+    users4admin: getItemLocalStorage("users"),
     ...initialFiltersState
 };
 
@@ -41,6 +42,7 @@ const usersSlice = createSlice({
                 state.isUserFetchSuccess = true;
                 state.users4admin = payload.users;
                 state.totalUsers = payload.count;
+                addToLocalStorage(payload.users, "users");
             })
             .addCase(getAllUsers.rejected, (state, { payload }) => {
                 state.isUserFetchLoading = false;
