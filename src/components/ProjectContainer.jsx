@@ -136,22 +136,8 @@ export const ProjectContainer = React.memo(({ project }) => {
                             </div>
                         </div>
                     </div>
-                    { isHovered ?
+                    { user.role === "resident" ?
                         <div className="flex items-center ml-auto space-x-2 text-Thesis-200 text-xs">
-                            <Button icon={ <CiEdit /> } type="dashed" onClick={ () => setEditProjectMode(true) } />
-                            <Modal centered title="Edit Project" open={ editProjectMode }
-                                   onCancel={ () => setEditProjectMode(false) }
-                                   footer={ null } wrapClassName="add-project-modal" width={ 800 }>
-                                <div className="pb-1 border-b-2 mb-3 select-none">Edit the details of the project.
-                                </div>
-                                <AddEditProjectComponent mode="edit" project={ project } />
-                            </Modal>
-                            <Popconfirm title="Delete Project"
-                                        description="Are you sure you want to delete this project?"
-                                        onConfirm={ onDeleteProjectConfirm }>
-                                <Button icon={ <MdDeleteOutline /> } danger type="primary" />
-                            </Popconfirm>
-                        </div> : <div className="flex items-center ml-auto space-x-2 text-Thesis-200 text-xs">
                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
                                  fill="none"
                                  stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
@@ -172,6 +158,72 @@ export const ProjectContainer = React.memo(({ project }) => {
                             { getNameByCreatedBy(project.createdBy) }
                         </span>
                         </div>
+                        : isHovered ?
+                            user.role === "admin" ? (
+                                <div className="flex items-center ml-auto space-x-2 text-Thesis-200 text-xs">
+                                    {/*--------------------Edit button--------------------*/ }
+                                    <Button icon={ <CiEdit /> } type="dashed"
+                                            onClick={ () => setEditProjectMode(true) } />
+                                    <Modal centered title="Edit Project" open={ editProjectMode }
+                                           onCancel={ () => setEditProjectMode(false) }
+                                           footer={ null } wrapClassName="add-project-modal" width={ 800 }>
+                                        <div className="pb-1 border-b-2 mb-3 select-none">Edit the details of the
+                                                                                          project.
+                                        </div>
+                                        <AddEditProjectComponent mode="edit" project={ project } />
+                                    </Modal>
+                                    {/*--------------------Delete button--------------------*/ }
+                                    <Popconfirm title="Delete Project"
+                                                description="Are you sure you want to delete this project?"
+                                                onConfirm={ onDeleteProjectConfirm }>
+                                        <Button icon={ <MdDeleteOutline /> } danger type="primary" />
+                                    </Popconfirm>
+                                </div>
+                            ) : (user.role === "barangay" && user.id === project.createdBy) && (
+                                <>
+                                    <div className="flex items-center ml-auto space-x-2 text-Thesis-200 text-xs">
+                                        {/*--------------------Edit button--------------------*/ }
+                                        <Button icon={ <CiEdit /> } type="dashed"
+                                                onClick={ () => setEditProjectMode(true) } />
+                                        <Modal centered title="Edit Project" open={ editProjectMode }
+                                               onCancel={ () => setEditProjectMode(false) }
+                                               footer={ null } wrapClassName="add-project-modal" width={ 800 }>
+                                            <div className="pb-1 border-b-2 mb-3 select-none">Edit the details of the
+                                                                                              project.
+                                            </div>
+                                            <AddEditProjectComponent mode="edit" project={ project } />
+                                        </Modal>
+                                        {/*--------------------Delete button--------------------*/ }
+                                        <Popconfirm title="Delete Project"
+                                                    description="Are you sure you want to delete this project?"
+                                                    onConfirm={ onDeleteProjectConfirm }>
+                                            <Button icon={ <MdDeleteOutline /> } danger type="primary" />
+                                        </Popconfirm>
+                                    </div>
+                                </>
+                            )
+                            :
+                            <div className="flex items-center ml-auto space-x-2 text-Thesis-200 text-xs">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                     fill="none"
+                                     stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
+                                     className="h-4 hidden w-4 lg:block">
+                                    <rect width="16" height="20" x="4" y="2" rx="2" ry="2"></rect>
+                                    <path d="M9 22v-4h6v4"></path>
+                                    <path d="M8 6h.01"></path>
+                                    <path d="M16 6h.01"></path>
+                                    <path d="M12 6h.01"></path>
+                                    <path d="M12 10h.01"></path>
+                                    <path d="M12 14h.01"></path>
+                                    <path d="M16 10h.01"></path>
+                                    <path d="M16 14h.01"></path>
+                                    <path d="M8 10h.01"></path>
+                                    <path d="M8 14h.01"></path>
+                                </svg>
+                                <span className="font-bold hidden select-none lg:block">
+                            { getNameByCreatedBy(project.createdBy) }
+                        </span>
+                            </div>
                     }
                 </div>
                 <AnimatePresence>

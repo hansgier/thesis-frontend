@@ -1,10 +1,14 @@
 import { Empty } from "antd";
 import React from "react";
+import { useDispatch } from "react-redux";
+import { setSingleProject } from "../../app/features/projects/projectsSlice.js";
 
 export const FeaturedProject = ({ project }) => {
+    const dispatch = useDispatch();
     return (
         <div
-            className="bg-white border-b border-green-400 border-t flex items-center p-2 rounded-lg md:flex md:flex-col md:gap-4 md:pb-2 md:pt-1.5 md:px-1.5 md:rounded-3xl">
+            onClick={ () => dispatch(setSingleProject({ payload: project })) }
+            className="bg-white border-b border-green-400 border-t flex items-center p-2 rounded-lg md:flex md:flex-col md:gap-4 md:pb-2 md:pt-1.5 md:px-1.5 md:rounded-3xl h-96">
             <div className="relative md:h-64 md:w-full">
                 { project.media.length < 1 ?
                     <div
@@ -18,7 +22,7 @@ export const FeaturedProject = ({ project }) => {
                         alt="Project" />
                 }
             </div>
-            <div className="gap-1 grid h-full ml-2 md:ml-0">
+            <div className="gap-1 grid h-20 ml-2 md:ml-0 w-full">
                 <p className="font-semibold mx-2 select-none text-sm md:text-base">{ project.title }</p>
                 <p className="mx-2 select-none text-gray-600 text-xs md:text-gray-600 md:text-sm line-clamp-2">
                     { project.description }</p>

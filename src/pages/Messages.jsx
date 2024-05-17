@@ -15,7 +15,7 @@ import {
     setSelectedConversation
 } from "../app/features/messages/messagesSlice.js";
 import moment from "moment";
-import { barangaysList } from "../utils/barangaysList.js";
+import { barangaysList, barangaysListWithoutGuest } from "../utils/barangaysList.js";
 
 const filterOption = (input, option) =>
     (option?.label ?? "").toLowerCase().includes(input.toLowerCase());
@@ -160,7 +160,7 @@ export const Messages = () => {
                                         onSearch={ handleSearch }
                                         onChange={ handleChange }
                                         notFoundContent={ null }
-                                        options={ barangaysList }
+                                        options={ barangaysListWithoutGuest }
                                     />
                                 </Modal>
                             </div>
