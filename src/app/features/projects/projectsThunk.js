@@ -1,5 +1,6 @@
 import customFetch, { checkForUnauthorizedResponse } from "../../../utils/axios.js";
 import { PROJECTS_URL } from "../../constants.js";
+import { getAllProjects } from "./projectsSlice.js";
 
 export const getAllProjectsThunk = async (_, thunkAPI) => {
     const {
@@ -50,13 +51,45 @@ export const getAllProjectsThunk = async (_, thunkAPI) => {
 // };
 
 export const createProjectThunk = async (project, thunkAPI) => {
-
     try {
         const state = thunkAPI.getState().auth;
         const headers = { userId: state.user.id };
-        const response = await customFetch.get(PROJECTS_URL, { headers });
+        const {
+            title,
+            description,
+            cost,
+            start_date,
+            due_date,
+            completion_date,
+            status,
+            tagsIds,
+            barangayIds,
+            funding_source,
+            uploadedImages
+        } = project;
+        console.log(project);
+
+        const response = await customFetch.post(
+            PROJECTS_URL,
+            {
+                title,
+                description,
+                cost,
+                start_date,
+                due_date,
+                completion_date,
+                status,
+                tagsIds,
+                barangayIds,
+                funding_source,
+                uploadedImages
+            },
+            { headers }
+        );
+        thunkAPI.dispatch(getAllProjects()); // Dispatch getAllProjects to fetch the updated list of projects
         return response.data;
     } catch (e) {
+        console.log(e);
         return checkForUnauthorizedResponse(e, thunkAPI);
     }
 };
@@ -67,6 +100,7 @@ export const editProjectThunk = async ({ id, project }, thunkAPI) => {
         const state = thunkAPI.getState().auth;
         const headers = { userId: state.user.id };
         const response = await customFetch.patch(`${ PROJECTS_URL }/${ id }`, project, { headers });
+        thunkAPI.dispatch(getAllProjects());
         return response.data;
     } catch (e) {
         return checkForUnauthorizedResponse(e, thunkAPI);

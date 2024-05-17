@@ -10,12 +10,20 @@ export const AddEditAnnouncementComponent = ({ mode, announcement }) => {
     const [form] = Form.useForm();
     const { isAddAnnouncementMode } = useSelector((store) => store.auth);
     const { isAnnouncementFetchLoading, isAnnouncementFetchSuccess } = useSelector((store) => store.announcements);
+    const { barangays } = useSelector((store) => store.barangays);
     const dispatch = useDispatch();
+
+    // Map the data to the desired format
+    const projectTags = data.map(({ id, name }) => ({
+        label: name,
+        value: id.toString()
+    }));
 
     useEffect(() => {
         if (isAddAnnouncementMode === false) {
             form.resetFields();
         }
+
     }, [isAddAnnouncementMode]);
 
     const onFinish = (values) => {
@@ -40,6 +48,7 @@ export const AddEditAnnouncementComponent = ({ mode, announcement }) => {
     const onFinishFailed = (errorInfo) => {
         console.log("Add Announcement Failed", errorInfo);
     };
+
 
     return (
         <Form scrollToFirstError form={ form } onFinish={ onFinish } onFinishFailed={ onFinishFailed }

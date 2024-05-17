@@ -3,18 +3,24 @@ import { project_attributes, project_status, project_tags } from "../utils/data-
 import { useDispatch, useSelector } from "react-redux";
 import React, { useEffect, useState } from "react";
 import { FaCloudUploadAlt } from "react-icons/fa";
-import { deleteImages, uploadImages } from "../app/features/projects/projectsSlice.js";
+import { createProject, deleteImages, uploadImages } from "../app/features/projects/projectsSlice.js";
+import { barangaysListWithoutGuest } from "../utils/barangaysList.js";
+import { getDateTimeFormat } from "../utils/functions.js";
 //TODO: get the values of project for editing mode
 const { Dragger } = Upload;
 
 const range_formatter = (value) => `${ value }%`;
 
-export const AddEditProjectComponent = React.memo(({ mode }) => {
-    const { uploadedImages, uploadLoading, uploadError } = useSelector((state) => state.projects);
+export const AddEditProjectComponent = ({ mode, project }) => {
+    const { uploadedImages, uploadLoading, uploadError, singleProject } = useSelector((state) => state.projects);
     const dispatch = useDispatch();
     const [form] = Form.useForm();
     const { isAddProjectMode } = useSelector((store) => store.auth);
     const [status, setStatus] = useState(null);
+    const [inputStartDate, setInputStartDate] = useState("");
+    const [inputDueDate, setInputDueDate] = useState("");
+    const [inputCompletionDate, setInputCompletionDate] = useState("");
+    const philippineDateTimeFormat = getDateTimeFormat();
 
     useEffect(() => {
         if (isAddProjectMode === false) {
@@ -38,7 +44,45 @@ export const AddEditProjectComponent = React.memo(({ mode }) => {
     };
 
     const onFinish = (values) => {
-        console.log(values);
+        const {
+            title,
+            description,
+            cost,
+            start_date,
+            due_date,
+            completion_date,
+            status,
+            tags,
+            locations,
+            funding_source,
+            uploadedImages
+        } = values;
+        const tagsIds = tags.join(",");
+        const barangayIds = locations.join(",");
+
+
+        const formattedStartDate = inputStartDate;
+        const formattedDueDate = inputDueDate;
+        const formattedCompletionDate = inputCompletionDate;
+
+        if (mode === "add") {
+            return dispatch(
+                createProject({
+                    title: title || "",
+                    description: description || "",
+                    cost: cost || "0",
+                    start_date: formattedStartDate,
+                    due_date: formattedDueDate,
+                    completion_date: formattedCompletionDate,
+                    status,
+                    tagsIds,
+                    barangayIds,
+                    funding_source: funding_source || "",
+                    uploadedImages: uploadedImages || []
+                })
+            );
+        }
+        // ... (handle edit mode if needed)
     };
 
     const onFinishFailed = (errorInfo) => {
@@ -112,7 +156,7 @@ export const AddEditProjectComponent = React.memo(({ mode }) => {
                     <Select
                         mode="multiple"
                         placeholder={ project_attributes[3].placeholder }
-                        options={ project_tags }
+                        options={ barangaysListWithoutGuest }
                     />
                 </Form.Item>
 
@@ -143,12 +187,12 @@ export const AddEditProjectComponent = React.memo(({ mode }) => {
                                 showNow
                                 style={ { width: "100%" } }
                                 format={ {
-                                    format: "MMMM DD, YYYY hh:mm A"
-                                } }
-                                showTime={ {
-                                    format: "hh:mm A"
+                                    format: "MMMM DD, YYYY"
                                 } }
                                 disabledDate={ disabledStartDate }
+                                onChange={ (value, dateString) => {
+                                    setInputStartDate(`${ value.$y }-${ value.$M + 1 }-${ value.$D }`);
+                                } }
                             />
                         </Form.Item>
                     </Col>
@@ -163,12 +207,12 @@ export const AddEditProjectComponent = React.memo(({ mode }) => {
                                 showNow
                                 style={ { width: "100%" } }
                                 format={ {
-                                    format: "MMMM DD, YYYY hh:mm A"
-                                } }
-                                showTime={ {
-                                    format: "hh:mm A"
+                                    format: "MMMM DD, YYYY"
                                 } }
                                 disabledDate={ disabledDueDate }
+                                onChange={ (value, dateString) => {
+                                    setInputDueDate(`${ value.$y }-${ value.$M + 1 }-${ value.$D }`);
+                                } }
                             />
                         </Form.Item>
                     </Col>
@@ -201,13 +245,12 @@ export const AddEditProjectComponent = React.memo(({ mode }) => {
                                 showNow
                                 style={ { width: "100%" } }
                                 format={ {
-                                    format: "MMMM DD, YYYY hh:mm A"
-                                } }
-                                showTime={ {
-                                    format: "hh:mm A"
+                                    format: "MMMM DD, YYYY"
                                 } }
                                 disabledDate={ disabledCompletionDate }
-                                onChange={ (value) => {
+                                getPopupContainer={ (node) => node.parentNode }
+                                onChange={ (value, dateString) => {
+                                    setInputCompletionDate(`${ value.$y }-${ value.$M + 1 }-${ value.$D }`);
                                     if (value) {
                                         form.setFields([
                                             {
@@ -258,11 +301,11 @@ export const AddEditProjectComponent = React.memo(({ mode }) => {
                         </Form.Item>
                     </Col>
                     <Col md={ { flex: "50%" } } xs={ { flex: "100%" } }>
-                        {/*----------IMPLEMENTING AGENCY----------*/ }
+                        {/*----------FUNDING SOURCE----------*/ }
                         <div
                             className="text-xs mb-1 uppercase font-bold select-none">{ project_attributes[10].label }</div>
                         <Form.Item
-                            name="implementing_agency"
+                            name="funding_source"
                         >
                             <Input
                                 placeholder={ project_attributes[10].placeholder }
@@ -271,35 +314,35 @@ export const AddEditProjectComponent = React.memo(({ mode }) => {
                     </Col>
                 </Row>
 
-                <Row gutter={ 20 }>
-                    <Col md={ { flex: "50%" } } xs={ { flex: "100%" } }>
-                        {/*----------CONTRACT TERM----------*/ }
-                        <div
-                            className="text-xs mb-1 uppercase font-bold select-none">{ project_attributes[11].label }</div>
-                        <Form.Item
-                            name="contract_term"
-                        >
-                            <Input
-                                placeholder={ project_attributes[11].placeholder }
-                            />
-                        </Form.Item>
-                    </Col>
-                    <Col md={ { flex: "50%" } } xs={ { flex: "100%" } }>
-                        {/*----------CONTRACTOR----------*/ }
-                        <div
-                            className="text-xs mb-1 uppercase font-bold select-none">{ project_attributes[12].label }</div>
-                        <Form.Item
-                            name="contractor"
-                        >
-                            <Input
-                                placeholder={ project_attributes[12].placeholder }
-                            />
-                        </Form.Item>
-                    </Col>
-                </Row>
+                {/*<Row gutter={ 20 }>*/ }
+                {/*    <Col md={ { flex: "50%" } } xs={ { flex: "100%" } }>*/ }
+                {/*        /!*----------CONTRACT TERM----------*/ }
+                {/*        <div*/ }
+                {/*            className="text-xs mb-1 uppercase font-bold select-none">{ project_attributes[11].label }</div>*/ }
+                {/*        <Form.Item*/ }
+                {/*            name="contract_term"*/ }
+                {/*        >*/ }
+                {/*            <Input*/ }
+                {/*                placeholder={ project_attributes[11].placeholder }*/ }
+                {/*            />*/ }
+                {/*        </Form.Item>*/ }
+                {/*    </Col>*/ }
+                {/*    <Col md={ { flex: "50%" } } xs={ { flex: "100%" } }>*/ }
+                {/*        /!*----------CONTRACTOR----------*/ }
+                {/*        <div*/ }
+                {/*            className="text-xs mb-1 uppercase font-bold select-none">{ project_attributes[12].label }</div>*/ }
+                {/*        <Form.Item*/ }
+                {/*            name="contractor"*/ }
+                {/*        >*/ }
+                {/*            <Input*/ }
+                {/*                placeholder={ project_attributes[12].placeholder }*/ }
+                {/*            />*/ }
+                {/*        </Form.Item>*/ }
+                {/*    </Col>*/ }
+                {/*</Row>*/ }
 
                 <Form.Item
-                    name="media"
+                    name="uploadedImages"
                     valuePropName="fileList"
                     getValueFromEvent={ normFile }
                 >
@@ -313,8 +356,9 @@ export const AddEditProjectComponent = React.memo(({ mode }) => {
                         className="flex items-center justify-center"
                     >
                         <FaCloudUploadAlt size={ 50 } className="w-full mt-8" />
-                        <p className="mb-8 mt-2 text-gray-600">Click or drag file to this area to
-                                                               upload.</p>
+                        <p className="mb-8 mt-2 text-gray-600">
+                            Click or drag file to this area to upload.
+                        </p>
                     </Dragger>
                 </Form.Item>
             </div>
@@ -336,4 +380,4 @@ export const AddEditProjectComponent = React.memo(({ mode }) => {
             </div>
         </Form>
     );
-});
+};

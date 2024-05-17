@@ -14,3 +14,12 @@ export function sortMessagesByDate(messages) {
         return dateB - dateA;
     });
 }
+
+// Helper function to create a DateTimeFormat instance with the desired time zone
+export const getDateTimeFormat = () => {
+    return new Intl.DateTimeFormat([], {
+        timeZone: "Asia/Manila",
+        hour12: false,
+        hourCycle: "h23"
+    });
+};

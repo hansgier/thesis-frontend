@@ -55,8 +55,8 @@ const commentsSlice = createSlice({
                 state.isCommentFetchLoading = false;
                 state.isCommentFetchError = false;
                 state.isCommentFetchSuccess = true;
-                state.comments = payload.projectComments;
-                state.totalComments = payload.totalCount;
+                state.comments = payload.msg === "No comments" ? [] : payload?.projectComments;
+                state.totalComments = payload.msg === "No comments" ? 0 : payload?.totalCount;
             })
             .addCase(getAllComments.rejected, (state, { payload }) => {
                 state.isCommentFetchLoading = false;

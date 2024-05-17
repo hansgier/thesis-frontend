@@ -133,20 +133,40 @@ export const filterSort = {
 
 export const project_tags = [
     {
+        label: "Administration And Governance",
+        values: "1"
+    },
+    {
+        label: "General Public Services",
+        value: "2"
+    },
+    {
+        label: "Health",
+        value: "3"
+    },
+    {
         label: "Education",
-        value: "Education"
+        value: "4"
     },
     {
-        label: "Work",
-        value: "Work"
+        label: "Livelihood",
+        value: "5"
     },
     {
-        label: "Personal",
-        value: "Personal"
+        label: "Infrastructure",
+        value: "6"
+    },
+    {
+        label: "Environmental Management",
+        value: "7"
+    },
+    {
+        label: "Sports And Recreation",
+        value: "8"
     },
     {
         label: "Other",
-        value: "Other"
+        value: "9"
     }
 ];
 
@@ -324,10 +344,10 @@ export const project_attributes = [
         required: false
     },
     {
-        label: "Implementing agency",
-        name: "implementing_agency",
-        value: "implementing_agency",
-        placeholder: "Enter IA",
+        label: "Funding Source",
+        name: "funding_source",
+        value: "funding_source",
+        placeholder: "Enter funding source",
         input_type: "text",
         display: "grid",
         required: false

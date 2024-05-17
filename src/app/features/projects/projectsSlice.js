@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { createProjectThunk, getAllProjectsThunk } from "./projectsThunk.js";
+import { createProjectThunk, editProjectThunk, getAllProjectsThunk } from "./projectsThunk.js";
 import cloudinary from "../../../utils/cloudinaryConfig.js";
 import { addToLocalStorage, getItemLocalStorage } from "../../../utils/localStorage.jsx";
 
@@ -82,6 +82,7 @@ export const deleteImages = createAsyncThunk(
 
 export const getAllProjects = createAsyncThunk("projects/getAllProjects", getAllProjectsThunk);
 export const createProject = createAsyncThunk("projects/createProject", createProjectThunk);
+export const editProject = createAsyncThunk("projects/editProject", editProjectThunk);
 
 
 const projectsSlice = createSlice({
@@ -111,6 +112,23 @@ const projectsSlice = createSlice({
                 state.uploadedImages = [];
             })
 
+            .addCase(editProject.pending, (state) => {
+                state.isProjectFetchSuccess = false;
+                state.isProjectFetchError = false;
+                state.isProjectFetchLoading = true;
+            })
+            .addCase(editProject.fulfilled, (state, { payload }) => {
+                state.isProjectFetchLoading = false;
+                state.isProjectFetchError = false;
+                state.isProjectFetchSuccess = true;
+            })
+            .addCase(editProject.rejected, (state, { payload }) => {
+                state.isProjectFetchLoading = false;
+                state.isProjectFetchSuccess = false;
+                state.projectFetchErrorMessage = payload;
+                state.isProjectFetchError = true;
+            })
+
             .addCase(createProject.pending, (state) => {
                 state.isProjectFetchSuccess = false;
                 state.isProjectFetchError = false;
@@ -120,9 +138,6 @@ const projectsSlice = createSlice({
                 state.isProjectFetchLoading = false;
                 state.isProjectFetchError = false;
                 state.isProjectFetchSuccess = true;
-                state.projects = payload.projects;
-                state.totalProjects = !payload.project ? 0 : payload.totalCount;
-
             })
             .addCase(createProject.rejected, (state, { payload }) => {
                 state.isProjectFetchLoading = false;

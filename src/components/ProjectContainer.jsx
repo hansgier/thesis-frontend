@@ -26,7 +26,7 @@ export const ProjectContainer = React.memo(({ project }) => {
 
     useEffect(() => {
         dispatch(getAllProjectReactions(project.id));
-    }, [totalReactions]);
+    }, []);
 
     const onDeleteProjectConfirm = () => {
         setDeleteProjectConfirm(true);
@@ -144,7 +144,7 @@ export const ProjectContainer = React.memo(({ project }) => {
                                    footer={ null } wrapClassName="add-project-modal" width={ 800 }>
                                 <div className="pb-1 border-b-2 mb-3 select-none">Edit the details of the project.
                                 </div>
-                                <AddEditProjectComponent mode="edit" />
+                                <AddEditProjectComponent mode="edit" project={ project } />
                             </Modal>
                             <Popconfirm title="Delete Project"
                                         description="Are you sure you want to delete this project?"
