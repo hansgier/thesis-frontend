@@ -22,7 +22,7 @@ export const TopBar = () => {
             </div>
             <div className="hidden select-none w-auto md:block">
                 <h5 className="text-gray-600 text-sm font-normal">Welcome,</h5>
-                <h6 className="font-bold text-black">{ user.username }</h6>
+                <h6 className="font-bold text-black">{ user.role === "admin" ? "Admin" : user.username }</h6>
             </div>
             <div className="flex flex-1 justify-between">
                 {/*---------------Menu Bar---------------*/ }

@@ -3,32 +3,6 @@ import { PROJECTS_URL } from "../../constants.js";
 import { getAllProjects } from "./projectsSlice.js";
 
 export const getAllProjectsThunk = async (_, thunkAPI) => {
-    // const {
-    //     search,
-    //     tags,
-    //     barangays,
-    //     status,
-    //     sort,
-    //     budgetRange,
-    //     progressRange,
-    //     viewsRange
-    // } = thunkAPI.getState().projects;
-    // let url = PROJECTS_URL;
-    // let queryParams = [];
-    //
-    // if (search) queryParams.push(`search=${ search }`);
-    // if (tags) queryParams.push(`tags=${ tags }`);
-    // if (barangays) queryParams.push(`barangays=${ barangays }`);
-    // if (status) queryParams.push(`status=${ status }`);
-    // if (sort) queryParams.push(`sort=${ sort }`);
-    // if (progressRange) queryParams.push(`progressRange=${ progressRange }`);
-    // if (viewsRange) queryParams.push(`viewsRange=${ viewsRange }`);
-    // if (budgetRange) queryParams.push(`budgetRange=${ budgetRange }`);
-    //
-    // if (queryParams.length > 0) {
-    //     url += `?${ queryParams.join("&") }`;
-    // }
-
     try {
         const state = thunkAPI.getState().auth;
         const headers = { userId: state.user.id };
@@ -36,6 +10,32 @@ export const getAllProjectsThunk = async (_, thunkAPI) => {
         return response.data;
     } catch (e) {
         return checkForUnauthorizedResponse(e, thunkAPI);
+    }
+};
+
+export const deleteProjectThunk = async (id, thunkAPI) => {
+    try {
+        const state = thunkAPI.getState().auth;
+        const headers = { userId: state.user.id };
+
+        // Set a timeout for the delete request
+        const deleteTimeout = setTimeout(() => {
+            throw new Error("Delete operation timed out");
+        }, 150000); // 2 minutes and 30 seconds (150000 milliseconds)
+
+        const deleteResponse = await Promise.race([
+            customFetch.delete(`${ PROJECTS_URL }/${ id }`, { headers }),
+            new Promise((_, reject) => deleteTimeout)
+        ]);
+
+        clearTimeout(deleteTimeout);
+
+        const getAllProjectsPromise = thunkAPI.dispatch(getAllProjects());
+        const [deleteData, getAllProjectsData] = await Promise.all([deleteResponse.data, getAllProjectsPromise]);
+
+        return deleteData;
+    } catch (e) {
+        return checkForUnauthorizedResponse(e, thunkAPI) || e.message;
     }
 };
 
@@ -57,33 +57,46 @@ export const createProjectThunk = async (project, thunkAPI) => {
             uploadedImages
         } = project;
 
-        const response = await customFetch.post(
-            PROJECTS_URL,
-            {
-                title,
-                description,
-                cost,
-                start_date,
-                due_date,
-                completion_date,
-                status,
-                tagsIds,
-                barangayIds,
-                funding_source,
-                uploadedImages
-            },
-            { headers }
-        );
-        thunkAPI.dispatch(getAllProjects()); // Dispatch getAllProjects to fetch the updated list of projects
-        return response.data;
+        // Set a timeout for the create request
+        const createTimeout = setTimeout(() => {
+            throw new Error("Create operation timed out");
+        }, 150000); // 2 minutes and 30 seconds (150000 milliseconds)
+
+        const createResponse = await Promise.race([
+            customFetch.post(
+                PROJECTS_URL,
+                {
+                    title,
+                    description,
+                    cost,
+                    start_date,
+                    due_date,
+                    completion_date,
+                    status,
+                    tagsIds,
+                    barangayIds,
+                    funding_source,
+                    uploadedImages
+                },
+                { headers }
+            ),
+            new Promise((_, reject) => createTimeout)
+        ]);
+
+        clearTimeout(createTimeout);
+
+        const getAllProjectsPromise = thunkAPI.dispatch(getAllProjects());
+        const [createData, getAllProjectsData] = await Promise.all([createResponse.data, getAllProjectsPromise]);
+
+        console.log(createData);
+        return createData;
     } catch (e) {
         console.log(e);
-        return checkForUnauthorizedResponse(e, thunkAPI);
+        return checkForUnauthorizedResponse(e, thunkAPI) || e.message;
     }
 };
 
 export const editProjectThunk = async ({ id, project }, thunkAPI) => {
-
     try {
         const state = thunkAPI.getState().auth;
         const headers = { userId: state.user.id };
@@ -101,34 +114,39 @@ export const editProjectThunk = async ({ id, project }, thunkAPI) => {
             uploadedImages
         } = project;
 
-        const response = await customFetch.patch(`${ PROJECTS_URL }/${ id }`, {
-            title,
-            description,
-            cost,
-            start_date,
-            due_date,
-            completion_date,
-            status,
-            tagsIds,
-            barangayIds,
-            funding_source,
-            uploadedImages
-        }, { headers });
-        thunkAPI.dispatch(getAllProjects());
-        return response.data;
-    } catch (e) {
-        return checkForUnauthorizedResponse(e, thunkAPI);
-    }
-};
+        // Set a timeout for the edit request
+        const editTimeout = setTimeout(() => {
+            throw new Error("Edit operation timed out");
+        }, 150000); // 2 minutes and 30 seconds (150000 milliseconds)
 
-export const deleteProjectThunk = async (id, thunkAPI) => {
-    try {
-        const state = thunkAPI.getState().auth;
-        const headers = { userId: state.user.id };
-        const response = await customFetch.delete(`${ PROJECTS_URL }/${ id }`, { headers });
-        await thunkAPI.dispatch(getAllProjects());
-        return response.data;
+        const editResponse = await Promise.race([
+            customFetch.patch(
+                `${ PROJECTS_URL }/${ id }`,
+                {
+                    title,
+                    description,
+                    cost,
+                    start_date,
+                    due_date,
+                    completion_date,
+                    status,
+                    tagsIds,
+                    barangayIds,
+                    funding_source,
+                    uploadedImages
+                },
+                { headers }
+            ),
+            new Promise((_, reject) => editTimeout)
+        ]);
+
+        clearTimeout(editTimeout);
+
+        const getAllProjectsPromise = thunkAPI.dispatch(getAllProjects());
+        const [editData, getAllProjectsData] = await Promise.all([editResponse.data, getAllProjectsPromise]);
+
+        return editData;
     } catch (e) {
-        return checkForUnauthorizedResponse(e, thunkAPI);
+        return checkForUnauthorizedResponse(e, thunkAPI) || e.message;
     }
 };

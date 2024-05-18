@@ -173,13 +173,13 @@ export const Dashboard = () => {
                             <>
                                 <div className="bg-white p-0 rounded-3xl border border-[#96d7cf]">
                                     <ul className="divide-y ">
-                                        { importantAnnouncements.length < 1 ?
+                                        { totalAnnouncements < 1 ?
                                             <div
                                                 className="p-10 flex items-center justify-center text-xs md:text-base">
                                                 <Empty description="No important annoucements" />
                                             </div>
                                             :
-                                            importantAnnouncements.map((announcement, i) => (
+                                            announcements.map((announcement, i) => (
                                                 <li className="p-4" key={ i }>
                                                     <Announcement announcement={ announcement } />
                                                 </li>

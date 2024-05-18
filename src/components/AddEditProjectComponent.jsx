@@ -1,16 +1,22 @@
-import { Button, Col, DatePicker, Form, Input, InputNumber, message, Row, Select, Slider, Upload } from "antd";
+import { Button, Col, DatePicker, Form, Input, InputNumber, Row, Select, Slider, Upload } from "antd";
 import { project_attributes, project_status, project_tags } from "../utils/data-components.jsx";
 import { useDispatch, useSelector } from "react-redux";
 import React, { useEffect, useState } from "react";
-import { createProject, deleteImages, editProject, uploadImages } from "../app/features/projects/projectsSlice.js";
 import { barangaysListWithoutGuest } from "../utils/barangaysList.js";
 import { getDateTimeFormat } from "../utils/functions.js";
-//TODO: get the values of project for editing mode
+import { FaCloudUploadAlt } from "react-icons/fa";
+import { createProject, editProject } from "../app/features/projects/projectsSlice.js";
+
 const { Dragger } = Upload;
 
 const range_formatter = (value) => `${ value }%`;
 
-export const AddEditProjectComponent = ({ mode, project }) => {
+export const AddEditProjectComponent = React.memo(({
+                                                       mode,
+                                                       project,
+                                                       uploadedImagesFromInput,
+                                                       setUploadedImagesFromInput
+                                                   }) => {
     const { uploadedImages, uploadLoading, uploadError, singleProject } = useSelector((state) => state.projects);
     const dispatch = useDispatch();
     const [form] = Form.useForm();
@@ -27,21 +33,8 @@ export const AddEditProjectComponent = ({ mode, project }) => {
         }
     }, [isAddProjectMode]);
 
-    const handleUpload = async (files) => {
-        try {
-            const uploadedImages = await dispatch(uploadImages(files)).payload;
-            form.setFieldsValue({ uploadedImages });
-            message.success("Images uploaded successfully");
-        } catch (error) {
-            message.error("Failed to upload images");
-        }
-    };
+    const deleteUploadedImages = () => {
 
-    const handleCancel = async () => {
-        const publicIds = form.getFieldValue("uploadedImages").map((image) => image.id);
-        await dispatch(deleteImages(publicIds));
-        form.setFieldsValue({ uploadedImages: [] });
-        message.info("Images deleted successfully");
     };
 
     const onFinish = (values) => {
@@ -49,14 +42,10 @@ export const AddEditProjectComponent = ({ mode, project }) => {
             title,
             description,
             cost,
-            start_date,
-            due_date,
-            completion_date,
             status,
             tags,
             locations,
-            funding_source,
-            uploadedImages
+            funding_source
         } = values;
 
         let tagsIds;
@@ -87,7 +76,7 @@ export const AddEditProjectComponent = ({ mode, project }) => {
                     tagsIds,
                     barangayIds,
                     funding_source: funding_source || "",
-                    uploadedImages: uploadedImages || []
+                    uploadedImages: uploadedImagesFromInput.length < 1 ? uploadedImagesFromInput : []
                 })
             );
         } else if (mode === "edit") {
@@ -103,7 +92,7 @@ export const AddEditProjectComponent = ({ mode, project }) => {
                     tagsIds,
                     barangayIds,
                     funding_source: funding_source || project.funding_source,
-                    uploadedImages: uploadedImages || []
+                    uploadedImages: uploadedImagesFromInput || []
                 }
             }));
         }
@@ -145,7 +134,10 @@ export const AddEditProjectComponent = ({ mode, project }) => {
                     className="text-xs mb-1 uppercase font-bold select-none">{ project_attributes[0].label }</div>
                 <Form.Item
                     name="title"
-                    rules={ mode === "add" ? [{ required: true, message: project_attributes[0].required_msg }] : null }
+                    rules={ mode === "add" ? [{
+                        required: true,
+                        message: project_attributes[0].required_msg
+                    }] : null }
                 >
                     <Input placeholder={ project_attributes[0].placeholder } />
                 </Form.Item>
@@ -155,7 +147,10 @@ export const AddEditProjectComponent = ({ mode, project }) => {
                     className="text-xs mb-1 uppercase font-bold select-none">{ project_attributes[1].label }</div>
                 <Form.Item
                     name="description"
-                    rules={ mode === "add" ? [{ required: true, message: project_attributes[1].required_msg }] : null }
+                    rules={ mode === "add" ? [{
+                        required: true,
+                        message: project_attributes[1].required_msg
+                    }] : null }
                 >
                     <Input.TextArea autoSize={ project_attributes[1].autoSize }
                                     placeholder={ project_attributes[1].placeholder } />
@@ -175,7 +170,10 @@ export const AddEditProjectComponent = ({ mode, project }) => {
                     className="text-xs mb-1 uppercase font-bold select-none">{ project_attributes[3].label }</div>
                 <Form.Item
                     name="locations"
-                    rules={ mode === "add" ? [{ required: true, message: project_attributes[3].required_msg }] : null }
+                    rules={ mode === "add" ? [{
+                        required: true,
+                        message: project_attributes[3].required_msg
+                    }] : null }
                 >
                     <Select
                         mode="multiple"
@@ -189,7 +187,10 @@ export const AddEditProjectComponent = ({ mode, project }) => {
                     className="text-xs mb-1 uppercase font-bold select-none">{ project_attributes[4].label }</div>
                 <Form.Item
                     name="tags"
-                    rules={ mode === "add" ? [{ required: true, message: project_attributes[4].required_msg }] : null }
+                    rules={ mode === "add" ? [{
+                        required: true,
+                        message: project_attributes[4].required_msg
+                    }] : null }
                 >
                     <Select
                         mode="multiple"
@@ -370,30 +371,30 @@ export const AddEditProjectComponent = ({ mode, project }) => {
                 {/*        </Form.Item>*/ }
                 {/*    </Col>*/ }
                 {/*</Row>*/ }
-
-                {/*<Form.Item*/ }
-                {/*    name="uploadedImages"*/ }
-                {/*    valuePropName="fileList"*/ }
-                {/*    getValueFromEvent={ normFile }*/ }
-                {/*>*/ }
-                {/*    <Dragger*/ }
-                {/*        multiple="true"*/ }
-                {/*        listType="picture-card"*/ }
-                {/*        showUploadList={ {*/ }
-                {/*            showRemoveIcon: true,*/ }
-                {/*            removeIcon: <CiCircleRemove />*/ }
-                {/*        } }*/ }
-                {/*        action="https://api.cloudinary.com/v1_1/your_cloudinary_cloud_name/image/upload"*/ }
-                {/*        className="flex items-center justify-center"*/ }
-                {/*        onChange={ handleUpload }*/ }
-                {/*        onRemove={ handleCancel }*/ }
-                {/*    >*/ }
-                {/*        <FaCloudUploadAlt size={ 50 } className="w-full mt-8" />*/ }
-                {/*        <p className="mb-8 mt-2 text-gray-600">*/ }
-                {/*            Click or drag file to this area to upload.*/ }
-                {/*        </p>*/ }
-                {/*    </Dragger>*/ }
-                {/*</Form.Item>*/ }
+                <Form.Item>
+                    <Dragger
+                        multiple="true"
+                        accept="image"
+                        listType="picture-card"
+                        showUploadList={ {
+                            showRemoveIcon: true
+                        } }
+                        className="flex items-center justify-center"
+                        action="https://api.cloudinary.com/v1_1/ddh4rh4ci/image/upload?upload_preset=ixqbobsf"
+                        onChange={ (info) => {
+                            info.fileList.map((file) => {
+                                if (file.status === "done") {
+                                    setUploadedImagesFromInput([...uploadedImagesFromInput, file.response]);
+                                }
+                            });
+                        } }
+                    >
+                        <FaCloudUploadAlt size={ 50 } className="w-full mt-8" />
+                        <p className="mb-8 mt-2 text-gray-600">
+                            Click or drag file to this area to upload.
+                        </p>
+                    </Dragger>
+                </Form.Item>
             </div>
             <div className="flex justify-end pr-3">
                 <Form.Item>
@@ -413,4 +414,4 @@ export const AddEditProjectComponent = ({ mode, project }) => {
             </div>
         </Form>
     );
-};
+});

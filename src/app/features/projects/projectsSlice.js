@@ -1,8 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { createProjectThunk, deleteProjectThunk, editProjectThunk, getAllProjectsThunk } from "./projectsThunk.js";
-import cloudinary from "../../../utils/cloudinaryConfig.js";
 import { addToLocalStorage, getItemLocalStorage } from "../../../utils/localStorage.jsx";
-import axios from "axios";
 
 const initialFitlersState = {
     search: "",
@@ -30,7 +28,6 @@ const initialState = {
     on_hold: 0,
     featuredProjects: [],
     upcomingProjects: [],
-    importantAnnouncements: [],
     feedbackSummaries: [],
     uploadedImages: [],
     uploadLoading: false,
@@ -39,48 +36,6 @@ const initialState = {
     isAddModeProjectUpdate: false,
     ...initialFitlersState
 };
-
-export const uploadImages = createAsyncThunk(
-    "projects/uploadImages",
-    async (files, { rejectWithValue }) => {
-        try {
-            const uploadedImages = await Promise.all(
-                files.map(async (file) => {
-                    const formData = new FormData();
-                    formData.append("file", file);
-                    formData.append("upload_preset", "your_upload_preset");
-
-                    const response = await axios.post(
-                        `https://api.cloudinary.com/v1_1/${ cloudinary.config().cloud_name }/upload`,
-                        formData
-                    );
-
-                    const { size, resource_type, secure_url, public_id } = response.data;
-                    return { size, resource_type, secure_url, id: public_id };
-                })
-            );
-
-            return uploadedImages;
-        } catch (error) {
-            return rejectWithValue(error.response.data);
-        }
-    }
-);
-
-export const deleteImages = createAsyncThunk(
-    "projects/deleteImages",
-    async (publicIds, { rejectWithValue }) => {
-        try {
-            await Promise.all(
-                publicIds.map(async (publicId) => {
-                    await cloudinary.uploader.destroy(publicId);
-                })
-            );
-        } catch (error) {
-            return rejectWithValue(error.response.data);
-        }
-    }
-);
 
 
 export const getAllProjects = createAsyncThunk("projects/getAllProjects", getAllProjectsThunk);
@@ -113,22 +68,6 @@ const projectsSlice = createSlice({
     },
     extraReducers: (builder) => {
         builder
-            .addCase(uploadImages.pending, (state) => {
-                state.uploadLoading = true;
-                state.uploadError = null;
-            })
-            .addCase(uploadImages.fulfilled, (state, action) => {
-                state.uploadLoading = false;
-                state.uploadedImages = action.payload;
-            })
-            .addCase(uploadImages.rejected, (state, action) => {
-                state.uploadLoading = false;
-                state.uploadError = action.payload;
-            })
-            .addCase(deleteImages.fulfilled, (state) => {
-                state.uploadedImages = [];
-            })
-
             .addCase(deleteProject.pending, (state) => {
                 state.isProjectFetchSuccess = false;
                 state.isProjectFetchError = false;
@@ -190,7 +129,7 @@ const projectsSlice = createSlice({
                 state.isProjectFetchError = false;
                 state.isProjectFetchSuccess = true;
                 state.projects = payload.projects.slice().sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
-                state.totalProjects = !payload.project ? 0 : payload.totalCount;
+                state.totalProjects = !payload.projects ? 0 : payload.totalCount;
                 state.completed = !payload.projects ? 0 : payload.projects.filter(project => project.status === "completed").length;
                 state.ongoing = !payload.projects ? 0 : payload.projects.filter(project => project.status === "ongoing").length;
                 state.planned = !payload.projects ? 0 : payload.projects.filter(project => project.status === "planned").length;

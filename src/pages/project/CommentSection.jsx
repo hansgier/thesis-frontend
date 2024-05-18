@@ -5,7 +5,7 @@ import React, { useEffect } from "react";
 import { getAllComments } from "../../app/features/comments/commentsSlice.js";
 import { Empty, Spin } from "antd";
 
-export const CommentSection = React.memo(() => {
+export const CommentSection = () => {
     const { projects, singleProject } = useSelector((store) => store.projects);
     const { user } = useSelector((store) => store.auth);
     const { users4admin } = useSelector((store) => store.users);
@@ -64,4 +64,4 @@ export const CommentSection = React.memo(() => {
             </div>
         </>
     );
-});
+};

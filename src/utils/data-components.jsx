@@ -203,8 +203,8 @@ export const projectDetails_sidebar = [
         color: "bg-slate-600"
     },
     {
-        name: "End date",
-        value: "end_date",
+        name: "Due date",
+        value: "due_date",
         pds_type: "single",
         color: "bg-zinc-600"
     },
@@ -233,8 +233,8 @@ export const projectDetails_sidebar = [
         color: "bg-amber-600"
     },
     {
-        name: "Implementing agency",
-        value: "implementing_agency",
+        name: "Funding Source",
+        value: "funding_source",
         pds_type: "single",
         color: "bg-teal-600"
     },

@@ -20,6 +20,7 @@ export const Projects = () => {
     const dispatch = useDispatch();
     const location = useLocation();
     const [addProjectMode, setAddProjectMode] = useState(false);
+    const [uploadedImagesFromInput, setUploadedImagesFromInput] = useState([]);
     // Ref for the scrollable div
     const scrollDivRef = useRef(null);
 
@@ -98,11 +99,21 @@ export const Projects = () => {
                                  } }
                                  onClick={ () => dispatch(toggleAddProjectMode()) } />
                     <Modal centered title="Add Project" open={ isAddProjectMode }
-                           onCancel={ () => dispatch(toggleAddProjectMode()) }
+                           onCancel={ async () => {
+                               try {
+                                   // Call the deleteUploadedImages function from ImageUploader component
+                                   await deleteUploadedImages();
+                                   setUploadedImagesFromInput([]);
+                               } catch (error) {
+                                   console.error("Error deleting images:", error);
+                               }
+                               dispatch(toggleAddProjectMode());
+                           } }
                            footer={ null } wrapClassName="add-project-modal" width={ 800 }>
                         <div className="pb-1 border-b-2 mb-3 select-none">Fill in the details of the new project.
                         </div>
-                        <AddEditProjectComponent mode="add" />
+                        <AddEditProjectComponent mode="add" uploadedImagesFromInput={ uploadedImagesFromInput }
+                                                 setUploadedImagesFromInput={ setUploadedImagesFromInput } />
                     </Modal>
                 </>
             ) }

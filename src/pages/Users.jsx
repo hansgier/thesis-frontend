@@ -149,53 +149,60 @@ export const Users = () => {
                             </tr> : (
                                 <>
                                     {/*User*/ }
-                                    { totalUsers < 1 ? <tr>No users</tr> : users4admin.map((ua) => (
-                                        <tr className="bg-white border-b text-xs md:text-sm">
-                                            <td className="w-4 p-4">
-                                                <div className="flex items-center">
-                                                    <input id={ `checkbox-table-search-${ user.id }` } type="checkbox"
-                                                           checked={ selectedUserIds.includes(user.id) }
-                                                           onChange={ (e) => handleUserCheckboxChange(user.id, e.target.checked) }
-                                                           className="bg-gray-100 dark:focus:ring-blue-600 dark:focus:ring-offset-gray-800 dark:ring-offset-gray-800 focus:outline-none focus:ring-0 focus:ring-offset-0 h-4 rounded text-blue-600 w-4" />
-                                                    <label htmlFor="checkbox-table-search-1"
-                                                           className="sr-only">checkbox</label>
-                                                </div>
-                                            </td>
-                                            <th scope="row"
-                                                className="dark:text-white flex items-center pl-0 pr-6 py-4 text-gray-900 whitespace-nowrap">
-                                                <div>
-                                                    <div
-                                                        className="font-semibold select-none text-base text-gray-900">{ ua.username }
-                                                    </div>
-                                                    <div
-                                                        className="font-normal select-none text-gray-500 truncate w-72">{ ua.email }
-                                                    </div>
-                                                </div>
-                                            </th>
-                                            <td className="px-0 py-4 text-center"><span
-                                                className={ `${ ua.role === "admin" ? roleColors.admin : ua.role === "assistant_admin" ? roleColors.assistant_admin : ua.role === "barangay" ? roleColors.barangay : ua.role === "resident" && roleColors.resident } font-medium px-4 py-1 rounded-xl select-none` }>{ capitalizeFirstLetter(ua.role) }</span>
-                                            </td>
-                                            <td className="px-6 py-4 select-none">{ ua.barangay_id }</td>
-                                            <td className="px-6 py-4 space-x-3">
-                                                <div className="flex">
-                                                    <AddEditUser mode="edit" />
-                                                    <button type="button">
-                                                        <svg viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg"
-                                                             fill="#000000"
-                                                             className="w-5">
-                                                            <g id="SVGRepo_bgCarrier" strokeWidth="0"></g>
-                                                            <g id="SVGRepo_tracerCarrier" strokeLinecap="round"
-                                                               strokeLinejoin="round"></g>
-                                                            <g id="SVGRepo_iconCarrier">
-                                                                <path fill="#d60000"
-                                                                      d="M160 256H96a32 32 0 0 1 0-64h256V95.936a32 32 0 0 1 32-32h256a32 32 0 0 1 32 32V192h256a32 32 0 1 1 0 64h-64v672a32 32 0 0 1-32 32H192a32 32 0 0 1-32-32V256zm448-64v-64H416v64h192zM224 896h576V256H224v640zm192-128a32 32 0 0 1-32-32V416a32 32 0 0 1 64 0v320a32 32 0 0 1-32 32zm192 0a32 32 0 0 1-32-32V416a32 32 0 0 1 64 0v320a32 32 0 0 1-32 32z"></path>
-                                                            </g>
-                                                        </svg>
-                                                    </button>
-                                                </div>
-                                            </td>
+                                    { totalUsers < 1 ?
+                                        <tr>
+                                            <div>No users</div>
                                         </tr>
-                                    )) }
+                                        :
+                                        users4admin.map((ua) => (
+                                            <tr className="bg-white border-b text-xs md:text-sm">
+                                                <td className="w-4 p-4">
+                                                    <div className="flex items-center">
+                                                        <input id={ `checkbox-table-search-${ user.id }` }
+                                                               type="checkbox"
+                                                               checked={ selectedUserIds.includes(user.id) }
+                                                               onChange={ (e) => handleUserCheckboxChange(user.id, e.target.checked) }
+                                                               className="bg-gray-100 dark:focus:ring-blue-600 dark:focus:ring-offset-gray-800 dark:ring-offset-gray-800 focus:outline-none focus:ring-0 focus:ring-offset-0 h-4 rounded text-blue-600 w-4" />
+                                                        <label htmlFor="checkbox-table-search-1"
+                                                               className="sr-only">checkbox</label>
+                                                    </div>
+                                                </td>
+                                                <th scope="row"
+                                                    className="dark:text-white flex items-center pl-0 pr-6 py-4 text-gray-900 whitespace-nowrap">
+                                                    <div>
+                                                        <div
+                                                            className="font-semibold select-none text-base text-gray-900">{ ua.username }
+                                                        </div>
+                                                        <div
+                                                            className="font-normal select-none text-gray-500 truncate w-72">{ ua.email }
+                                                        </div>
+                                                    </div>
+                                                </th>
+                                                <td className="px-0 py-4 text-center"><span
+                                                    className={ `${ ua.role === "admin" ? roleColors.admin : ua.role === "assistant_admin" ? roleColors.assistant_admin : ua.role === "barangay" ? roleColors.barangay : ua.role === "resident" && roleColors.resident } font-medium px-4 py-1 rounded-xl select-none` }>{ capitalizeFirstLetter(ua.role) }</span>
+                                                </td>
+                                                <td className="px-6 py-4 select-none">{ ua.barangay_id }</td>
+                                                <td className="px-6 py-4 space-x-3">
+                                                    <div className="flex">
+                                                        <AddEditUser mode="edit" />
+                                                        <button type="button">
+                                                            <svg viewBox="0 0 1024 1024"
+                                                                 xmlns="http://www.w3.org/2000/svg"
+                                                                 fill="#000000"
+                                                                 className="w-5">
+                                                                <g id="SVGRepo_bgCarrier" strokeWidth="0"></g>
+                                                                <g id="SVGRepo_tracerCarrier" strokeLinecap="round"
+                                                                   strokeLinejoin="round"></g>
+                                                                <g id="SVGRepo_iconCarrier">
+                                                                    <path fill="#d60000"
+                                                                          d="M160 256H96a32 32 0 0 1 0-64h256V95.936a32 32 0 0 1 32-32h256a32 32 0 0 1 32 32V192h256a32 32 0 1 1 0 64h-64v672a32 32 0 0 1-32 32H192a32 32 0 0 1-32-32V256zm448-64v-64H416v64h192zM224 896h576V256H224v640zm192-128a32 32 0 0 1-32-32V416a32 32 0 0 1 64 0v320a32 32 0 0 1-32 32zm192 0a32 32 0 0 1-32-32V416a32 32 0 0 1 64 0v320a32 32 0 0 1-32 32z"></path>
+                                                                </g>
+                                                            </svg>
+                                                        </button>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        )) }
                                 </>
                             ) }
                         </tbody>

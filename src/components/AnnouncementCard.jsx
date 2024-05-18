@@ -1,6 +1,6 @@
 import { announcement_component } from "../utils/data-components.jsx";
 import { useDispatch, useSelector } from "react-redux";
-import { useState } from "react";
+import React, { useState } from "react";
 import { MdDeleteOutline } from "react-icons/md";
 import { Button, Modal, Popconfirm } from "antd";
 import { AnimatePresence, motion } from "framer-motion";
@@ -9,7 +9,7 @@ import { AddEditAnnouncementComponent } from "./AddEditAnnouncementComponent.jsx
 import moment from "moment";
 import { deleteAnnouncement } from "../app/features/announcements/announcementsSlice.js";
 
-export const AnnouncementCard = ({ announcement }) => {
+export const AnnouncementCard = React.memo(({ announcement }) => {
     const { view, user } = useSelector((store) => store.auth);
     const { users4admin } = useSelector((store) => store.users);
     const { barangays } = useSelector((store) => store.barangays);
@@ -135,4 +135,4 @@ export const AnnouncementCard = ({ announcement }) => {
 
         </div>
     );
-};
+});

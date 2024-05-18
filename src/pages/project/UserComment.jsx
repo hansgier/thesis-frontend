@@ -9,7 +9,7 @@ const roleColors = {
     resident: "text-black"
 };
 
-export const UserComment = ({ comment }) => {
+export const UserComment = React.memo(({ comment }) => {
     const { users4admin } = useSelector((store) => store.users);
     const { user } = useSelector((store) => store.auth);
     const { barangays } = useSelector((store) => store.barangays);
@@ -62,4 +62,4 @@ export const UserComment = ({ comment }) => {
             </div>
         </div>
     );
-};
+});
