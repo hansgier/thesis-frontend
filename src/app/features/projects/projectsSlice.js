@@ -1,14 +1,15 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { createProjectThunk, editProjectThunk, getAllProjectsThunk } from "./projectsThunk.js";
+import { createProjectThunk, deleteProjectThunk, editProjectThunk, getAllProjectsThunk } from "./projectsThunk.js";
 import cloudinary from "../../../utils/cloudinaryConfig.js";
 import { addToLocalStorage, getItemLocalStorage } from "../../../utils/localStorage.jsx";
+import axios from "axios";
 
 const initialFitlersState = {
     search: "",
     tags: "",
     barangays: "",
     status: "",
-    sort: "",
+    sort: "newest",
     budgetRange: "",
     progressRange: "",
     viewsRange: ""
@@ -34,6 +35,8 @@ const initialState = {
     uploadedImages: [],
     uploadLoading: false,
     uploadError: null,
+    isEditModeProjectUpdate: false,
+    isAddModeProjectUpdate: false,
     ...initialFitlersState
 };
 
@@ -83,6 +86,7 @@ export const deleteImages = createAsyncThunk(
 export const getAllProjects = createAsyncThunk("projects/getAllProjects", getAllProjectsThunk);
 export const createProject = createAsyncThunk("projects/createProject", createProjectThunk);
 export const editProject = createAsyncThunk("projects/editProject", editProjectThunk);
+export const deleteProject = createAsyncThunk("projects/deleteProject", deleteProjectThunk);
 
 
 const projectsSlice = createSlice({
@@ -92,7 +96,20 @@ const projectsSlice = createSlice({
         setSingleProject: (state, { payload }) => {
             state.singleProject = payload;
             addToLocalStorage(payload, "singleProject");
+        },
+        toggleEditModeProjectUpdate: (state) => {
+            state.isEditModeProjectUpdate = !state.isEditModeProjectUpdate;
+        },
+        setEditModeProjectUpdate: (state, { payload }) => {
+            state.isEditModeProjectUpdate = payload;
+        },
+        setAddModeProjectUpdate: (state, { payload }) => {
+            state.isAddModeProjectUpdate = payload;
+        },
+        toggleAddModeProjectUpdate: (state) => {
+            state.isAddModeProjectUpdate = !state.isAddModeProjectUpdate;
         }
+
     },
     extraReducers: (builder) => {
         builder
@@ -110,6 +127,23 @@ const projectsSlice = createSlice({
             })
             .addCase(deleteImages.fulfilled, (state) => {
                 state.uploadedImages = [];
+            })
+
+            .addCase(deleteProject.pending, (state) => {
+                state.isProjectFetchSuccess = false;
+                state.isProjectFetchError = false;
+                state.isProjectFetchLoading = true;
+            })
+            .addCase(deleteProject.fulfilled, (state, { payload }) => {
+                state.isProjectFetchLoading = false;
+                state.isProjectFetchError = false;
+                state.isProjectFetchSuccess = true;
+            })
+            .addCase(deleteProject.rejected, (state, { payload }) => {
+                state.isProjectFetchLoading = false;
+                state.isProjectFetchSuccess = false;
+                state.projectFetchErrorMessage = payload;
+                state.isProjectFetchError = true;
             })
 
             .addCase(editProject.pending, (state) => {
@@ -155,7 +189,7 @@ const projectsSlice = createSlice({
                 state.isProjectFetchLoading = false;
                 state.isProjectFetchError = false;
                 state.isProjectFetchSuccess = true;
-                state.projects = payload.projects;
+                state.projects = payload.projects.slice().sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
                 state.totalProjects = !payload.project ? 0 : payload.totalCount;
                 state.completed = !payload.projects ? 0 : payload.projects.filter(project => project.status === "completed").length;
                 state.ongoing = !payload.projects ? 0 : payload.projects.filter(project => project.status === "ongoing").length;
@@ -200,6 +234,10 @@ const projectsSlice = createSlice({
 });
 
 export const {
-    setSingleProject
+    setSingleProject,
+    toggleEditModeProjectUpdate,
+    toggleAddModeProjectUpdate,
+    setEditModeProjectUpdate,
+    setAddModeProjectUpdate
 } = projectsSlice.actions;
 export default projectsSlice.reducer;

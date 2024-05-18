@@ -1,11 +1,14 @@
 import { projectDetails_sidebar } from "../utils/data-components.jsx";
 import { useReducer, useState } from "react";
 import { ProjectUpdate } from "../pages/project/ProjectUpdate.jsx";
-import { Button } from "antd";
+import { Button, Modal, Skeleton } from "antd";
 import { RiSortAsc, RiSortDesc } from "react-icons/ri";
 import { CiEdit } from "react-icons/ci";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import moment from "moment";
+import { FiPlus } from "react-icons/fi";
+import { toggleAddModeProjectUpdate, toggleEditModeProjectUpdate } from "../app/features/projects/projectsSlice.js";
+import { EditProjectUpdate } from "../pages/project/EditProjectUpdate.jsx";
 
 const uimgsrc = ["/src/assets/logo.png", "/src/assets/logo.png", "/src/assets/logo.png"];
 
@@ -45,8 +48,11 @@ export const DetailsUpdate = () => {
     const { users4admin } = useSelector((store) => store.users);
     const { barangays } = useSelector((store) => store.barangays);
     const { reactions } = useSelector((store) => store.reactions);
+    const { updates, isUpdateFetchLoading, isUpdateFetchSuccess, totalUpdates } = useSelector((store) => store.updates);
+    const { isEditModeProjectUpdate, isAddModeProjectUpdate } = useSelector((store) => store.projects);
     const [isDetailsMode, setIsDetailsMode] = useState(true);
     const [state, dispatch] = useReducer(reducer, initialState);
+    const dispatchRedux = useDispatch();
 
     function getNameByCreatedBy(createdBy) {
         const user = users4admin.find((user) => user.id === createdBy);
@@ -74,7 +80,9 @@ export const DetailsUpdate = () => {
                         <h2 className="flex-1 font-semibold select-none text-xl"
                             data-id="15">{ isDetailsMode ? "Details" : "Updates" }</h2>
                         {/*-----------Details-Update Switch-----------*/ }
-                        <button onClick={ () => setIsDetailsMode(!isDetailsMode) }
+                        <button onClick={ () => {
+                            setIsDetailsMode(!isDetailsMode);
+                        } }
                                 className="flex focus:outline-none focus:ring-0 focus:ring-offset-0 font-medium hover:bg-opacity-90 hover:duration-200 hover:shadow-inner hover:text-yellow-900 hover:transition-all items-center p-2 rounded-lg shadow text-black">
                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
                                  fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"
@@ -93,7 +101,7 @@ export const DetailsUpdate = () => {
                             className="select-none text-gray-700 text-sm">{ `By ${ getNameByCreatedBy(singleProject.payload.createdBy) }` }</div>
                     </div>
                     {/*-----------DETAILS-----------*/ }
-                    <div className="border-t mt-4 overflow-y-scroll pt-4 w-full">
+                    <div className="border-t mt-4 overflow-y-auto pt-4 w-full">
                         { isDetailsMode ? (
                             projectDetails_sidebar
                                 .filter((pds) => {
@@ -167,18 +175,36 @@ export const DetailsUpdate = () => {
                                             icon={ state.updateSort === 0 ?
                                                 <RiSortAsc /> : state.updateSort === 1 && <RiSortDesc /> }
                                             type="text" />
-                                    <Button onClick={ () => dispatch({ type: "toggleEditUpdateMode" }) }
-                                            icon={ <CiEdit /> } type="text" />
+                                    <div>
+                                        <Button onClick={ () => {
+                                            dispatchRedux(toggleAddModeProjectUpdate());
+                                        } }
+                                                icon={ <FiPlus /> } type="text" />
+                                        <Button onClick={ () => {
+                                            dispatchRedux(toggleEditModeProjectUpdate());
+                                        } }
+                                                icon={ <CiEdit /> } type="text" />
+                                    </div>
+                                    <Modal open={ isAddModeProjectUpdate } centered footer={ null }
+                                           onCancel={ () => dispatchRedux(toggleAddModeProjectUpdate()) }>
+                                        <ProjectUpdate mode="add" />
+                                    </Modal>
                                 </div>
-                                <div className="h-[474px] overflow-y-scroll">
+                                <div className="h-[440px]">
                                     {/*-----------UPDATES-----------*/ }
-                                    {/*TODO: map the project updates here*/ }
-                                    <ProjectUpdate
-                                        editMode={ state.editUpdateMode }
-                                        content="This is an overview of the current project. It includes updates and progress."
-                                        updateImgs={ uimgsrc }
-                                        updatePostDate="2 days ago" progress="100%"
-                                    />
+                                    { isUpdateFetchLoading ? <Skeleton active spinning={ isUpdateFetchLoading } /> : (
+                                        <>
+                                            { totalUpdates < 1 ?
+                                                <div className="flex items-center justify-center h-full">No
+                                                                                                         updates</div>
+                                                : updates.map((update) => (
+                                                    <EditProjectUpdate
+                                                        key={ update.id }
+                                                        update={ update }
+                                                    />
+                                                )) }
+                                        </>
+                                    ) }
                                 </div>
                             </>
                         ) }

@@ -1,16 +1,20 @@
 import { DetailsUpdate, ImageCarousel, LikeDislikeButtons } from "../../components/index.jsx";
 import { useNavigate, useParams } from "react-router-dom";
 import { CommentSection } from "./CommentSection.jsx";
-import { Button, Modal, Segmented } from "antd";
+import { Button, Modal, Segmented, Skeleton } from "antd";
 import { useWindowSize } from "../../hooks/index.jsx";
 import { projectDetails_sidebar } from "../../utils/data-components.jsx";
 import { ProjectUpdate } from "./ProjectUpdate.jsx";
 import { CiEdit } from "react-icons/ci";
 import { RiSortAsc, RiSortDesc } from "react-icons/ri";
-import { useReducer } from "react";
+import { useEffect, useReducer } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import moment from "moment";
 import { capitalizeFirstLetter } from "../../utils/functions.js";
+import { getAllProjectUpdates } from "../../app/features/projects/updatesSlice.js";
+import { toggleAddModeProjectUpdate, toggleEditModeProjectUpdate } from "../../app/features/projects/projectsSlice.js";
+import { FiPlus } from "react-icons/fi";
+import { EditProjectUpdate } from "./EditProjectUpdate.jsx";
 
 const uimgsrc = ["/src/assets/logo.png", "/src/assets/logo.png", "/src/assets/logo.png"];
 
@@ -46,15 +50,25 @@ const reducer = (state, action) => {
 
 export const SingleProject = () => {
     const { projectId } = useParams();
-    const { projects, singleProject } = useSelector((store) => store.projects);
+    const {
+        projects,
+        singleProject,
+        isEditModeProjectUpdate,
+        isAddModeProjectUpdate
+    } = useSelector((store) => store.projects);
     const { user } = useSelector((store) => store.auth);
     const { users4admin } = useSelector((store) => store.users);
     const { barangays } = useSelector((store) => store.barangays);
     const { reactions } = useSelector((store) => store.reactions);
+    const { updates, isUpdateFetchLoading, isUpdateFetchSuccess, totalUpdates } = useSelector((store) => store.updates);
     const dispatchRedux = useDispatch();
     const navigate = useNavigate();
     const { width } = useWindowSize();
     const [state, dispatch] = useReducer(reducer, initialState);
+
+    useEffect(() => {
+        dispatchRedux(getAllProjectUpdates(singleProject.payload.id));
+    }, []);
 
     function getNameByCreatedBy(createdBy) {
         const user = users4admin.find((user) => user.id === createdBy);
@@ -101,8 +115,8 @@ export const SingleProject = () => {
                             <div
                                 className="select-none text-gray-700 text-xs">{ `By ${ getNameByCreatedBy(singleProject.payload.createdBy) }` }</div>
                         </div>
-                        <div className="border-t mt-4 overflow-y-hidden pt-2 w-full">
-                            <div className="h-[474px] overflow-y-scroll">
+                        <div className="border-t mt-4  pt-2 w-full">
+                            <div className="h-[474px]">
                                 { state.isDetailsMobileMode ? (
                                     projectDetails_sidebar
                                         .filter((pds) => {
@@ -176,18 +190,35 @@ export const SingleProject = () => {
                                                     icon={ state.updateSort === 0 ?
                                                         <RiSortAsc /> : state.updateSort === 1 && <RiSortDesc /> }
                                                     type="text" />
-                                            <Button onClick={ () => dispatch({ type: "toggleEditUpdateMode" }) }
-                                                    icon={ <CiEdit /> } type="text" />
+                                            <div>
+                                                <Button onClick={ () => dispatchRedux(toggleAddModeProjectUpdate()) }
+                                                        icon={ <FiPlus /> } type="text" />
+                                                <Button onClick={ () => dispatchRedux(toggleEditModeProjectUpdate()) }
+                                                        icon={ <CiEdit /> } type="text" />
+                                            </div>
                                         </div>
-                                        <div className="h-[474px] overflow-y-scroll">
+                                        <Modal open={ isAddModeProjectUpdate } centered footer={ null }
+                                               onCancel={ () => dispatchRedux(toggleAddModeProjectUpdate()) }
+                                               className="m-0 p-0">
+                                            <ProjectUpdate mode="add" />
+                                        </Modal>
+                                        <div className="h-[430px]">
                                             {/*-----------UPDATES-----------*/ }
-                                            {/*TODO: map the project updates here*/ }
-                                            <ProjectUpdate
-                                                editMode={ state.editUpdateMode }
-                                                content="This is an overview of the current project. It includes updates and progress."
-                                                updateImgs={ uimgsrc }
-                                                updatePostDate="2 days ago" progress="100%"
-                                            />
+                                            { isUpdateFetchLoading ?
+                                                <Skeleton active spinning={ isUpdateFetchLoading } /> : (
+                                                    <>
+                                                        { totalUpdates < 1 ?
+                                                            <div
+                                                                className="flex items-center justify-center h-full">No
+                                                                                                                    updates</div>
+                                                            : updates.map((update) => (
+                                                                <EditProjectUpdate
+                                                                    key={ update.id }
+                                                                    update={ update }
+                                                                />
+                                                            )) }
+                                                    </>
+                                                ) }
                                         </div>
                                     </>
                                 ) }

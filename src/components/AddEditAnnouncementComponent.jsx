@@ -13,11 +13,6 @@ export const AddEditAnnouncementComponent = ({ mode, announcement }) => {
     const { barangays } = useSelector((store) => store.barangays);
     const dispatch = useDispatch();
 
-    // Map the data to the desired format
-    const projectTags = data.map(({ id, name }) => ({
-        label: name,
-        value: id.toString()
-    }));
 
     useEffect(() => {
         if (isAddAnnouncementMode === false) {

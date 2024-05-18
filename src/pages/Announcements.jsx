@@ -9,7 +9,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { getAllAnnouncements } from "../app/features/announcements/announcementsSlice.js";
 
 export const Announcements = () => {
-    const { isAddAnnouncementMode } = useSelector((store) => store.auth);
+    const { isAddAnnouncementMode, user } = useSelector((store) => store.auth);
     const {
         announcements,
         isAnnouncementFetchLoading,
@@ -54,20 +54,26 @@ export const Announcements = () => {
                     </>
                 }
             </div>
-            <FloatButton icon={ <GoPlus /> } type="primary"
-                         className="float-add-btn"
-                         style={ {
-                             right: 24,
-                             width: "50px",
-                             height: "50px"
-                         } }
-                         onClick={ () => dispatch(toggleAddAnnouncementMode()) } />
-            <Modal centered title="Add Announcement" open={ isAddAnnouncementMode }
-                   onCancel={ () => dispatch(toggleAddAnnouncementMode()) }
-                   footer={ null } wrapClassName="add-project-modal" width={ 800 }>
-                <div className="pb-1 border-b-2 mb-3 select-none">Fill in the details of the new announcement.</div>
-                <AddEditAnnouncementComponent mode="add" />
-            </Modal>
+            { (user.role === "admin" || user.role === "barangay") && (
+                <>
+                    <FloatButton icon={ <GoPlus /> } type="primary"
+                                 className="float-add-btn"
+                                 style={ {
+                                     right: 24,
+                                     width: "50px",
+                                     height: "50px"
+                                 } }
+                                 onClick={ () => dispatch(toggleAddAnnouncementMode()) } />
+                    <Modal centered title="Add Announcement" open={ isAddAnnouncementMode }
+                           onCancel={ () => dispatch(toggleAddAnnouncementMode()) }
+                           footer={ null } wrapClassName="add-project-modal" width={ 800 }>
+                        <div className="pb-1 border-b-2 mb-3 select-none">Fill in the details of the new announcement.
+                        </div>
+                        <AddEditAnnouncementComponent mode="add" announcement={ announcements } />
+                    </Modal>
+                </>
+            ) }
+
         </>
     );
 };

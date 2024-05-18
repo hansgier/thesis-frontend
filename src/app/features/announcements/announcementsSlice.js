@@ -95,7 +95,7 @@ const announcementSlice = createSlice({
                 state.isAnnouncementFetchLoading = false;
                 state.isAnnouncementFetchError = false;
                 state.isAnnouncementFetchSuccess = true;
-                state.announcements = payload.announcements;
+                state.announcements = payload.announcements.slice().sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
                 state.totalAnnouncements = payload.totalCount;
             })
             .addCase(getAllAnnouncements.rejected, (state, { payload }) => {

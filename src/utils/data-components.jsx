@@ -387,7 +387,7 @@ export const project_status = [
     },
     {
         label: "On hold",
-        value: "on-hold"
+        value: "on_hold"
     },
     {
         label: "Planned",

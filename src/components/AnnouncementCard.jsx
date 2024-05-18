@@ -19,6 +19,13 @@ export const AnnouncementCard = ({ announcement }) => {
     const [editAnnouncementMode, setEditAnnouncementMode] = useState(false);
     const dispatch = useDispatch();
 
+    const isAdmin = user.role === "admin";
+    const isBarangay = user.role === "barangay";
+    const isAnnouncementCreatedByUser = announcement.createdBy === user.id;
+
+    const canEditOrDelete = isAdmin || (isBarangay && isAnnouncementCreatedByUser);
+
+
     const onDeleteAnnouncementConfirm = () => {
         setDeleteAnnouncementConfirm(true);
         dispatch(deleteAnnouncement(announcement.id));
@@ -57,45 +64,49 @@ export const AnnouncementCard = ({ announcement }) => {
                             { announcement.title }
                         </h3>
                     </div>
-                    { isHovered ? <div
-                        className="flex flex-row items-center justify-center ml-auto space-x-2 text-gray-500 text-xs md:flex-row md:items-center">
-                        <Button icon={ <CiEdit /> } type="dashed" onClick={ () => setEditAnnouncementMode(true) } />
-                        <Modal centered title="Edit Announcement" open={ editAnnouncementMode }
-                               onCancel={ () => {
-                                   if (!isAnnouncementFetchLoading) {
-                                       if (isAnnouncementFetchSuccess) setEditAnnouncementMode(false);
-                                   }
-                               } }
-                               footer={ null } wrapClassName="add-project-modal" width={ 800 }>
-                            <div className="pb-1 border-b-2 mb-3 select-none">Edit the details of the announcement.
-                            </div>
-                            <AddEditAnnouncementComponent mode="edit" announcement={ announcement } />
-                        </Modal>
-                        <Popconfirm title="Delete Announcement"
-                                    description="Are you sure you want to delete this announcement?"
-                                    onConfirm={ onDeleteAnnouncementConfirm }>
-                            <Button icon={ <MdDeleteOutline /> } danger type="primary" />
-                        </Popconfirm>
-                    </div> : <div
-                        className="flex flex-col items-center justify-center ml-auto space-x-2 text-gray-500 text-xs md:flex-row md:items-center">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                             fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"
-                             strokeLinejoin="round" className="h-4 w-4">
-                            <rect width="16" height="20" x="4" y="2" rx="2" ry="2"></rect>
-                            <path d="M9 22v-4h6v4"></path>
-                            <path d="M8 6h.01"></path>
-                            <path d="M16 6h.01"></path>
-                            <path d="M12 6h.01"></path>
-                            <path d="M12 10h.01"></path>
-                            <path d="M12 14h.01"></path>
-                            <path d="M16 10h.01"></path>
-                            <path d="M16 14h.01"></path>
-                            <path d="M8 10h.01"></path>
-                            <path d="M8 14h.01"></path>
-                        </svg>
-                        <span
-                            className="hidden select-none md:block">{ getNameByPostedBy(announcement.createdBy) }</span>
-                    </div> }
+                    { canEditOrDelete && isHovered ? (
+                        <div
+                            className="flex flex-row items-center justify-center ml-auto space-x-2 text-gray-500 text-xs md:flex-row md:items-center">
+                            <Button icon={ <CiEdit /> } type="dashed" onClick={ () => setEditAnnouncementMode(true) } />
+                            <Modal centered title="Edit Announcement" open={ editAnnouncementMode }
+                                   onCancel={ () => {
+                                       if (!isAnnouncementFetchLoading) {
+                                           if (isAnnouncementFetchSuccess) setEditAnnouncementMode(false);
+                                       }
+                                   } }
+                                   footer={ null } wrapClassName="add-project-modal" width={ 800 }>
+                                <div className="pb-1 border-b-2 mb-3 select-none">Edit the details of the announcement.
+                                </div>
+                                <AddEditAnnouncementComponent mode="edit" announcement={ announcement } />
+                            </Modal>
+                            <Popconfirm title="Delete Announcement"
+                                        description="Are you sure you want to delete this announcement?"
+                                        onConfirm={ onDeleteAnnouncementConfirm }>
+                                <Button icon={ <MdDeleteOutline /> } danger type="primary" />
+                            </Popconfirm>
+                        </div>
+                    ) : (
+                        <div
+                            className="flex flex-col items-center justify-center ml-auto space-x-2 text-gray-500 text-xs md:flex-row md:items-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                 fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"
+                                 strokeLinejoin="round" className="h-4 w-4">
+                                <rect width="16" height="20" x="4" y="2" rx="2" ry="2"></rect>
+                                <path d="M9 22v-4h6v4"></path>
+                                <path d="M8 6h.01"></path>
+                                <path d="M16 6h.01"></path>
+                                <path d="M12 6h.01"></path>
+                                <path d="M12 10h.01"></path>
+                                <path d="M12 14h.01"></path>
+                                <path d="M16 10h.01"></path>
+                                <path d="M16 14h.01"></path>
+                                <path d="M8 10h.01"></path>
+                                <path d="M8 14h.01"></path>
+                            </svg>
+                            <span
+                                className="hidden select-none md:block">{ getNameByPostedBy(announcement.createdBy) }</span>
+                        </div>
+                    ) }
 
                 </div>
                 <AnimatePresence>

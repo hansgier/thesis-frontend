@@ -9,7 +9,7 @@ import { AddEditProjectComponent } from "./AddEditProjectComponent.jsx";
 import moment from "moment";
 import { getAllProjectReactions } from "../app/features/reactions/reactionsSlice.js";
 import { capitalizeFirstLetter } from "../utils/functions.js";
-import { setSingleProject } from "../app/features/projects/projectsSlice.js";
+import { deleteProject, setSingleProject } from "../app/features/projects/projectsSlice.js";
 import { LikeDislikeButtons } from "./LikeDislikeButtons.jsx";
 
 
@@ -24,12 +24,18 @@ export const ProjectContainer = React.memo(({ project }) => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
 
+    const isAdmin = user.role === "admin";
+    const isBarangay = user.role === "barangay";
+    const isProjectCreatedByUser = project.createdBy === user.id;
+    const canEditOrDelete = isAdmin || (isBarangay && isProjectCreatedByUser);
+
     useEffect(() => {
         dispatch(getAllProjectReactions(project.id));
     }, []);
 
     const onDeleteProjectConfirm = () => {
         setDeleteProjectConfirm(true);
+        dispatch(deleteProject(project.id));
     };
 
     const barangayNames = project.barangays.map(barangay => barangay.name);
@@ -136,12 +142,55 @@ export const ProjectContainer = React.memo(({ project }) => {
                             </div>
                         </div>
                     </div>
-                    { user.role === "resident" ?
-                        <div className="flex items-center ml-auto space-x-2 text-Thesis-200 text-xs">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                                 fill="none"
-                                 stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
-                                 className="h-4 hidden w-4 lg:block">
+                    { canEditOrDelete && isHovered && (
+                        <div id="ishovered" className="flex items-center ml-auto space-x-2 text-Thesis-200 text-xs">
+                            {/* Edit button */ }
+                            { (isAdmin || (isBarangay && isProjectCreatedByUser)) && (
+                                <>
+                                    <Button icon={ <CiEdit /> } type="dashed"
+                                            onClick={ () => setEditProjectMode(true) } />
+                                    <Modal
+                                        centered
+                                        title="Edit Project"
+                                        open={ editProjectMode }
+                                        onCancel={ () => setEditProjectMode(false) }
+                                        footer={ null }
+                                        wrapClassName="add-project-modal"
+                                        width={ 800 }
+                                    >
+                                        <div className="pb-1 border-b-2 mb-3 select-none">
+                                            Edit the details of the project.
+                                        </div>
+                                        <AddEditProjectComponent mode="edit" project={ project } />
+                                    </Modal>
+                                </>
+                            ) }
+                            {/* Delete button */ }
+                            { (isAdmin || (isBarangay && isProjectCreatedByUser)) && (
+                                <Popconfirm
+                                    title="Delete Project"
+                                    description="Are you sure you want to delete this project?"
+                                    onConfirm={ onDeleteProjectConfirm }
+                                >
+                                    <Button icon={ <MdDeleteOutline /> } danger type="primary" />
+                                </Popconfirm>
+                            ) }
+                        </div>
+                    ) }
+                    { !canEditOrDelete && (
+                        <div id="not hovered" className="flex items-center ml-auto space-x-2 text-Thesis-200 text-xs">
+                            <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                width="24"
+                                height="24"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                strokeWidth="2"
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                className="h-4 hidden w-4 lg:block"
+                            >
                                 <rect width="16" height="20" x="4" y="2" rx="2" ry="2"></rect>
                                 <path d="M9 22v-4h6v4"></path>
                                 <path d="M8 6h.01"></path>
@@ -155,76 +204,10 @@ export const ProjectContainer = React.memo(({ project }) => {
                                 <path d="M8 14h.01"></path>
                             </svg>
                             <span className="font-bold hidden select-none lg:block">
-                            { getNameByCreatedBy(project.createdBy) }
-                        </span>
+                                { getNameByCreatedBy(project.createdBy) }
+                            </span>
                         </div>
-                        : isHovered ?
-                            user.role === "admin" ? (
-                                <div className="flex items-center ml-auto space-x-2 text-Thesis-200 text-xs">
-                                    {/*--------------------Edit button--------------------*/ }
-                                    <Button icon={ <CiEdit /> } type="dashed"
-                                            onClick={ () => setEditProjectMode(true) } />
-                                    <Modal centered title="Edit Project" open={ editProjectMode }
-                                           onCancel={ () => setEditProjectMode(false) }
-                                           footer={ null } wrapClassName="add-project-modal" width={ 800 }>
-                                        <div className="pb-1 border-b-2 mb-3 select-none">Edit the details of the
-                                                                                          project.
-                                        </div>
-                                        <AddEditProjectComponent mode="edit" project={ project } />
-                                    </Modal>
-                                    {/*--------------------Delete button--------------------*/ }
-                                    <Popconfirm title="Delete Project"
-                                                description="Are you sure you want to delete this project?"
-                                                onConfirm={ onDeleteProjectConfirm }>
-                                        <Button icon={ <MdDeleteOutline /> } danger type="primary" />
-                                    </Popconfirm>
-                                </div>
-                            ) : (user.role === "barangay" && user.id === project.createdBy) && (
-                                <>
-                                    <div className="flex items-center ml-auto space-x-2 text-Thesis-200 text-xs">
-                                        {/*--------------------Edit button--------------------*/ }
-                                        <Button icon={ <CiEdit /> } type="dashed"
-                                                onClick={ () => setEditProjectMode(true) } />
-                                        <Modal centered title="Edit Project" open={ editProjectMode }
-                                               onCancel={ () => setEditProjectMode(false) }
-                                               footer={ null } wrapClassName="add-project-modal" width={ 800 }>
-                                            <div className="pb-1 border-b-2 mb-3 select-none">Edit the details of the
-                                                                                              project.
-                                            </div>
-                                            <AddEditProjectComponent mode="edit" project={ project } />
-                                        </Modal>
-                                        {/*--------------------Delete button--------------------*/ }
-                                        <Popconfirm title="Delete Project"
-                                                    description="Are you sure you want to delete this project?"
-                                                    onConfirm={ onDeleteProjectConfirm }>
-                                            <Button icon={ <MdDeleteOutline /> } danger type="primary" />
-                                        </Popconfirm>
-                                    </div>
-                                </>
-                            )
-                            :
-                            <div className="flex items-center ml-auto space-x-2 text-Thesis-200 text-xs">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                                     fill="none"
-                                     stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
-                                     className="h-4 hidden w-4 lg:block">
-                                    <rect width="16" height="20" x="4" y="2" rx="2" ry="2"></rect>
-                                    <path d="M9 22v-4h6v4"></path>
-                                    <path d="M8 6h.01"></path>
-                                    <path d="M16 6h.01"></path>
-                                    <path d="M12 6h.01"></path>
-                                    <path d="M12 10h.01"></path>
-                                    <path d="M12 14h.01"></path>
-                                    <path d="M16 10h.01"></path>
-                                    <path d="M16 14h.01"></path>
-                                    <path d="M8 10h.01"></path>
-                                    <path d="M8 14h.01"></path>
-                                </svg>
-                                <span className="font-bold hidden select-none lg:block">
-                            { getNameByCreatedBy(project.createdBy) }
-                        </span>
-                            </div>
-                    }
+                    ) }
                 </div>
                 <AnimatePresence>
                     { view === 0 && (
