@@ -6,6 +6,8 @@ import {
     getUserFromLocalStorage,
     removeUserFromLocalStorage
 } from "../../../utils/localStorage.jsx";
+import { clearStoreThunk } from "./authThunk.js";
+
 
 const initialState = {
     isSidebarOpen: false,
@@ -48,21 +50,36 @@ export const loginUser = createAsyncThunk("auth/login", async (user, thunkAPI) =
     }
 );
 
+export const logout = createAsyncThunk("auth/logout", async (user, thunkAPI) => {
+        try {
+            const state = thunkAPI.getState().auth;
+            const headers = { Authorization: `Bearer ${ state.user.accessToken }` };
+            const resp = await customFetch.delete(`${ AUTH_URL }/logout`, { headers });
+            return resp.data;
+        } catch (e) {
+            console.log(e.response.data.message);
+            return thunkAPI.rejectWithValue(e.response.data.message);
+        }
+    }
+);
+
+
 export const updateUser = createAsyncThunk("users/updateUser", async (user, thunkAPI) => {
     try {
         const state = thunkAPI.getState().auth;
-        const headers = {
-            userId: state.user.id
-        };
+        const headers = { Authorization: `Bearer ${ state.user.accessToken }` };
         const resp = await customFetch.patch(`${ USERS_URL }/update-user`, user, {
             headers
         });
+        console.log(resp);
         return resp.data;
     } catch (e) {
         console.log(e.response.data.message);
         return thunkAPI.rejectWithValue(e.response.data.message);
     }
 });
+
+export const clearStore = createAsyncThunk("auth/clearStore", clearStoreThunk);
 
 
 const authSlice = createSlice({
@@ -96,16 +113,15 @@ const authSlice = createSlice({
         setLoading: (state) => {
             state.isLoading = false;
         },
+        setGuestMode: (state, { payload }) => {
+            state.guestMode = payload;
+        },
         logoutUser: (state) => {
             state.user = null;
             state.userProfile = null;
-            state.isSidebarOpen = false;
-            state.isLoading = false;
             removeUserFromLocalStorage();
         },
-        setGuestMode: (state, { payload }) => {
-            state.guestMode = payload;
-        }
+        clearAuthStore: () => initialState
     },
     extraReducers(builder) {
         builder
@@ -153,6 +169,29 @@ const authSlice = createSlice({
                 state.authErrorMessage = payload;
             })
 
+            .addCase(logout.pending, (state) => {
+                state.authSuccess = false;
+                state.authError = false;
+                state.isLoading = true;
+            })
+            .addCase(logout.fulfilled, (state, { payload }) => {
+                state.isLoading = false;
+                state.userProfile = null;
+                state.user = null;
+                state.authSuccess = true;
+                state.authError = false;
+                state.authErrorMessage = "";
+                state.guestMode = false;
+                removeUserFromLocalStorage();
+            })
+            .addCase(logout.rejected, (state, { payload }) => {
+                state.isLoading = false;
+                state.authError = true;
+                state.authSuccess = false;
+                state.authErrorMessage = payload;
+            })
+
+
             .addCase(loginUser.pending, (state) => {
                 state.authSuccess = false;
                 state.authError = false;
@@ -174,7 +213,12 @@ const authSlice = createSlice({
                 state.authError = true;
                 state.authSuccess = false;
                 state.authErrorMessage = payload;
+            })
+
+            .addCase(clearStore.rejected, (state) => {
+                console.log("clear store failed");
             });
+
     }
 });
 
@@ -186,9 +230,10 @@ export const {
     toggleAddAnnouncementMode,
     toggleView,
     resetView,
-    logoutUser,
     setLoading,
     setGuestMode,
-    setOldPassword
+    setOldPassword,
+    logoutUser,
+    clearAuthStore
 } = authSlice.actions;
 export default authSlice.reducer;

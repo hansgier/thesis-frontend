@@ -45,7 +45,7 @@ export const AdminProjects = () => {
     const handleSelectAll = (e) => {
         const checked = e.target.checked;
         if (checked) {
-            // If "select all" is checked, add all user IDs to the selectedUserIds state
+            // If "select all" is checked, add all auth IDs to the selectedUserIds state
             const allUserIds = users.map((user) => user.id);
             setSelectedUserIds(allUserIds);
         } else {
@@ -56,10 +56,10 @@ export const AdminProjects = () => {
 
     const handleUserCheckboxChange = (userId, checked) => {
         if (checked) {
-            // If the checkbox is checked, add the user ID to the selectedUserIds state
+            // If the checkbox is checked, add the auth ID to the selectedUserIds state
             setSelectedUserIds([...selectedUserIds, userId]);
         } else {
-            // If the checkbox is unchecked, remove the user ID from the selectedUserIds state
+            // If the checkbox is unchecked, remove the auth ID from the selectedUserIds state
             setSelectedUserIds(selectedUserIds.filter((id) => id !== userId));
         }
     };

@@ -24,7 +24,9 @@ export const postComment = createAsyncThunk("comments/postComment", postCommentT
 const commentsSlice = createSlice({
     name: "comments",
     initialState,
-    reducers: {},
+    reducers: {
+        clearCommentStore: () => initialState
+    },
     extraReducers: (builder) => {
         builder
             .addCase(postComment.pending, (state) => {
@@ -67,5 +69,7 @@ const commentsSlice = createSlice({
     }
 });
 
-export const {} = commentsSlice.actions;
+export const {
+    clearCommentStore
+} = commentsSlice.actions;
 export default commentsSlice.reducer;

@@ -20,6 +20,8 @@ import { LikeDislikeButtons } from "./LikeDislikeButtons.jsx";
 import { FilterSort } from "./FilterSort.jsx";
 import { AddEditProjectComponent } from "./AddEditProjectComponent.jsx";
 import { AddEditAnnouncementComponent } from "./AddEditAnnouncementComponent.jsx";
+import { AddEditContactComponent } from "./AddEditContactComponent.jsx";
+
 
 export {
     Sidebar,
@@ -43,5 +45,6 @@ export {
     LikeDislikeButtons,
     FilterSort,
     AddEditProjectComponent,
-    AddEditAnnouncementComponent
+    AddEditAnnouncementComponent,
+    AddEditContactComponent
 };

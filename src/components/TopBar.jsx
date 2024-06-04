@@ -1,5 +1,5 @@
 import { useDispatch, useSelector } from "react-redux";
-import { toggleSidebar } from "../app/features/user/authSlice.js";
+import { toggleSidebar } from "../app/features/auth/authSlice.js";
 import { SearchBar } from "./SearchBar.jsx";
 import logo from "/src/assets/logo.png";
 

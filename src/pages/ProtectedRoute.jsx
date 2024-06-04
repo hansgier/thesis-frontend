@@ -2,12 +2,11 @@ import { useSelector } from "react-redux";
 import { Navigate } from "react-router-dom";
 
 export const ProtectedRoute = ({ children }) => {
-    const { user, guestMode } = useSelector((store) => store.auth);
-    if (guestMode) {
-        return children;
-    }
+    const { user } = useSelector((store) => store.auth);
+
     if (!user) {
         return <Navigate to="/" />;
+    } else {
+        return children;
     }
-    return children;
 };

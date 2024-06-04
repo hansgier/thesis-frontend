@@ -9,7 +9,7 @@ import {
 const initialFiltersState = {
     search: "",
     sort: "",
-    updateed_by: ""
+    updated_by: ""
 };
 
 const initialState = {
@@ -35,7 +35,8 @@ const updatesSlice = createSlice({
     reducers: {
         setSelectedUpdate: (state, { payload }) => {
             state.selectedUpdate = payload;
-        }
+        },
+        clearUpdateStore: () => initialState
     },
     extraReducers: (builder) => {
         builder
@@ -113,6 +114,7 @@ const updatesSlice = createSlice({
 });
 
 export const {
-    setSelectedUpdate
+    setSelectedUpdate,
+    clearUpdateStore
 } = updatesSlice.actions;
 export default updatesSlice.reducer;

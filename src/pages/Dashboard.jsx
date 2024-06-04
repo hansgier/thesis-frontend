@@ -161,7 +161,7 @@ export const Dashboard = () => {
                         </div>
                     </div>
                     {/*----------------------------IMPORTANT ANNOUNCEMENTS----------------------------*/ }
-                    <div className="md:mx-0 mx-4 rounded-xl mb-3" data-v0-t="card">
+                    <div className="md:mx-0 mx-4 rounded-xl mb-6" data-v0-t="card">
                         <div className="flex-col gap-1 grid pr-6 py-6 select-none space-y-1.5">
                             <h3 className="font-bold leading-none text-xl tracking-tight whitespace-normal md:text-2xl">
                                 Important Announcements </h3>
@@ -173,7 +173,7 @@ export const Dashboard = () => {
                             <>
                                 <div className="bg-white p-0 rounded-3xl border border-[#96d7cf]">
                                     <ul className="divide-y ">
-                                        { totalAnnouncements < 1 ?
+                                        { announcements.length < 1 ?
                                             <div
                                                 className="p-10 flex items-center justify-center text-xs md:text-base">
                                                 <Empty description="No important annoucements" />

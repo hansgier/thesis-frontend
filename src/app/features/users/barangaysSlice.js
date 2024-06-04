@@ -1,6 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { getAllBarangaysThunk } from "./barangaysThunk.js";
-import { addToLocalStorage, getItemLocalStorage } from "../../../utils/localStorage.jsx";
 
 const initialFiltersState = {
     search: "",
@@ -13,7 +12,7 @@ const initialState = {
     barangayFetchErrorBarangay: "",
     isBarangayFetchError: false,
     totalBarangays: 0,
-    barangays: getItemLocalStorage("barangays"),
+    barangays: [],
     ...initialFiltersState
 };
 
@@ -27,7 +26,7 @@ const barangaysSlice = createSlice({
         setSelectedBarangay: (state, { payload }) => {
             state.selectedBarangay = payload;
         },
-        resetBarangayConvState: () => initialState
+        clearBarangayStore: () => initialState
     },
     extraReducers: (builder) => {
         builder
@@ -40,9 +39,8 @@ const barangaysSlice = createSlice({
                 state.isBarangayFetchLoading = false;
                 state.isBarangayFetchError = false;
                 state.isBarangayFetchSuccess = true;
-                state.barangays = payload.barangays;
+                state.barangays = !payload.barangays ? [] : payload.barangays;
                 state.totalBarangays = payload.count;
-                addToLocalStorage(payload.barangays, "barangays");
             })
             .addCase(getAllBarangays.rejected, (state, { payload }) => {
                 state.isBarangayFetchLoading = false;
@@ -55,6 +53,6 @@ const barangaysSlice = createSlice({
 
 export const {
     setSelectedBarangay,
-    resetBarangayConvState
+    clearBarangayStore
 } = barangaysSlice.actions;
 export default barangaysSlice.reducer;

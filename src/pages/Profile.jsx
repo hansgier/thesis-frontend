@@ -3,7 +3,7 @@ import { Button, Form, Input, Select, Spin } from "antd";
 import { useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { barangaysList } from "../utils/barangaysList.js";
-import { updateUser } from "../app/features/user/authSlice.js";
+import { updateUser } from "../app/features/auth/authSlice.js";
 
 export const Profile = () => {
     const [isEditMode, setIsEditMode] = useState(false);

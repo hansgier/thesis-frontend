@@ -1,6 +1,6 @@
 import { useDispatch, useSelector } from "react-redux";
 import React, { useEffect, useState } from "react";
-import { toggleSidebar } from "../app/features/user/authSlice.js";
+import { toggleSidebar } from "../app/features/auth/authSlice.js";
 import { NavLink, useLocation } from "react-router-dom";
 import { sideLinks } from "../utils/data-components.jsx";
 import logo from "/src/assets/logo.png";

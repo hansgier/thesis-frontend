@@ -1,9 +1,11 @@
 import { Button, Col, Form, Input, Modal, Row, Select } from "antd";
 import { IoAdd } from "react-icons/io5";
 import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 
 export const AddEditUser = ({ mode }) => {
     const [openAddNewUserModal, setOpenAddNewUserModal] = useState(false);
+    const { barangays } = useSelector((store) => store.barangays);
     const [form] = Form.useForm();
 
     useEffect(() => {
@@ -43,7 +45,7 @@ export const AddEditUser = ({ mode }) => {
                    onOk={ () => setOpenAddNewUserModal(false) }
                    onCancel={ () => setOpenAddNewUserModal(false) } footer={ null }>
                 <div className="bg-transparent border-b-2 mb-2 pb-2 text-gray-800 text-xs md:text-sm">
-                    { mode === "add" ? "Enter the user's information to add them to the system." : "Edit the user's" +
+                    { mode === "add" ? "Enter the auth's information to add them to the system." : "Edit the auth's" +
                         " information" }
                 </div>
                 {/*TODO: in edit mode, retain the values to be edited, otherwise in add mode, set it to default
@@ -90,13 +92,18 @@ export const AddEditUser = ({ mode }) => {
                                 name="addnewuser_barangay"
                                 label="Barangay"
                             >
-                                {/*TODO: put barangay data in the options from the server*/ }
-                                <Select defaultValue="Tambulilid" options={ [
-                                    { value: "admin", label: "Admin" },
-                                    { value: "assistant_admin", label: "Assistant Admin" },
-                                    { value: "barangay", label: "Barangay" },
-                                    { value: "resident", label: "Resident" }
-                                ] } />
+                                <Select defaultValue={ barangays[0].name } onChange={ (value) => console.log(value) }>
+                                    { barangays.map((barangay) => {
+                                        return (
+                                            <Select.Option key={ barangay.id }
+                                                           value={ barangay.id }
+
+                                            >
+                                                { barangay.name }
+                                            </Select.Option>
+                                        );
+                                    }) }
+                                </Select>
                             </Form.Item>
                         </Col>
                     </Row>

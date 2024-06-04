@@ -1,17 +1,20 @@
 import { Col, Form, Row, Select } from "antd";
 import {
-    announcement_types,
     project_cost,
     project_progress,
     project_status,
+    project_tags,
     project_views
 } from "../utils/data-components.jsx";
 import React from "react";
 import { useWindowSize } from "../hooks/index.jsx";
+import { useSelector } from "react-redux";
 
 
 export const Filters = React.memo(({ mode, page }) => {
     const [form] = Form.useForm();
+    const { barangays } = useSelector((store) => store.barangays);
+    const { users4admin } = useSelector((store) => store.users);
     const { width } = useWindowSize();
 
     const onFinish = (values) => {
@@ -33,40 +36,74 @@ export const Filters = React.memo(({ mode, page }) => {
                         { page === "Projects" && (
                             <>
                                 <Form.Item name="tags" className="m-0 p-0">
-                                    <Select mode="multiple" placeholder="Tags"
-                                            options={ null } />
+                                    <Select mode="multiple" placeholder="Tags" allowClear>
+                                        { project_tags.map((tag, i) => {
+                                            return <Select.Option key={ i }
+                                                                  value={ tag.values }>{ tag.label }</Select.Option>;
+                                        }) }
+                                    </Select>
                                 </Form.Item>
                                 <Form.Item name="locations" className="m-0 p-0">
-                                    <Select mode="multiple" placeholder="Location(s)"
-                                            options={ null } />
+                                    <Select mode="multiple" placeholder="Location(s)" allowClear>
+                                        { barangays.map((barangay) => {
+                                            return <Select.Option key={ barangay.id }
+                                                                  value={ barangay.id }>{ barangay.name }</Select.Option>;
+                                        }) }
+                                    </Select>
                                 </Form.Item>
                                 <Form.Item name="posted_by" className="m-0 p-0">
-                                    <Select placeholder="Posted By"
-                                            options={ null } />
+                                    <Select placeholder="Posted By" allowClear>
+                                        { users4admin.map((user) => {
+                                            if (user.role === "barangay" || user.role === "admin")
+                                                return <Select.Option key={ user.id }
+                                                                      value={ user.id }>{ user.username }</Select.Option>;
+                                        }) }
+                                    </Select>
                                 </Form.Item>
                                 <Form.Item name="status" className="m-0 p-0">
-                                    <Select placeholder="Status"
-                                            options={ project_status } />
+                                    <Select placeholder="Status" allowClear>
+                                        { project_status.map((status, i) => {
+                                            return <Select.Option key={ i }
+                                                                  value={ status.value }>{ status.label }</Select.Option>;
+                                        }) }
+                                    </Select>
                                 </Form.Item>
                                 <Form.Item name="cost" className="m-0 p-0">
-                                    <Select placeholder="Cost"
-                                            options={ project_cost } />
+                                    <Select placeholder="Cost" allowClear>
+                                        { project_cost.map((cost, i) => {
+                                            return <Select.Option key={ i }
+                                                                  value={ cost.value }>{ cost.label }</Select.Option>;
+                                        }) }
+                                    </Select>
                                 </Form.Item>
                                 <Form.Item name="progress" className="m-0 p-0">
-                                    <Select placeholder="Progress"
-                                            options={ project_progress } />
+                                    <Select placeholder="Progress" allowClear>
+                                        { project_progress.map((progress, i) => {
+                                            return <Select.Option key={ i }
+                                                                  value={ progress.value }>{ progress.label }</Select.Option>;
+                                        }) }
+                                    </Select>
                                 </Form.Item>
                                 <Form.Item name="views" className="m-0 p-0">
-                                    <Select placeholder="Views"
-                                            options={ project_views } />
+                                    <Select placeholder="Views" allowClear>
+                                        { project_views.map((view, i) => {
+                                            return <Select.Option key={ i }
+                                                                  value={ view.value }>{ view.label }</Select.Option>;
+                                        }) }
+                                    </Select>
                                 </Form.Item>
                             </>
                         ) }
                         { page === "Announcements" && (
                             <>
                                 <Form.Item name="posted_by" className="m-0 p-0">
-                                    <Select placeholder="Posted By"
-                                            options={ null } />
+                                    <Select placeholder="Posted By" allowClear>
+                                        { users4admin.map((user, i) => {
+                                            if (user.role === "admin" || user.role === "barangay")
+                                                return <Select.Option key={ user.id }
+                                                                      value={ user.id }>{ user.username }</Select.Option>;
+                                        }) }
+                                    </Select>
                                 </Form.Item>
                             </>
                         ) }
@@ -105,44 +142,77 @@ export const Filters = React.memo(({ mode, page }) => {
                         { page === "Projects" && (
                             <>
                                 <Form.Item name="tags" className="m-0 p-0">
-                                    <Select mode="multiple" placeholder="Tags"
-                                            options={ null } />
+                                    <Select mode="multiple" placeholder="Tags" allowClear>
+                                        { project_tags.map((tags, i) => {
+                                            return <Select.Option key={ i }
+                                                                  value={ tags.value }>{ tags.label }</Select.Option>;
+                                        }) }
+                                    </Select>
                                 </Form.Item>
                                 <Form.Item name="locations" className="m-0 p-0">
-                                    <Select mode="multiple" placeholder="Location(s)"
-                                            options={ null } />
+                                    <Select mode="multiple" placeholder="Location(s)" allowClear>
+                                        { barangays.map((barangay) => {
+                                            return <Select.Option key={ barangay.id }
+                                                                  value={ barangay.id }>{ barangay.name }</Select.Option>;
+                                        }) }
+                                    </Select>
                                 </Form.Item>
                                 <Form.Item name="posted_by" className="m-0 p-0">
-                                    <Select placeholder="Posted By"
-                                            options={ null } />
+                                    <Select placeholder="Posted By" allowClear>
+                                        { users4admin.map((user) => {
+                                            return <Select.Option key={ user.id }
+                                                                  value={ user.id }>{ user.username }</Select.Option>;
+                                        }) }
+                                    </Select>
                                 </Form.Item>
                                 <Form.Item name="status" className="m-0 p-0">
-                                    <Select placeholder="Status"
-                                            options={ project_status } />
+                                    <Select placeholder="Status" allowClear>
+                                        { project_status.map((status, i) => {
+                                            return <Select.Option key={ i }
+                                                                  value={ status.value }>{ status.label }</Select.Option>;
+                                        }) }
+                                    </Select>
                                 </Form.Item>
                                 <Form.Item name="cost" className="m-0 p-0">
-                                    <Select placeholder="Cost"
-                                            options={ project_cost } />
+                                    <Select placeholder="Cost" allowClear>
+                                        { project_cost.map((cost, i) => {
+                                            return <Select.Option key={ i }
+                                                                  value={ cost.value }>{ cost.label }</Select.Option>;
+                                        }) }
+                                    </Select>
                                 </Form.Item>
                                 <Form.Item name="progress" className="m-0 p-0">
-                                    <Select placeholder="Progress"
-                                            options={ project_progress } />
+                                    <Select placeholder="Progress" allowClear>
+                                        { project_progress.map((progress, i) => {
+                                            return <Select.Option key={ i }
+                                                                  value={ progress.value }>{ progress.label }</Select.Option>;
+                                        }) }
+                                    </Select>
                                 </Form.Item>
                                 <Form.Item name="views" className="m-0 p-0">
-                                    <Select placeholder="Views"
-                                            options={ project_views } />
+                                    <Select placeholder="Views" allowClear>
+                                        { project_views.map((view, i) => {
+                                            return <Select.Option key={ i }
+                                                                  value={ view.value }>{ view.label }</Select.Option>;
+                                        }) }
+                                    </Select>
                                 </Form.Item>
                             </>
                         ) }
                         { page === "Announcements" && (
                             <>
-                                <Form.Item name="type" className="m-0 p-0">
-                                    <Select placeholder="Type"
-                                            options={ announcement_types } />
-                                </Form.Item>
+                                {/*<Form.Item name="type" className="m-0 p-0">*/ }
+                                {/*    <Select placeholder="Type" allowClear*/ }
+                                {/*            options={ announcement_types } />*/ }
+                                {/*</Form.Item>*/ }
                                 <Form.Item name="posted_by" className="m-0 p-0">
-                                    <Select placeholder="Posted By"
-                                            options={ null } />
+                                    <Select placeholder="Posted By" allowClear>
+                                        { users4admin.map((user) => {
+                                            if (user.role === "admin" || user.role === "barangay")
+                                                return <Select.Option key={ user.id }
+                                                                      value={ user.id }>{ user.username }</Select.Option>;
+                                        }) }
+                                    </Select>
                                 </Form.Item>
                             </>
                         ) }

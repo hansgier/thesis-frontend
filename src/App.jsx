@@ -16,8 +16,6 @@ import {
 import { SingleProject } from "./pages/project/index.jsx";
 
 function App() {
-
-
     return (
         <BrowserRouter>
             <Routes>
@@ -35,7 +33,7 @@ function App() {
                     <Route path="profile" element={ <Profile /> } />
                     <Route path="users" element={ <AdminRoute><Users /></AdminRoute> } />
                 </Route>
-                <Route index element={ <LoginRegister /> } />
+                <Route index path="/" element={ <LoginRegister /> } />
                 <Route path="*" element={ <NotFound /> } />
             </Routes>
         </BrowserRouter>

@@ -1,21 +1,14 @@
-import { NavLink, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import { Form, Input, Select, Spin } from "antd";
-import { loginUser, registerUser, setGuestMode, setOldPassword } from "../app/features/user/authSlice.js";
+import { loginUser, registerUser, setGuestMode, setOldPassword } from "../app/features/auth/authSlice.js";
 import indexbg from "../assets/indexbg.png";
 import { barangaysList } from "../utils/barangaysList.js";
-
-const initialState = {
-    username: "",
-    email: "",
-    password: "",
-    barangay: "",
-    isMember: true
-};
+import cityGovLogo from "../assets/city-government.png";
 
 export const LoginRegister = () => {
-    const { isLoading, user, authError, authSuccess } = useSelector((store) => store.auth);
+    const { isLoading, user, authError, authSuccess, guestMode } = useSelector((store) => store.auth);
     const dispatch = useDispatch();
     const [form] = Form.useForm();
     const navigate = useNavigate();
@@ -25,7 +18,7 @@ export const LoginRegister = () => {
         if (user) {
             navigate("/dashboard");
         }
-    }, [user, navigate]);
+    }, [user]);
 
     useEffect(() => {
         if (!isLoginMode) {
@@ -60,7 +53,7 @@ export const LoginRegister = () => {
             <div className="bg-transparent flex flex-col h-full items-center justify-center w-full z-50">
                 <div className="flex items-center justify-center">
                     <img alt="Logo" width="100" height="100" className="bg-cover rounded-xl sm:mb-2"
-                         src="https://www.ormoc.gov.ph/assets/img/official_seal.webp" loading="lazy" />
+                         src={ cityGovLogo } loading="lazy" />
                 </div>
                 <div className="space-y-4">
                     <h1 className="font-bold px-3 text-3xl text-black tracking-tighter sm:px-0 sm:text-4xl md:text-5xl">Ormoc
@@ -97,7 +90,6 @@ export const LoginRegister = () => {
                                         message: "Email is required"
                                     }] }
                                     validateStatus={ isLoading ? "validating" : authError ? "error" : null }
-                                    help={ authError ? "Incorrect email address" : null }
                                 >
                                     <Input placeholder="Email Address"
                                            id="index_input"
@@ -111,7 +103,7 @@ export const LoginRegister = () => {
                                         message: "Password is required"
                                     }] }
                                     validateStatus={ isLoading ? "validating" : authError ? "error" : null }
-                                    help={ authError ? "Incorrect password" : null }
+                                    help={ "Password must be at least 6 characters" }
                                 >
                                     <Input.Password placeholder="Password"
                                                     rootClassName="index-input-password"
@@ -158,7 +150,7 @@ export const LoginRegister = () => {
                             </>
                         ) }
                     </div>
-                    <Spin spinning={ isLoading }>
+                    { guestMode ?
                         <Form.Item>
                             <button
                                 className="bg-gradient-to-r font-bold font-sans from-[#24C6DC] h-11 hover:bg-gradient-to-l hover:duration-300 hover:ease-in-out hover:from-Thesis-300 hover:to-blue-300 hover:transition-all px-4 py-2 rounded-sm text-base text-indigo-100 to-[#514A9D] tracking-widest uppercase w-full"
@@ -166,25 +158,31 @@ export const LoginRegister = () => {
                                 type="submit">{ isLoginMode ? "Sign in" : "Register" }
                             </button>
                         </Form.Item>
-                    </Spin>
+                        :
+                        <Spin spinning={ isLoading }>
+                            <Form.Item>
+                                <button
+                                    className="bg-gradient-to-r font-bold font-sans from-[#24C6DC] h-11 hover:bg-gradient-to-l hover:duration-300 hover:ease-in-out hover:from-Thesis-300 hover:to-blue-300 hover:transition-all px-4 py-2 rounded-sm text-base text-indigo-100 to-[#514A9D] tracking-widest uppercase w-full"
+                                    disabled={ isLoading }
+                                    type="submit">{ isLoginMode ? "Sign in" : "Register" }
+                                </button>
+                            </Form.Item>
+                        </Spin>
+                    }
                 </Form>
-                <div className="group max-w-sm mt-0 px-4 space-y-4 w-full sm:px-0 md:px-0">
-                    { isLoading ? (
+                <div
+                    className={ `group max-w-sm px-4 space-y-4 w-full sm:px-0 md:px-0 ${ (guestMode && isLoading) && "mt-6" } ` }>
+                    <Spin spinning={ isLoading && guestMode }>
                         <button
-                            disabled={ isLoading }
-                            className="bg-opacity-25border-opacity-100 border-2 opacity-50 border-Thesis-100 border-solid font-medium inline-block px-4 py-2 ring-0 ring-offset-0 rounded-sm text-base text-black w-full md:px-0"
+                            onClick={ () => {
+                                dispatch(setGuestMode({ payload: true }));
+                                dispatch(loginUser({ email: "guest@guest.com", password: "guest123456" }));
+                            } }
+                            className="bg-opacity-25 border-opacity-100 border-2 border-Thesis-100 border-solid font-medium hover:border-Thesis-300 hover:duration-300 hover:ease-in-out hover:text-Thesis-300 hover:transition-all inline-block px-4 py-2 ring-0 ring-offset-0 rounded-sm text-base text-black w-full md:px-0"
                         >
                             Continue as a guest
                         </button>
-                    ) : (
-                        <NavLink
-                            to="/dashboard"
-                            onClick={ () => dispatch(setGuestMode({ payload: true })) }
-                            className="bg-opacity-25border-opacity-100 border-2 border-Thesis-100 border-solid font-medium hover:border-Thesis-300 hover:duration-300 hover:ease-in-out hover:text-Thesis-300 hover:transition-all inline-block px-4 py-2 ring-0 ring-offset-0 rounded-sm text-base text-black w-full md:px-0"
-                        >
-                            Continue as a guest
-                        </NavLink>
-                    ) }
+                    </Spin>
                 </div>
                 <div className="max-w-sm mt-6 space-y-4 w-full" data-id="15">
                     <p className="flex flex-col text-base text-gray-600 sm:block" data-id="16">

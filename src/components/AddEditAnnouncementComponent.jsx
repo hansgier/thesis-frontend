@@ -3,7 +3,6 @@ import { project_attributes } from "../utils/data-components.jsx";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
 import { editAnnouncement, postAnnouncement } from "../app/features/announcements/announcementsSlice.js";
-//TODO: get the values of announcement for editing mode
 
 
 export const AddEditAnnouncementComponent = ({ mode, announcement }) => {

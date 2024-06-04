@@ -1,6 +1,6 @@
 import { useDispatch, useSelector } from "react-redux";
 import { Button, Col, Form, Input, Modal, Row } from "antd";
-import { toggleFeedback } from "../app/features/user/authSlice.js";
+import { toggleFeedback } from "../app/features/auth/authSlice.js";
 import React, { useEffect, useState } from "react";
 
 export const Feedback = React.memo(() => {

@@ -1,5 +1,8 @@
 import axios from "axios";
 import { BASE_URL } from "../app/constants.js";
+import { clearStore } from "../app/features/auth/authSlice.js";
+import { removeUserFromLocalStorage } from "./localStorage.jsx";
+
 
 const customFetch = axios.create({
     baseURL: BASE_URL
@@ -7,9 +10,9 @@ const customFetch = axios.create({
 
 // customFetch.interceptors.request.use(
 //     (config) => {
-//         const user = getUserFromLocalStorage();
-//         if (user) {
-//             config.headers["Authorization"] = `Bearer ${ user.token }`;
+//         const auth = getUserFromLocalStorage();
+//         if (auth) {
+//             config.headers["Authorization"] = `Bearer ${ auth.token }`;
 //         }
 //         return config;
 //     },
@@ -20,7 +23,9 @@ const customFetch = axios.create({
 //
 export const checkForUnauthorizedResponse = (error, thunkAPI) => {
     if (error.response.status === 401) {
-        // thunkAPI.dispatch(clearStore());
+        removeUserFromLocalStorage();
+        thunkAPI.dispatch(clearStore());
+        // thunkAPI.dispatch(logout());
         return thunkAPI.rejectWithValue("Unauthorized! Logging out...");
     }
     return thunkAPI.rejectWithValue(error.response.data.message);

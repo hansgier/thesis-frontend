@@ -5,7 +5,7 @@ import { getAllComments } from "./commentsSlice.js";
 export const getAllCommentsThunk = async (id, thunkAPI) => {
     try {
         const state = thunkAPI.getState().auth;
-        const headers = { userId: state.user.id };
+        const headers = { Authorization: `Bearer ${ state.user.accessToken }` };
         const response = await customFetch.get(`${ PROJECTS_URL }/${ id }/comments`, { headers });
         return response.data;
     } catch (e) {
@@ -16,7 +16,7 @@ export const getAllCommentsThunk = async (id, thunkAPI) => {
 export const postCommentThunk = async ({ id, comments }, thunkAPI) => {
     try {
         const state = thunkAPI.getState().auth;
-        const headers = { userId: state.user.id };
+        const headers = { Authorization: `Bearer ${ state.user.accessToken }` };
         const response = await customFetch.post(`${ PROJECTS_URL }/${ id }/comments`, comments, { headers });
         thunkAPI.dispatch(getAllComments(id));
 

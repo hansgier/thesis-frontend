@@ -44,7 +44,7 @@ const messagesSlice = createSlice({
         setSelectedConversation: (state, { payload }) => {
             state.selectedConversation = payload;
         },
-        resetMessageConvState: (state) => initialState
+        clearMessageStore: (state) => initialState
     },
     extraReducers: (builder) => {
         builder
@@ -75,7 +75,7 @@ const messagesSlice = createSlice({
                 state.isMessageFetchLoading = false;
                 state.isMessageFetchError = false;
                 state.isMessageFetchSuccess = true;
-                state.messages = payload.messages.slice().sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
+                state.messages = !payload.messages ? [] : payload.messages.slice().sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
                 state.totalMessages = payload.totalCount;
             })
             .addCase(getAllMessages.rejected, (state, { payload }) => {
@@ -127,6 +127,6 @@ const messagesSlice = createSlice({
 
 export const {
     setSelectedConversation,
-    resetMessageConvState
+    clearMessageStore
 } = messagesSlice.actions;
 export default messagesSlice.reducer;

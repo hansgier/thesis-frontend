@@ -5,7 +5,7 @@ import { getAllConversations, getAllMessages } from "./messagesSlice.js";
 export const getAllMessagesThunk = async (conversationId, thunkAPI) => {
     try {
         const state = thunkAPI.getState().auth;
-        const headers = { userId: state.user.id };
+        const headers = { Authorization: `Bearer ${ state.user.accessToken }` };
         const response = await customFetch.get(`${ CONVERSATIONS_URL }/${ conversationId }/messages`, { headers });
         return response.data;
     } catch (e) {
@@ -17,7 +17,7 @@ export const getAllMessagesThunk = async (conversationId, thunkAPI) => {
 export const sendMessagesThunk = async ({ conversationId, messages }, thunkAPI) => {
     try {
         const state = thunkAPI.getState().auth;
-        const headers = { userId: state.user.id };
+        const headers = { Authorization: `Bearer ${ state.user.accessToken }` };
         const response = await customFetch.post(`${ CONVERSATIONS_URL }/${ conversationId }/messages`, messages, { headers });
         thunkAPI.dispatch(getAllMessages(conversationId)); // Dispatch the getAllMessages action with the conversationId
         return response.data.message; // Return the message object from the response
@@ -30,7 +30,7 @@ export const sendMessagesThunk = async ({ conversationId, messages }, thunkAPI) 
 export const getAllConversationsThunk = async (_, thunkAPI) => {
     try {
         const state = thunkAPI.getState().auth;
-        const headers = { userId: state.user.id };
+        const headers = { Authorization: `Bearer ${ state.user.accessToken }` };
         const response = await customFetch.get(CONVERSATIONS_URL, { headers });
         return response.data;
     } catch (e) {
@@ -41,10 +41,10 @@ export const getAllConversationsThunk = async (_, thunkAPI) => {
 export const createConversationThunk = async (data, thunkAPI) => {
     try {
         const state = thunkAPI.getState().auth;
-        const headers = { userId: state.user.id };
+        const headers = { Authorization: `Bearer ${ state.user.accessToken }` };
         const existingConversations = thunkAPI.getState().messages.conversations;
 
-        // Check if a conversation with the selected user already exists
+        // Check if a conversation with the selected auth already exists
         const existingConversation = existingConversations.find(
             (conversation) =>
                 conversation.users.some(

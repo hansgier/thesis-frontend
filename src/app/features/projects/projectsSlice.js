@@ -29,7 +29,7 @@ const initialState = {
     featuredProjects: [],
     upcomingProjects: [],
     feedbackSummaries: [],
-    uploadedImages: [],
+    uploadedImagesArray: [],
     uploadLoading: false,
     uploadError: null,
     isEditModeProjectUpdate: false,
@@ -63,8 +63,12 @@ const projectsSlice = createSlice({
         },
         toggleAddModeProjectUpdate: (state) => {
             state.isAddModeProjectUpdate = !state.isAddModeProjectUpdate;
-        }
-
+        },
+        setUploadedImagesArray: (state, action) => {
+            state.uploadedImagesArray = action.payload;
+        },
+        clearUploadedImagesArray: (state) => state.uploadedImagesArray = [],
+        clearProjectStore: () => initialState
     },
     extraReducers: (builder) => {
         builder
@@ -128,7 +132,7 @@ const projectsSlice = createSlice({
                 state.isProjectFetchLoading = false;
                 state.isProjectFetchError = false;
                 state.isProjectFetchSuccess = true;
-                state.projects = payload.projects.slice().sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+                state.projects = !payload.projects ? [] : payload.projects.slice().sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
                 state.totalProjects = !payload.projects ? 0 : payload.totalCount;
                 state.completed = !payload.projects ? 0 : payload.projects.filter(project => project.status === "completed").length;
                 state.ongoing = !payload.projects ? 0 : payload.projects.filter(project => project.status === "ongoing").length;
@@ -177,6 +181,9 @@ export const {
     toggleEditModeProjectUpdate,
     toggleAddModeProjectUpdate,
     setEditModeProjectUpdate,
-    setAddModeProjectUpdate
+    setAddModeProjectUpdate,
+    clearProjectStore,
+    setUploadedImagesArray,
+    clearUploadedImagesArray
 } = projectsSlice.actions;
 export default projectsSlice.reducer;

@@ -4,9 +4,9 @@ import { AddEditUser } from "../components/index.jsx";
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { barangaysList } from "../utils/barangaysList.js";
 import { capitalizeFirstLetter } from "../utils/functions.js";
 import { getAllUsers } from "../app/features/users/usersSlice.js";
+import { getAllBarangays } from "../app/features/users/barangaysSlice.js";
 
 const roleColors = {
     admin: "bg-pink-200",
@@ -28,6 +28,7 @@ export const Users = () => {
             sessionStorage.setItem("scrollPosition", "0");
         }
         dispatch(getAllUsers());
+        dispatch(getAllBarangays());
     }, []);
 
     const user = {
@@ -53,7 +54,7 @@ export const Users = () => {
     const handleSelectAll = (e) => {
         const checked = e.target.checked;
         if (checked) {
-            // If "select all" is checked, add all user IDs to the selectedUserIds state
+            // If "select all" is checked, add all auth IDs to the selectedUserIds state
             const allUserIds = users.map((user) => user.id);
             setSelectedUserIds(allUserIds);
         } else {
@@ -64,10 +65,10 @@ export const Users = () => {
 
     const handleUserCheckboxChange = (userId, checked) => {
         if (checked) {
-            // If the checkbox is checked, add the user ID to the selectedUserIds state
+            // If the checkbox is checked, add the auth ID to the selectedUserIds state
             setSelectedUserIds([...selectedUserIds, userId]);
         } else {
-            // If the checkbox is unchecked, remove the user ID from the selectedUserIds state
+            // If the checkbox is unchecked, remove the auth ID from the selectedUserIds state
             setSelectedUserIds(selectedUserIds.filter((id) => id !== userId));
         }
     };
@@ -91,10 +92,23 @@ export const Users = () => {
                                     { value: "admin", label: "Admin" },
                                     { value: "assistant_admin", label: "Assistant Admin" },
                                     { value: "barangay", label: "Barangay" },
-                                    { value: "resident", label: "Resident" }
+                                    { value: "resident", label: "Resident" },
+                                    { value: "guest", label: "Guest" }
                                 ] } />
                                 <span className="font-bold mt-4 text-left text-xs w-full mb-2">BARANGAY</span>
-                                <Select allowClear placeholder="Filter by barangay" options={ barangaysList } />
+                                <Select allowClear placeholder="Filter by barangay"
+                                        onChange={ (value) => console.log(value) }>
+                                    { barangays.map((barangay, i) => {
+                                        return (
+                                            <Select.Option
+                                                key={ i }
+                                                value={ barangay.id }
+                                            >
+                                                { barangay.name }
+                                            </Select.Option>
+                                        );
+                                    }) }
+                                </Select>
                             </div>
                         }>
                             <Button icon={ <IoFilter /> }>
@@ -155,7 +169,7 @@ export const Users = () => {
                                         </tr>
                                         :
                                         users4admin.map((ua) => (
-                                            <tr className="bg-white border-b text-xs md:text-sm">
+                                            <tr key={ ua.id } className="bg-white border-b text-xs md:text-sm">
                                                 <td className="w-4 p-4">
                                                     <div className="flex items-center">
                                                         <input id={ `checkbox-table-search-${ user.id }` }

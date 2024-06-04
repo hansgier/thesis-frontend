@@ -32,7 +32,9 @@ export const postAnnouncement = createAsyncThunk("announcements/postAnnouncement
 const announcementSlice = createSlice({
     name: "announcements",
     initialState,
-    reducers: {},
+    reducers: {
+        clearAnnouncementStore: () => initialState
+    },
     extraReducers: (builder) => {
         builder
             .addCase(postAnnouncement.pending, (state) => {
@@ -95,7 +97,7 @@ const announcementSlice = createSlice({
                 state.isAnnouncementFetchLoading = false;
                 state.isAnnouncementFetchError = false;
                 state.isAnnouncementFetchSuccess = true;
-                state.announcements = payload.announcements.slice().sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+                state.announcements = !payload.announcements ? [] : payload.announcements.slice().sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
                 state.totalAnnouncements = payload.totalCount;
             })
             .addCase(getAllAnnouncements.rejected, (state, { payload }) => {
@@ -108,5 +110,5 @@ const announcementSlice = createSlice({
     }
 });
 
-export const {} = announcementSlice.actions;
+export const { clearAnnouncementStore } = announcementSlice.actions;
 export default announcementSlice.reducer;

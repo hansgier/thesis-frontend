@@ -134,7 +134,7 @@ export const filterSort = {
 export const project_tags = [
     {
         label: "Administration And Governance",
-        values: "1"
+        value: "1"
     },
     {
         label: "General Public Services",

@@ -1,5 +1,5 @@
 import { useDispatch, useSelector } from "react-redux";
-import { toggleNotifications } from "../app/features/user/authSlice.js";
+import { toggleNotifications } from "../app/features/auth/authSlice.js";
 import { useEffect } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 

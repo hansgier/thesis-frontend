@@ -6,3 +6,5 @@ export const PROJECTS_URL = "/api/projects";
 export const ANNOUNCEMENTS_URL = "/api/announcements";
 export const CONVERSATIONS_URL = "/api/conversations";
 export const BARANGAYS_URL = "/api/barangays";
+export const CONTACTS_URL = "/api/contacts";
+export const MEDIA_URL = "/api/media";

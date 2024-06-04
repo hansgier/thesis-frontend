@@ -59,6 +59,7 @@ export const Messages = () => {
         selectedConversation
     } = useSelector((store) => store.messages);
     const { user } = useSelector((store) => store.auth);
+    const { users4admin } = useSelector((store) => store.users);
     const { width } = useWindowSize();
     const location = useLocation();
     const [state, dispatch] = useReducer(reducer, initialState);
@@ -80,7 +81,7 @@ export const Messages = () => {
     const handleChange = async (newValue) => {
         if (newValue) {
             try {
-                // Create a new conversation with the selected user
+                // Create a new conversation with the selected auth
                 const response = await dispatchRedux(createConversation({ user2Id: newValue }));
                 const { conversation } = response.payload;
                 console.log(response);
@@ -154,12 +155,17 @@ export const Messages = () => {
                                         dropdownStyle={ { maxHeight: 400 } }
                                         placeholder="Search for barangay or city government"
                                         suffixIcon={ null }
-                                        filterOption={ filterOption }
-                                        onSearch={ handleSearch }
+                                        // filterOption={ filterOption }
+                                        // onSearch={ handleSearch }
                                         onChange={ handleChange }
-                                        notFoundContent={ null }
-                                        options={ barangaysListWithoutGuest }
-                                    />
+                                        notFoundContent={ null }>
+                                        { users4admin.map((ua) => {
+                                            if (ua.role === "admin" || ua.role === "barangay")
+                                                if (ua.id !== user.id)
+                                                    return <Select.Option key={ ua.id }
+                                                                          value={ ua.username }>{ ua.username }</Select.Option>;
+                                        }) }
+                                    </Select>
                                 </Modal>
                             </div>
                             <div className="overflow-y-scroll pr-4">

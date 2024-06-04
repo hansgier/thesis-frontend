@@ -1,6 +1,6 @@
 import { filterSort } from "../utils/data-components.jsx";
 import { useDispatch, useSelector } from "react-redux";
-import { resetView, toggleView } from "../app/features/user/authSlice.js";
+import { resetView, toggleView } from "../app/features/auth/authSlice.js";
 import { useEffect, useState } from "react";
 import { RiSortAlphabetAsc, RiSortAlphabetDesc, RiSortAsc, RiSortDesc } from "react-icons/ri";
 import { Modal } from "antd";
@@ -8,7 +8,7 @@ import { Filters } from "./Filters.jsx";
 import { useWindowSize } from "../hooks/index.jsx";
 
 const adminMode = true;
-//TODO: admin logic where it will change according to user roles
+//TODO: admin logic where it will change according to auth roles
 
 const sortButtons = {
     newest: {

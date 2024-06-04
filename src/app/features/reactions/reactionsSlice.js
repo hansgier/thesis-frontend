@@ -4,7 +4,7 @@ import { getAllProjectReactionsThunk } from "./reactionsThunk.js";
 const initialFiltersState = {
     search: "",
     sort: "",
-    reactioned_by: ""
+    reaction_by: ""
 };
 
 const initialState = {
@@ -24,7 +24,9 @@ export const getAllProjectReactions = createAsyncThunk("reactions/getAllProjectR
 const reactionsSlice = createSlice({
     name: "reactions",
     initialState,
-    reducers: {},
+    reducers: {
+        clearReactionStore: () => initialState
+    },
     extraReducers: (builder) => {
         builder
             .addCase(getAllProjectReactions.pending, (state) => {
@@ -36,7 +38,7 @@ const reactionsSlice = createSlice({
                 state.isReactionFetchLoading = false;
                 state.isReactionFetchError = false;
                 state.isReactionFetchSuccess = true;
-                state.reactions = payload.reactions;
+                state.reactions = !payload.reactions ? [] : payload.reactions;
                 state.totalReactions = payload.reactions.length;
             })
             .addCase(getAllProjectReactions.rejected, (state, { payload }) => {
@@ -49,5 +51,5 @@ const reactionsSlice = createSlice({
     }
 });
 
-export const {} = reactionsSlice.actions;
+export const { clearReactionStore } = reactionsSlice.actions;
 export default reactionsSlice.reducer;

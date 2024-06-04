@@ -5,7 +5,7 @@ import { getAllProjects } from "./projectsSlice.js";
 export const getAllProjectsThunk = async (_, thunkAPI) => {
     try {
         const state = thunkAPI.getState().auth;
-        const headers = { userId: state.user.id };
+        const headers = { Authorization: `Bearer ${ state.user.accessToken }` };
         const response = await customFetch.get(PROJECTS_URL, { headers });
         return response.data;
     } catch (e) {
@@ -16,7 +16,7 @@ export const getAllProjectsThunk = async (_, thunkAPI) => {
 export const deleteProjectThunk = async (id, thunkAPI) => {
     try {
         const state = thunkAPI.getState().auth;
-        const headers = { userId: state.user.id };
+        const headers = { Authorization: `Bearer ${ state.user.accessToken }` };
 
         // Set a timeout for the delete request
         const deleteTimeout = setTimeout(() => {
@@ -40,9 +40,10 @@ export const deleteProjectThunk = async (id, thunkAPI) => {
 };
 
 export const createProjectThunk = async (project, thunkAPI) => {
+    console.log(project);
     try {
         const state = thunkAPI.getState().auth;
-        const headers = { userId: state.user.id };
+        const headers = { Authorization: `Bearer ${ state.user.accessToken }` };
         const {
             title,
             description,
@@ -88,7 +89,6 @@ export const createProjectThunk = async (project, thunkAPI) => {
         const getAllProjectsPromise = thunkAPI.dispatch(getAllProjects());
         const [createData, getAllProjectsData] = await Promise.all([createResponse.data, getAllProjectsPromise]);
 
-        console.log(createData);
         return createData;
     } catch (e) {
         console.log(e);
@@ -99,7 +99,7 @@ export const createProjectThunk = async (project, thunkAPI) => {
 export const editProjectThunk = async ({ id, project }, thunkAPI) => {
     try {
         const state = thunkAPI.getState().auth;
-        const headers = { userId: state.user.id };
+        const headers = { Authorization: `Bearer ${ state.user.accessToken }` };
         const {
             title,
             description,

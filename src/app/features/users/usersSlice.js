@@ -1,6 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { getAllUsersThunk } from "./usersThunk.js";
-import { addToLocalStorage, getItemLocalStorage } from "../../../utils/localStorage.jsx";
 
 const initialFiltersState = {
     search: "",
@@ -13,7 +12,7 @@ const initialState = {
     userFetchErrorUser: "",
     isUserFetchError: false,
     totalUsers: 0,
-    users4admin: getItemLocalStorage("users"),
+    users4admin: [],
     ...initialFiltersState
 };
 
@@ -27,7 +26,7 @@ const usersSlice = createSlice({
         setSelectedUser: (state, { payload }) => {
             state.selectedUser = payload;
         },
-        resetUserConvState: () => initialState
+        clearUsersStore: () => initialState
     },
     extraReducers: (builder) => {
         builder
@@ -40,9 +39,20 @@ const usersSlice = createSlice({
                 state.isUserFetchLoading = false;
                 state.isUserFetchError = false;
                 state.isUserFetchSuccess = true;
-                state.users4admin = payload.users;
+                state.users4admin = payload.users.length < 1 ? [] : payload?.users.slice().sort((a, b) => {
+                    const nameA = a.username.toUpperCase();
+                    const nameB = b.username.toUpperCase();
+
+                    // If both names contain "CITY GOVERNMENT" or neither does, sort alphabetically
+                    if (nameA < nameB) {
+                        return -1;
+                    }
+                    if (nameA > nameB) {
+                        return 1;
+                    }
+                    return 0;
+                });
                 state.totalUsers = payload.count;
-                addToLocalStorage(payload.users, "users");
             })
             .addCase(getAllUsers.rejected, (state, { payload }) => {
                 state.isUserFetchLoading = false;
@@ -55,6 +65,6 @@ const usersSlice = createSlice({
 
 export const {
     setSelectedUser,
-    resetUserConvState
+    clearUsersStore
 } = usersSlice.actions;
 export default usersSlice.reducer;

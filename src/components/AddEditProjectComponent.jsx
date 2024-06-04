@@ -2,10 +2,11 @@ import { Button, Col, DatePicker, Form, Input, InputNumber, Row, Select, Slider,
 import { project_attributes, project_status, project_tags } from "../utils/data-components.jsx";
 import { useDispatch, useSelector } from "react-redux";
 import React, { useEffect, useState } from "react";
-import { barangaysListWithoutGuest } from "../utils/barangaysList.js";
 import { getDateTimeFormat } from "../utils/functions.js";
 import { FaCloudUploadAlt } from "react-icons/fa";
-import { createProject, editProject } from "../app/features/projects/projectsSlice.js";
+import { createProject, editProject, setUploadedImagesArray } from "../app/features/projects/projectsSlice.js";
+import { toggleAddProjectMode } from "../app/features/auth/authSlice.js";
+import { deleteMedium } from "../app/features/media/mediaSlice.js";
 
 const { Dragger } = Upload;
 
@@ -13,11 +14,10 @@ const range_formatter = (value) => `${ value }%`;
 
 export const AddEditProjectComponent = React.memo(({
                                                        mode,
-                                                       project,
-                                                       uploadedImagesFromInput,
-                                                       setUploadedImagesFromInput
+                                                       project
                                                    }) => {
-    const { uploadedImages, uploadLoading, uploadError, singleProject } = useSelector((state) => state.projects);
+    const { uploadedImagesArray, uploadLoading, uploadError, singleProject } = useSelector((state) => state.projects);
+    const { barangays } = useSelector((state) => state.barangays);
     const dispatch = useDispatch();
     const [form] = Form.useForm();
     const { isAddProjectMode } = useSelector((store) => store.auth);
@@ -45,7 +45,9 @@ export const AddEditProjectComponent = React.memo(({
             status,
             tags,
             locations,
-            funding_source
+            funding_source,
+            contract_term,
+            contractor
         } = values;
 
         let tagsIds;
@@ -70,13 +72,15 @@ export const AddEditProjectComponent = React.memo(({
                     description: description || "",
                     cost: cost || "0",
                     start_date: formattedStartDate,
-                    due_date: formattedDueDate,
-                    completion_date: formattedCompletionDate,
+                    due_date: formattedDueDate === "" ? null : formattedDueDate,
+                    completion_date: formattedCompletionDate === "" ? null : formattedCompletionDate,
                     status,
                     tagsIds,
                     barangayIds,
                     funding_source: funding_source || "",
-                    uploadedImages: uploadedImagesFromInput.length < 1 ? uploadedImagesFromInput : []
+                    contract_term: contract_term || "",
+                    contractor: contractor || "",
+                    uploadedImages: uploadedImagesArray.length > 0 ? uploadedImagesArray : []
                 })
             );
         } else if (mode === "edit") {
@@ -92,7 +96,7 @@ export const AddEditProjectComponent = React.memo(({
                     tagsIds,
                     barangayIds,
                     funding_source: funding_source || project.funding_source,
-                    uploadedImages: uploadedImagesFromInput || []
+                    uploadedImages: uploadedImagesArray.length > 0 ? uploadedImagesArray : []
                 }
             }));
         }
@@ -177,9 +181,14 @@ export const AddEditProjectComponent = React.memo(({
                 >
                     <Select
                         mode="multiple"
-                        placeholder={ project_attributes[3].placeholder }
-                        options={ barangaysListWithoutGuest }
-                    />
+                        allowClear
+                        placeholder={ project_attributes[3].placeholder }>
+                        { barangays.map((barangay) => {
+                            return <Select.Option key={ barangay.id }
+                                                  value={ barangay.id }>{ barangay.name }</Select.Option>;
+                        }) }
+
+                    </Select>
                 </Form.Item>
 
                 {/*----------TAGS----------*/ }
@@ -194,9 +203,13 @@ export const AddEditProjectComponent = React.memo(({
                 >
                     <Select
                         mode="multiple"
-                        placeholder={ project_attributes[4].placeholder }
-                        options={ project_tags }
-                    />
+                        placeholder={ project_attributes[4].placeholder }>
+                        { project_tags.map((tag, i) => {
+                            return <Select.Option key={ i } value={ tag.value }>
+                                { tag.label }
+                            </Select.Option>;
+                        }) }
+                    </Select>
                 </Form.Item>
 
                 <Row gutter={ 20 }>
@@ -345,32 +358,32 @@ export const AddEditProjectComponent = React.memo(({
                     </Col>
                 </Row>
 
-                {/*<Row gutter={ 20 }>*/ }
-                {/*    <Col md={ { flex: "50%" } } xs={ { flex: "100%" } }>*/ }
-                {/*        /!*----------CONTRACT TERM----------*/ }
-                {/*        <div*/ }
-                {/*            className="text-xs mb-1 uppercase font-bold select-none">{ project_attributes[11].label }</div>*/ }
-                {/*        <Form.Item*/ }
-                {/*            name="contract_term"*/ }
-                {/*        >*/ }
-                {/*            <Input*/ }
-                {/*                placeholder={ project_attributes[11].placeholder }*/ }
-                {/*            />*/ }
-                {/*        </Form.Item>*/ }
-                {/*    </Col>*/ }
-                {/*    <Col md={ { flex: "50%" } } xs={ { flex: "100%" } }>*/ }
-                {/*        /!*----------CONTRACTOR----------*/ }
-                {/*        <div*/ }
-                {/*            className="text-xs mb-1 uppercase font-bold select-none">{ project_attributes[12].label }</div>*/ }
-                {/*        <Form.Item*/ }
-                {/*            name="contractor"*/ }
-                {/*        >*/ }
-                {/*            <Input*/ }
-                {/*                placeholder={ project_attributes[12].placeholder }*/ }
-                {/*            />*/ }
-                {/*        </Form.Item>*/ }
-                {/*    </Col>*/ }
-                {/*</Row>*/ }
+                <Row gutter={ 20 }>
+                    <Col md={ { flex: "50%" } } xs={ { flex: "100%" } }>
+                        {/*/!*----------CONTRACT TERM----------*/ }
+                        <div
+                            className="text-xs mb-1 uppercase font-bold select-none">{ project_attributes[11].label }</div>
+                        <Form.Item
+                            name="contract_term"
+                        >
+                            <Input
+                                placeholder={ project_attributes[11].placeholder }
+                            />
+                        </Form.Item>
+                    </Col>
+                    <Col md={ { flex: "50%" } } xs={ { flex: "100%" } }>
+                        {/*/!*----------CONTRACTOR----------*/ }
+                        <div
+                            className="text-xs mb-1 uppercase font-bold select-none">{ project_attributes[12].label }</div>
+                        <Form.Item
+                            name="contractor"
+                        >
+                            <Input
+                                placeholder={ project_attributes[12].placeholder }
+                            />
+                        </Form.Item>
+                    </Col>
+                </Row>
                 <Form.Item>
                     <Dragger
                         multiple="true"
@@ -379,19 +392,20 @@ export const AddEditProjectComponent = React.memo(({
                         showUploadList={ {
                             showRemoveIcon: true
                         } }
-                        className="flex items-center justify-center"
+                        className="flex items-center justify-center mb-3"
                         action="https://api.cloudinary.com/v1_1/ddh4rh4ci/image/upload?upload_preset=ixqbobsf"
                         onChange={ (info) => {
                             info.fileList.map((file) => {
                                 if (file.status === "done") {
-                                    setUploadedImagesFromInput([...uploadedImagesFromInput, file.response]);
+                                    dispatch(setUploadedImagesArray([...uploadedImagesArray, file.response]));
                                 }
                             });
                         } }
+                        onRemove={ (value) => dispatch(deleteMedium({ url: value.response.public_id })) }
                     >
                         <FaCloudUploadAlt size={ 50 } className="w-full mt-8" />
                         <p className="mb-8 mt-2 text-gray-600">
-                            Click or drag file to this area to upload.
+                            Click or drag image(s) to this area to upload.
                         </p>
                     </Dragger>
                 </Form.Item>
@@ -401,8 +415,19 @@ export const AddEditProjectComponent = React.memo(({
                     <Button key="reset" type="text" onClick={ () => {
                         form.resetFields();
                     } }
-                            className="hover:border-red-700 hover:!text-red-700 hover:bg-none mr-2">
+                            className="mr-2">
                         Reset
+                    </Button>
+                </Form.Item>
+                <Form.Item>
+                    <Button type="text" danger htmlType="button"
+                            className="border-red-700 mr-3 hover:bg-red-400"
+                            onClick={ () => {
+                                dispatch(toggleAddProjectMode());
+                                uploadedImagesArray.length > 0 && uploadedImagesArray.map((img) => dispatch(deleteMedium({ url: img.secure_url })));
+                            } }
+                    >
+                        Cancel
                     </Button>
                 </Form.Item>
                 <Form.Item>
