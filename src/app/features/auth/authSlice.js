@@ -6,7 +6,16 @@ import {
     getUserFromLocalStorage,
     removeUserFromLocalStorage
 } from "../../../utils/localStorage.jsx";
-import { clearStoreThunk } from "./authThunk.js";
+import { clearUsersStore } from "../users/usersSlice.js";
+import { clearBarangayStore } from "../users/barangaysSlice.js";
+import { clearAnnouncementStore } from "../announcements/announcementsSlice.js";
+import { clearCommentStore } from "../comments/commentsSlice.js";
+import { clearContactStore } from "../contacts/contactsSlice.js";
+import { clearMediaStore } from "../media/mediaSlice.js";
+import { clearMessageStore } from "../messages/messagesSlice.js";
+import { clearProjectStore } from "../projects/projectsSlice.js";
+import { clearUpdateStore } from "../projects/updatesSlice.js";
+import { clearReactionStore } from "../reactions/reactionsSlice.js";
 
 
 const initialState = {
@@ -79,8 +88,6 @@ export const updateUser = createAsyncThunk("users/updateUser", async (user, thun
     }
 });
 
-export const clearStore = createAsyncThunk("auth/clearStore", clearStoreThunk);
-
 
 const authSlice = createSlice({
     name: "auth",
@@ -121,7 +128,22 @@ const authSlice = createSlice({
             state.userProfile = null;
             removeUserFromLocalStorage();
         },
-        clearAuthStore: () => initialState
+        clearAuthStore: () => initialState,
+        clearStore: (state) => {
+            clearUsersStore();
+            clearBarangayStore();
+            clearAnnouncementStore();
+            clearCommentStore();
+            clearContactStore();
+            clearMediaStore();
+            clearMessageStore();
+            clearProjectStore();
+            clearUpdateStore();
+            clearReactionStore();
+            clearAuthStore();
+            state.user = null;
+            state.userProfile = null;
+        }
     },
     extraReducers(builder) {
         builder
@@ -213,12 +235,7 @@ const authSlice = createSlice({
                 state.authError = true;
                 state.authSuccess = false;
                 state.authErrorMessage = payload;
-            })
-
-            .addCase(clearStore.rejected, (state) => {
-                console.log("clear store failed");
             });
-
     }
 });
 
@@ -234,6 +251,7 @@ export const {
     setGuestMode,
     setOldPassword,
     logoutUser,
-    clearAuthStore
+    clearAuthStore,
+    clearStore
 } = authSlice.actions;
 export default authSlice.reducer;

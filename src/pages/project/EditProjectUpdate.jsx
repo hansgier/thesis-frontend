@@ -4,9 +4,12 @@ import { FaCheck, FaTrash } from "react-icons/fa";
 import moment from "moment";
 import { deleteProjectUpdate, editProjectUpdate } from "../../app/features/projects/updatesSlice.js";
 import { useDispatch, useSelector } from "react-redux";
+import { useParams } from "react-router-dom";
+import React from "react";
 
-export const EditProjectUpdate = ({ update }) => {
+export const EditProjectUpdate = React.memo(({ update }) => {
     const [form] = Form.useForm();
+    const { projectId } = useParams();
     const dispatch = useDispatch();
     const { singleProject, isEditModeProjectUpdate, isAddModeProjectUpdate } = useSelector((store) => store.projects);
     const { isUpdateFetchLoading, isUpdateFetchSuccess } = useSelector((store) => store.updates);
@@ -19,7 +22,7 @@ export const EditProjectUpdate = ({ update }) => {
 
     const onFinish = (values) => {
         dispatch(editProjectUpdate({
-            projectId: singleProject.payload.id,
+            projectId: projectId,
             id: update.id,
             update: {
                 remarks: values.remarks || "",
@@ -45,16 +48,13 @@ export const EditProjectUpdate = ({ update }) => {
                             <Input.TextArea autoSize={ { minRows: 2 } }
                                             placeholder={ update.remarks } />
                         </Form.Item>
-                        <Form.Item name="progress" className="mb-2 !p-0 w-full">
-                            <Input placeholder={ update.progress } />
-                        </Form.Item>
                         <div className="flex items-center justify-between" data-id="20">
                             <div className="flex items-center gap-2" data-id="24">
                                 <Form.Item className="m-0 p-0">
                                     <Button onClick={ () => {
                                         dispatch(toggleEditModeProjectUpdate());
                                         dispatch(deleteProjectUpdate({
-                                            projectId: singleProject.payload.id,
+                                            projectId: projectId,
                                             id: update.id
                                         }));
                                     } }
@@ -100,26 +100,26 @@ export const EditProjectUpdate = ({ update }) => {
                                 </svg>
                                 {/*----------Moment Post Date----------*/ }
                                 <span className="select-none text-gray-500 text-xs" data-id="23">
-                        { `Last update ${ moment(update.createdAt).format("MM D, YYYY") }` }
+                        { `Last update: ${ moment(update.createdAt).format("MMMM D, YYYY h:mm A") }` }
                     </span>
                             </div>
-                            <div className="flex items-center gap-2" data-id="24">
-                                {/*----------Project Update Progress----------*/ }
-                                <svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg"
-                                     fill="#a7f3d0" className="w-5 ">
-                                    <g id="SVGRepo_bgCarrier" strokeWidth="0"></g>
-                                    <g id="SVGRepo_tracerCarrier" strokeLinecap="round"
-                                       strokeLinejoin="round"></g>
-                                    <g id="SVGRepo_iconCarrier">
-                                        <path fill="#76a790" fillRule="evenodd"
-                                              d="M0,8 C0,6.34315 1.34315,5 3,5 L13,5 C14.6569,5 16,6.34315 16,8 C16,9.65685 14.6569,11 13,11 L3,11 C1.34315,11 0,9.65685 0,8 Z M10,7 L13,7 C13.5523,7 14,7.44772 14,8 C14,8.55228 13.5523,9 13,9 L8,9 L10,7 Z"></path>
-                                    </g>
-                                </svg>
-                                <span className="select-none text-green-500 text-sm"
-                                      data-id="26">
-                        { update.progress }
-                    </span>
-                            </div>
+                            {/*        <div className="flex items-center gap-2" data-id="24">*/ }
+                            {/*            /!*----------Project Update Progress----------*/ }
+                            {/*            <svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg"*/ }
+                            {/*                 fill="#a7f3d0" className="w-5 ">*/ }
+                            {/*                <g id="SVGRepo_bgCarrier" strokeWidth="0"></g>*/ }
+                            {/*                <g id="SVGRepo_tracerCarrier" strokeLinecap="round"*/ }
+                            {/*                   strokeLinejoin="round"></g>*/ }
+                            {/*                <g id="SVGRepo_iconCarrier">*/ }
+                            {/*                    <path fill="#76a790" fillRule="evenodd"*/ }
+                            {/*                          d="M0,8 C0,6.34315 1.34315,5 3,5 L13,5 C14.6569,5 16,6.34315 16,8 C16,9.65685 14.6569,11 13,11 L3,11 C1.34315,11 0,9.65685 0,8 Z M10,7 L13,7 C13.5523,7 14,7.44772 14,8 C14,8.55228 13.5523,9 13,9 L8,9 L10,7 Z"></path>*/ }
+                            {/*                </g>*/ }
+                            {/*            </svg>*/ }
+                            {/*            <span className="select-none text-green-500 text-sm"*/ }
+                            {/*                  data-id="26">*/ }
+                            {/*    { update.progress }*/ }
+                            {/*</span>*/ }
+                            {/*        </div>*/ }
                         </div>
                     </div>
                 </div>
@@ -127,4 +127,4 @@ export const EditProjectUpdate = ({ update }) => {
         </>
 
     );
-};
+});

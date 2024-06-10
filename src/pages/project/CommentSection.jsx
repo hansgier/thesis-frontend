@@ -2,10 +2,10 @@ import { UserComment } from "./UserComment.jsx";
 import { PostComment } from "./PostComment.jsx";
 import { useDispatch, useSelector } from "react-redux";
 import React, { useEffect } from "react";
-import { getAllComments } from "../../app/features/comments/commentsSlice.js";
 import { Empty, Spin } from "antd";
+import { getAllComments } from "../../app/features/comments/commentsSlice.js";
 
-export const CommentSection = () => {
+export const CommentSection = React.memo(({ projectId }) => {
     const { projects, singleProject } = useSelector((store) => store.projects);
     const { user } = useSelector((store) => store.auth);
     const { users4admin } = useSelector((store) => store.users);
@@ -19,8 +19,9 @@ export const CommentSection = () => {
     const dispatch = useDispatch();
 
     useEffect(() => {
-        dispatch(getAllComments(singleProject.payload.id));
+        dispatch(getAllComments(projectId));
     }, []);
+
 
     return (
         <>
@@ -43,7 +44,6 @@ export const CommentSection = () => {
                     <span
                         className="bg-[#daf4aa] flex font-bold items-center justify-center px-2 py-0 rounded-full select-none text-black text-xs md:text-sm">
                                 { totalComments }
-
                     </span>
                         </>
                     ) }
@@ -56,7 +56,7 @@ export const CommentSection = () => {
                                 <Empty description="No comments" />
                                 :
                                 comments.map((comment) => (
-                                    <UserComment key={ comment.id } comment={ comment } />
+                                    <UserComment key={ comment?.id } comment={ comment } />
                                 )) }
                         </>
                     ) }
@@ -64,4 +64,4 @@ export const CommentSection = () => {
             </div>
         </>
     );
-};
+});

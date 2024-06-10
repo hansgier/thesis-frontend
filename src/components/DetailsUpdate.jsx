@@ -1,5 +1,5 @@
 import { projectDetails_sidebar } from "../utils/data-components.jsx";
-import { useReducer, useState } from "react";
+import { useCallback, useReducer, useState } from "react";
 import { ProjectUpdate } from "../pages/project/ProjectUpdate.jsx";
 import { Button, Modal, Skeleton } from "antd";
 import { RiSortAsc, RiSortDesc } from "react-icons/ri";
@@ -54,22 +54,25 @@ export const DetailsUpdate = () => {
     const [state, dispatch] = useReducer(reducer, initialState);
     const dispatchRedux = useDispatch();
 
-    function getNameByCreatedBy(createdBy) {
-        const user = users4admin.find((user) => user.id === createdBy);
+    const getNameByCreatedBy = useCallback(
+        (createdBy) => {
+            const user = users4admin.find((user) => user.id === createdBy);
 
-        if (user) {
-            if (user.role === "barangay") {
-                const barangay = barangays.find((b) => b.id === user.barangay_id);
-                return barangay ? barangay.name : "Unknown Barangay";
-            } else if (user.role === "admin") {
-                return "City Government";
-            } else {
-                return user.username;
+            if (user) {
+                if (user.role === "barangay") {
+                    const barangay = barangays.find((b) => b.id === user.barangay_id);
+                    return barangay ? barangay.name : "Unknown Barangay";
+                } else if (user.role === "admin") {
+                    return "City Government";
+                } else {
+                    return user.username;
+                }
             }
-        }
 
-        return "Unknown User";
-    }
+            return "Unknown User";
+        },
+        [users4admin, barangays]
+    );
 
     return (
         <>
@@ -96,9 +99,13 @@ export const DetailsUpdate = () => {
                     {/*-----------PROJECT POST DATE & POSTED BY-----------*/ }
                     <div className="pt-2">
                         <div
-                            className="font-normal select-none text-gray-700 text-sm">{ isDetailsMode ? `Posted on ${ moment(singleProject.payload.createdAt).format("MMMM D, YYYY ") }` : `Last updated on ${ moment(singleProject.payload.updatedAt).format("MMMM D, YYYY ") }` }</div>
+                            className="font-normal select-none text-gray-700 text-sm">
+                            { isDetailsMode ? `Posted on ${ moment(singleProject?.createdAt).format("MMMM D, YYYY ") }` : `Last updated on ${ moment(singleProject?.updatedAt).format("MMMM D, YYYY ") }` }
+                        </div>
                         <div
-                            className="select-none text-gray-700 text-sm">{ `By ${ getNameByCreatedBy(singleProject.payload.createdBy) }` }</div>
+                            className="select-none text-gray-700 text-sm">
+                            { `By ${ getNameByCreatedBy(singleProject?.createdBy) }` }
+                        </div>
                     </div>
                     {/*-----------DETAILS-----------*/ }
                     <div className="border-t mt-4 overflow-y-auto pt-4 w-full">
@@ -106,7 +113,7 @@ export const DetailsUpdate = () => {
                             projectDetails_sidebar
                                 .filter((pds) => {
                                     const { value } = pds;
-                                    const projectValue = singleProject.payload[value];
+                                    const projectValue = singleProject?.[value];
                                     if (pds.pds_type === "single") {
                                         return !!projectValue; // Include if projectValue is truthy
                                     } else if (pds.pds_type === "multiple") {
@@ -116,7 +123,7 @@ export const DetailsUpdate = () => {
                                 })
                                 .map((pds, index) => {
                                     const { name, pds_type, color, value } = pds;
-                                    if (!singleProject || !singleProject.payload) {
+                                    if (!singleProject || !singleProject) {
                                         return null; // or you can render a placeholder component
                                     }
 
@@ -124,13 +131,13 @@ export const DetailsUpdate = () => {
                                         const isDateValue = ["start_date", "due_date", "completion_date"].includes(value);
                                         const isCostValue = value === "cost";
                                         const displayValue = isDateValue
-                                            ? moment(singleProject.payload[value]).format("MMMM D, YYYY")
+                                            ? moment(singleProject?.[value]).format("MMMM D, YYYY")
                                             : isCostValue
-                                                ? `₱ ${ parseFloat(singleProject.payload[value]).toLocaleString("en-PH", {
+                                                ? `₱ ${ parseFloat(singleProject?.[value]).toLocaleString("en-PH", {
                                                     minimumFractionDigits: 2,
                                                     maximumFractionDigits: 2
                                                 }) }`
-                                                : singleProject.payload[value];
+                                                : singleProject?.[value];
 
                                         return (
                                             <div className="mb-5" key={ index }>
@@ -153,7 +160,7 @@ export const DetailsUpdate = () => {
                                                     { name }
                                                 </div>
                                                 <div className="flex flex-wrap gap-2 mt-2">
-                                                    { singleProject.payload[value].map((item, index) => (
+                                                    { singleProject?.[value].map((item, index) => (
                                                         <span
                                                             key={ index }
                                                             className={ `${ color } font-bold px-3 py-1 rounded-2xl select-none text-white text-xs` }
@@ -185,8 +192,12 @@ export const DetailsUpdate = () => {
                                         } }
                                                 icon={ <CiEdit /> } type="text" />
                                     </div>
-                                    <Modal open={ isAddModeProjectUpdate } centered footer={ null }
-                                           onCancel={ () => dispatchRedux(toggleAddModeProjectUpdate()) }>
+                                    <Modal open={ isAddModeProjectUpdate } centered footer={ null } closeIcon={ null }
+                                           onCancel={ () => {
+                                               return;
+                                           } }
+                                           title="Add Project Update"
+                                    >
                                         <ProjectUpdate mode="add" />
                                     </Modal>
                                 </div>

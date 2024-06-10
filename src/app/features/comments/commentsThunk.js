@@ -19,7 +19,6 @@ export const postCommentThunk = async ({ id, comments }, thunkAPI) => {
         const headers = { Authorization: `Bearer ${ state.user.accessToken }` };
         const response = await customFetch.post(`${ PROJECTS_URL }/${ id }/comments`, comments, { headers });
         thunkAPI.dispatch(getAllComments(id));
-
         return response.data;
     } catch (e) {
         return checkForUnauthorizedResponse(e, thunkAPI);

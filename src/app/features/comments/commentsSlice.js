@@ -25,6 +25,7 @@ const commentsSlice = createSlice({
     name: "comments",
     initialState,
     reducers: {
+        resetAllComments: (state) => state.comments = null,
         clearCommentStore: () => initialState
     },
     extraReducers: (builder) => {
@@ -38,7 +39,6 @@ const commentsSlice = createSlice({
                 state.isCommentFetchLoading = false;
                 state.isCommentFetchError = false;
                 state.isCommentFetchSuccess = true;
-                console.log(payload);
                 state.totalComments = payload.totalCount;
             })
             .addCase(postComment.rejected, (state, { payload }) => {
@@ -70,6 +70,7 @@ const commentsSlice = createSlice({
 });
 
 export const {
-    clearCommentStore
+    clearCommentStore,
+    resetAllComments
 } = commentsSlice.actions;
 export default commentsSlice.reducer;

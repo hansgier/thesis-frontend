@@ -6,6 +6,15 @@ import { PiSortAscendingBold, PiSortDescendingBold, PiUsersThree } from "react-i
 import { FaListUl, FaSortAlphaDownAlt, FaSortAlphaUp } from "react-icons/fa";
 import { IoFileTrayStackedOutline } from "react-icons/io5";
 
+export const proj_status = {
+    ongoing: "bg-gray-100",
+    on_hold: "bg-amber-100",
+    completed: "bg-green-100",
+    cancelled: "bg-red-100",
+    planned: "bg-sky-100"
+
+};
+
 export const sideLinks = [
     {
         id: 1,

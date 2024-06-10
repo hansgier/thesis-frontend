@@ -13,6 +13,18 @@ export const getAllProjectsThunk = async (_, thunkAPI) => {
     }
 };
 
+export const getProjectThunk = async (id, thunkAPI) => {
+    try {
+        const state = thunkAPI.getState().auth;
+        const headers = { Authorization: `Bearer ${ state.user.accessToken }` };
+        const response = await customFetch.get(`${ PROJECTS_URL }/${ id }`, { headers });
+        return response.data;
+    } catch (e) {
+        return checkForUnauthorizedResponse(e, thunkAPI);
+    }
+};
+
+
 export const deleteProjectThunk = async (id, thunkAPI) => {
     try {
         const state = thunkAPI.getState().auth;
@@ -40,7 +52,6 @@ export const deleteProjectThunk = async (id, thunkAPI) => {
 };
 
 export const createProjectThunk = async (project, thunkAPI) => {
-    console.log(project);
     try {
         const state = thunkAPI.getState().auth;
         const headers = { Authorization: `Bearer ${ state.user.accessToken }` };
@@ -111,6 +122,8 @@ export const editProjectThunk = async ({ id, project }, thunkAPI) => {
             tagsIds,
             barangayIds,
             funding_source,
+            contract_term,
+            contractor,
             uploadedImages
         } = project;
 
@@ -133,6 +146,8 @@ export const editProjectThunk = async ({ id, project }, thunkAPI) => {
                     tagsIds,
                     barangayIds,
                     funding_source,
+                    contract_term,
+                    contractor,
                     uploadedImages
                 },
                 { headers }

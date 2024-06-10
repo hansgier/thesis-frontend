@@ -33,11 +33,11 @@ export const UserComment = React.memo(({ comment }) => {
     const userRole = (commentedBy) => {
         const userR = users4admin.find((user) => user.id === commentedBy);
 
-        if (userR.id === user.id) {
+        if (userR?.id === user.id) {
             return roleColors.you;
-        } else if (userR.role === "admin" || userR.role === "assistant_admin") {
+        } else if (userR?.role === "admin" || userR?.role === "assistant_admin") {
             return roleColors.admin;
-        } else if (userR.role === "barangay") {
+        } else if (userR?.role === "barangay") {
             return roleColors.barangay;
         } else {
             return roleColors.resident;

@@ -20,7 +20,7 @@ export const LikeDislikeButtons = React.memo(({ project }) => {
     let likeCount = 0;
     let dislikeCount = 0;
 
-    project.reactions.forEach(reaction => {
+    project?.reactions.forEach(reaction => {
         if (reaction.reaction_type === "like") {
             likeCount++;
         } else if (reaction.reaction_type === "dislike") {

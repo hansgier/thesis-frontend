@@ -96,6 +96,8 @@ export const AddEditProjectComponent = React.memo(({
                     tagsIds,
                     barangayIds,
                     funding_source: funding_source || project.funding_source,
+                    contract_term: contract_term || project.contract_term,
+                    contractor: contractor || project.contractor,
                     uploadedImages: uploadedImagesArray.length > 0 ? uploadedImagesArray : []
                 }
             }));
@@ -338,7 +340,7 @@ export const AddEditProjectComponent = React.memo(({
                                 formatter={ (value) => {
                                     const [wholeNumber, decimalPart] = (value || "").toString().split(".");
                                     const formattedWholeNumber = wholeNumber.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-                                    return decimalPart ? `${ formattedWholeNumber }.${ decimalPart.toFixed() }` : formattedWholeNumber;
+                                    return decimalPart ? `${ formattedWholeNumber }.${ decimalPart }` : formattedWholeNumber;
                                 } }
                                 parser={ (value) => value.replace(/\₱\s?|(,*)/g, "") }
                             />

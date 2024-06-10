@@ -7,8 +7,6 @@ import { Modal } from "antd";
 import { Filters } from "./Filters.jsx";
 import { useWindowSize } from "../hooks/index.jsx";
 
-const adminMode = true;
-//TODO: admin logic where it will change according to auth roles
 
 const sortButtons = {
     newest: {

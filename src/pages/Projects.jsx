@@ -6,7 +6,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { toggleAddProjectMode } from "../app/features/auth/authSlice.js";
 import { getAllProjects } from "../app/features/projects/projectsSlice.js";
 import { getAllUsers } from "../app/features/users/usersSlice.js";
-import { removeItemLocalStorage } from "../utils/localStorage.jsx";
 import { getAllBarangays } from "../app/features/users/barangaysSlice.js";
 
 export const Projects = () => {
@@ -25,7 +24,6 @@ export const Projects = () => {
         dispatch(getAllProjects());
         dispatch(getAllBarangays());
         dispatch(getAllUsers());
-        removeItemLocalStorage("singleProject");
     }, []);
 
     // Function to save the scroll position to sessionStorage

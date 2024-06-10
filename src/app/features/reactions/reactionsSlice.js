@@ -25,7 +25,8 @@ const reactionsSlice = createSlice({
     name: "reactions",
     initialState,
     reducers: {
-        clearReactionStore: () => initialState
+        clearReactionStore: () => initialState,
+        resetReactions: (state) => state.reactions = []
     },
     extraReducers: (builder) => {
         builder
@@ -51,5 +52,5 @@ const reactionsSlice = createSlice({
     }
 });
 
-export const { clearReactionStore } = reactionsSlice.actions;
+export const { clearReactionStore, resetReactions } = reactionsSlice.actions;
 export default reactionsSlice.reducer;

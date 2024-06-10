@@ -8,7 +8,7 @@ export const PostComment = () => {
     const dispatch = useDispatch();
     const onFinish = (values) => {
         if (values.content) dispatch(postComment({
-            id: singleProject.payload.id,
+            id: singleProject.id,
             comments: { content: values.content }
         }));
         form.resetFields();

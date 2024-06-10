@@ -1,22 +1,25 @@
-import { DetailsUpdate, ImageCarousel, LikeDislikeButtons } from "../../components/index.jsx";
 import { useNavigate, useParams } from "react-router-dom";
-import { CommentSection } from "./CommentSection.jsx";
-import { Button, Modal, Segmented, Skeleton } from "antd";
 import { useWindowSize } from "../../hooks/index.jsx";
-import { projectDetails_sidebar } from "../../utils/data-components.jsx";
-import { ProjectUpdate } from "./ProjectUpdate.jsx";
-import { CiEdit } from "react-icons/ci";
-import { RiSortAsc, RiSortDesc } from "react-icons/ri";
 import { useEffect, useReducer } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import moment from "moment";
-import { capitalizeFirstLetter } from "../../utils/functions.js";
-import { getAllProjectUpdates } from "../../app/features/projects/updatesSlice.js";
-import { toggleAddModeProjectUpdate, toggleEditModeProjectUpdate } from "../../app/features/projects/projectsSlice.js";
+import {
+    getSingleProject,
+    toggleAddModeProjectUpdate,
+    toggleEditModeProjectUpdate
+} from "../../app/features/projects/projectsSlice.js";
+import { DetailsUpdate, ImageCarousel, LikeDislikeButtons } from "../../components/index.jsx";
+import { Button, Modal, Segmented, Skeleton } from "antd";
+import { RiSortAsc, RiSortDesc } from "react-icons/ri";
 import { FiPlus } from "react-icons/fi";
+import { CiEdit } from "react-icons/ci";
+import { ProjectUpdate } from "./ProjectUpdate.jsx";
 import { EditProjectUpdate } from "./EditProjectUpdate.jsx";
-
-const uimgsrc = ["/src/assets/logo.png", "/src/assets/logo.png", "/src/assets/logo.png"];
+import { CommentSection } from "./CommentSection.jsx";
+import moment from "moment";
+import { projectDetails_sidebar } from "../../utils/data-components.jsx";
+import { getAllUsers } from "../../app/features/users/usersSlice.js";
+import { getAllBarangays } from "../../app/features/users/barangaysSlice.js";
+import { getAllProjectUpdates } from "../../app/features/projects/updatesSlice.js";
 
 const initialState = {
     isDetailsUpdateMobileOpen: false,
@@ -54,7 +57,9 @@ export const SingleProject = () => {
         projects,
         singleProject,
         isEditModeProjectUpdate,
-        isAddModeProjectUpdate
+        isAddModeProjectUpdate,
+        isProjectFetchLoading,
+        isProjectFetchSuccess
     } = useSelector((store) => store.projects);
     const { user } = useSelector((store) => store.auth);
     const { users4admin } = useSelector((store) => store.users);
@@ -65,9 +70,13 @@ export const SingleProject = () => {
     const navigate = useNavigate();
     const { width } = useWindowSize();
     const [state, dispatch] = useReducer(reducer, initialState);
+    
 
     useEffect(() => {
-        dispatchRedux(getAllProjectUpdates(singleProject.payload.id));
+        dispatchRedux(getAllProjectUpdates(projectId));
+        dispatchRedux(getSingleProject(projectId));
+        dispatchRedux(getAllUsers());
+        dispatchRedux(getAllBarangays());
     }, []);
 
     function getNameByCreatedBy(createdBy) {
@@ -86,6 +95,9 @@ export const SingleProject = () => {
 
         return "Unknown User";
     }
+
+    if (isProjectFetchLoading)
+        return <div>Loading...</div>;
 
     return (
         <>
@@ -109,11 +121,13 @@ export const SingleProject = () => {
                         </div>
                         <div className="pt-2">
                             <div className="font-normal select-none text-gray-700 text-xs">
-                                { `Last updated on  ${ moment(singleProject.payload.updatedAt).format("MMMM D, YYYY" +
+                                { `Last updated on  ${ moment(singleProject?.updatedAt).format("MMMM D, YYYY" +
                                     " h:mm A") }` }
                             </div>
                             <div
-                                className="select-none text-gray-700 text-xs">{ `By ${ getNameByCreatedBy(singleProject.payload.createdBy) }` }</div>
+                                className="select-none text-gray-700 text-xs">
+                                { `By ${ getNameByCreatedBy(singleProject?.createdBy) }` }
+                            </div>
                         </div>
                         <div className="border-t mt-4  pt-2 w-full">
                             <div className="h-[474px]">
@@ -121,7 +135,7 @@ export const SingleProject = () => {
                                     projectDetails_sidebar
                                         .filter((pds) => {
                                             const { value } = pds;
-                                            const projectValue = singleProject.payload[value];
+                                            const projectValue = singleProject?.[value];
                                             if (pds.pds_type === "single") {
                                                 return !!projectValue; // Include if projectValue is truthy
                                             } else if (pds.pds_type === "multiple") {
@@ -131,7 +145,7 @@ export const SingleProject = () => {
                                         })
                                         .map((pds, index) => {
                                             const { name, pds_type, color, value } = pds;
-                                            if (!singleProject || !singleProject.payload) {
+                                            if (!singleProject || !singleProject) {
                                                 return null; // or you can render a placeholder component
                                             }
 
@@ -139,13 +153,13 @@ export const SingleProject = () => {
                                                 const isDateValue = ["start_date", "due_date", "completion_date"].includes(value);
                                                 const isCostValue = value === "cost";
                                                 const displayValue = isDateValue
-                                                    ? moment(singleProject.payload[value]).format("MMMM D, YYYY")
+                                                    ? moment(singleProject?.[value]).format("MMMM D, YYYY")
                                                     : isCostValue
-                                                        ? `₱ ${ parseFloat(singleProject.payload[value]).toLocaleString("en-PH", {
+                                                        ? `₱ ${ parseFloat(singleProject?.[value]).toLocaleString("en-PH", {
                                                             minimumFractionDigits: 2,
                                                             maximumFractionDigits: 2
                                                         }) }`
-                                                        : singleProject.payload[value];
+                                                        : singleProject?.[value];
 
                                                 return (
                                                     <div className="mb-5" key={ index }>
@@ -156,8 +170,8 @@ export const SingleProject = () => {
                                                         <span
                                                             className={ `${ color } font-bold px-3 py-1 rounded-2xl select-none text-white text-xs` }
                                                         >
-                        { displayValue }
-                    </span>
+                                    { displayValue }
+                                </span>
                                                     </div>
                                                 );
                                             } else if (pds_type === "multiple") {
@@ -168,13 +182,13 @@ export const SingleProject = () => {
                                                             { name }
                                                         </div>
                                                         <div className="flex flex-wrap gap-2 mt-2">
-                                                            { singleProject.payload[value].map((item, index) => (
+                                                            { singleProject?.[value].map((item, index) => (
                                                                 <span
                                                                     key={ index }
                                                                     className={ `${ color } font-bold px-3 py-1 rounded-2xl select-none text-white text-xs` }
                                                                 >
-                                { item.name }
-                            </span>
+                                            { item.name }
+                                        </span>
                                                             )) }
                                                         </div>
                                                     </div>
@@ -209,8 +223,9 @@ export const SingleProject = () => {
                                                     <>
                                                         { totalUpdates < 1 ?
                                                             <div
-                                                                className="flex items-center justify-center h-full">No
-                                                                                                                    updates</div>
+                                                                className="flex items-center justify-center h-full">
+                                                                No updates
+                                                            </div>
                                                             : updates.map((update) => (
                                                                 <EditProjectUpdate
                                                                     key={ update.id }
@@ -228,7 +243,7 @@ export const SingleProject = () => {
                 </Modal>
             ) }
 
-            {/*-----------------------PROJECTS SECTION-----------------------*/ }
+            {/*-----------------------PROJECT SECTION-----------------------*/ }
             <div
                 className="h-full max-h-full mt-0 overflow-y-scroll pt-0 px-0 md:absolute md:flex md:left-[336px] md:mt-4 md:pl-0 md:pr-4 md:w-[calc(100%-336px)] flex flex-col">
                 <div>
@@ -270,7 +285,7 @@ export const SingleProject = () => {
                                 <div className="flex flex-col gap-1 md:grid">
                                     {/*TITLE*/ }
                                     <h3 className="font-semibold leading-none select-none text-lg tracking-tight md:text-2xl">
-                                        { singleProject.payload.title }
+                                        { singleProject?.title }
                                     </h3>
                                     <div className="flex items-center">
                                         <div className="flex group items-center mr-4 space-x-1">
@@ -287,12 +302,15 @@ export const SingleProject = () => {
                                                 </g>
                                             </svg>
                                             {/*POST MOMENT DATE*/ }
-                                            <p className="mr-5 select-none text-[#29d2b0] text-xs font-bold">{ moment(singleProject.payload.createdAt).fromNow() }</p>
+                                            <p className="mr-5 select-none text-[#29d2b0] text-xs font-bold">
+                                                { moment(singleProject?.createdAt).fromNow() }
+                                            </p>
                                         </div>
                                         {/*STATUS*/ }
                                         <div
                                             className="bg-gray-100 border border-transparent focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-ring font-semibold hover:bg-secondary/80 inline-flex items-center px-2.5 py-0.5 rounded-full select-none text-secondary-foreground text-xs transition-colors w-fit whitespace-nowrap">
-                                            { capitalizeFirstLetter(singleProject.payload.status) }
+                                            { singleProject?.status?.charAt(0).toUpperCase() }
+                                            { singleProject?.status?.slice(1) }
                                         </div>
                                     </div>
                                 </div>
@@ -318,11 +336,11 @@ export const SingleProject = () => {
                             <div className="mb-4 px-4 md:px-6">
                                 {/*DESCRIPTION*/ }
                                 <p className="leading-relaxed md:text-base select-none text-gray-700 text-justify text-sm">
-                                    { singleProject.payload.description }
+                                    { singleProject?.description }
                                 </p>
                             </div>
                             {/*PROJECT IMAGE CAROUSEL*/ }
-                            { singleProject.payload.media > 1 && <div className="px-4 md:px-6">
+                            { singleProject?.media > 1 && <div className="px-4 md:px-6">
                                 {/*TODO: put the project images array in the images prop for image carousel*/ }
                                 <ImageCarousel images={ [
                                     "https://pinegrow.com/placeholders/img18.jpg"
@@ -331,10 +349,10 @@ export const SingleProject = () => {
 
                             <div className="border-b gap-2 grid pb-3 px-4 md:px-6">
                                 <div className="flex gap-2 h-8 items-center mt-4 text-sm md:gap-4">
-                                    <LikeDislikeButtons project={ singleProject.payload } />
+                                    <LikeDislikeButtons project={ singleProject } />
                                 </div>
                             </div>
-                            <CommentSection />
+                            <CommentSection projectId={ projectId } />
                         </div>
                     </div>
                 </div>

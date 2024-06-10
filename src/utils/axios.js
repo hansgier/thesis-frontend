@@ -26,6 +26,7 @@ export const checkForUnauthorizedResponse = (error, thunkAPI) => {
         removeUserFromLocalStorage();
         thunkAPI.dispatch(clearStore());
         // thunkAPI.dispatch(logout());
+
         return thunkAPI.rejectWithValue("Unauthorized! Logging out...");
     }
     return thunkAPI.rejectWithValue(error.response.data.message);

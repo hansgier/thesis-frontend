@@ -9,8 +9,9 @@ import { AddEditProjectComponent } from "./AddEditProjectComponent.jsx";
 import moment from "moment";
 import { getAllProjectReactions } from "../app/features/reactions/reactionsSlice.js";
 import { capitalizeFirstLetter } from "../utils/functions.js";
-import { deleteProject, setSingleProject } from "../app/features/projects/projectsSlice.js";
+import { deleteProject } from "../app/features/projects/projectsSlice.js";
 import { LikeDislikeButtons } from "./LikeDislikeButtons.jsx";
+import { proj_status } from "../utils/data-components.jsx";
 
 
 export const ProjectContainer = React.memo(({ project }) => {
@@ -167,7 +168,6 @@ export const ProjectContainer = React.memo(({ project }) => {
                                     </svg>
                                 </div>
                                 <div onClick={ () => {
-                                    dispatch(setSingleProject({ payload: project }));
                                     navigate(`/projects/${ project.id }`);
                                 } }
                                      className="flex flex-col gap-1 md:grid hover:cursor-pointer">
@@ -215,12 +215,12 @@ export const ProjectContainer = React.memo(({ project }) => {
                                 </span>
                                         </div>
                                         <div
-                                            className="bg-gray-100 border border-transparent focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-ring font-semibold hover:bg-secondary/80 inline-flex items-center px-2.5 py-0.5 rounded-full select-none text-secondary-foreground text-xs transition-colors w-fit whitespace-nowrap">
+                                            className={ `border border-transparent focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-ring font-semibold hover:bg-secondary/80 inline-flex items-center px-2.5 py-0.5 rounded-full select-none text-secondary-foreground text-xs transition-colors w-fit whitespace-nowrap ${ proj_status[project.status] }` }>
                                             { capitalizeFirstLetter(project.status) }
                                         </div>
                                     </div>
                                 </div>
-                                { canEditOrDelete && isHovered && (
+                                { canEditOrDelete && isHovered ? (
                                     <div id="ishovered"
                                          className="flex items-center ml-auto space-x-2 text-Thesis-200 text-xs">
                                         {/* Edit button */ }
@@ -255,8 +255,7 @@ export const ProjectContainer = React.memo(({ project }) => {
                                             </Popconfirm>
                                         ) }
                                     </div>
-                                ) }
-                                { !canEditOrDelete && (
+                                ) : (
                                     <div id="not hovered"
                                          className="flex items-center ml-auto space-x-2 text-Thesis-200 text-xs">
                                         <svg
@@ -305,7 +304,6 @@ export const ProjectContainer = React.memo(({ project }) => {
                                             <div className="mx-4 pt-[334px] px-4 relative md:mx-6 md:px-6">
                                                 <img alt="project_img" src={ project.media[0]?.url }
                                                      onClick={ () => {
-                                                         dispatch(setSingleProject({ payload: project }));
                                                          navigate(`/projects/${ project.id }`);
                                                      } }
                                                      className="absolute h-full left-0 object-center object-cover rounded-xl top-0 w-full hover:cursor-pointer" />
@@ -318,7 +316,6 @@ export const ProjectContainer = React.memo(({ project }) => {
                                                 {/*-----------------------COMMENT COUNT-----------------------*/ }
                                                 <div
                                                     onClick={ () => {
-                                                        dispatch(setSingleProject({ payload: project }));
                                                         navigate(`/projects/${ project.id }`);
                                                     } }
                                                     className="duration-300 flex gap-1 h-full hover:bg-blue-50 hover:rounded-md items-center px-2 transition-colors hover:cursor-pointer"

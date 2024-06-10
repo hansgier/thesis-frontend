@@ -1,3 +1,5 @@
+import { useSelector } from "react-redux";
+
 export function getInitials(username) {
     const names = username.split(" ");
     return names.map(name => name[0].toUpperCase()).join("");
@@ -23,3 +25,22 @@ export const getDateTimeFormat = () => {
         hourCycle: "h23"
     });
 };
+
+export function getNameByCreatedBy(createdBy) {
+    const { users4admin } = useSelector((store) => store.users);
+    const { barangays } = useSelector((store) => store.barangays);
+    const user = users4admin.find((user) => user.id === createdBy);
+
+    if (user) {
+        if (user.role === "barangay") {
+            const barangay = barangays.find((b) => b.id === user.barangay_id);
+            return barangay ? barangay.name : "Unknown Barangay";
+        } else if (user.role === "admin") {
+            return "City Government";
+        } else {
+            return user.username;
+        }
+    }
+
+    return "Unknown User";
+}

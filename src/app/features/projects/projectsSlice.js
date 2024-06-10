@@ -1,6 +1,13 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { createProjectThunk, deleteProjectThunk, editProjectThunk, getAllProjectsThunk } from "./projectsThunk.js";
-import { addToLocalStorage, getItemLocalStorage } from "../../../utils/localStorage.jsx";
+import {
+    createProjectThunk,
+    deleteProjectThunk,
+    editProjectThunk,
+    getAllProjectsThunk,
+    getProjectThunk
+} from "./projectsThunk.js";
+import { resetReactions } from "../reactions/reactionsSlice.js";
+import { resetAllComments } from "../comments/commentsSlice.js";
 
 const initialFitlersState = {
     search: "",
@@ -20,7 +27,8 @@ const initialState = {
     isProjectFetchError: false,
     totalProjects: 0,
     projects: [],
-    singleProject: getItemLocalStorage("singleProject"),
+    project: null,
+    singleProject: null,
     completed: 0,
     ongoing: 0,
     planned: 0,
@@ -39,6 +47,7 @@ const initialState = {
 
 
 export const getAllProjects = createAsyncThunk("projects/getAllProjects", getAllProjectsThunk);
+export const getSingleProject = createAsyncThunk("projects/getSingleProject", getProjectThunk);
 export const createProject = createAsyncThunk("projects/createProject", createProjectThunk);
 export const editProject = createAsyncThunk("projects/editProject", editProjectThunk);
 export const deleteProject = createAsyncThunk("projects/deleteProject", deleteProjectThunk);
@@ -49,8 +58,11 @@ const projectsSlice = createSlice({
     initialState,
     reducers: {
         setSingleProject: (state, { payload }) => {
-            state.singleProject = payload;
-            addToLocalStorage(payload, "singleProject");
+            // state.singleProject = payload;
+            // addToLocalStorage(payload, "singleProject");
+        },
+        resetSingleProject: (state) => {
+            state.singleProject = null;
         },
         toggleEditModeProjectUpdate: (state) => {
             state.isEditModeProjectUpdate = !state.isEditModeProjectUpdate;
@@ -123,6 +135,24 @@ const projectsSlice = createSlice({
                 state.isProjectFetchError = true;
             })
 
+            .addCase(getSingleProject.pending, (state) => {
+                state.isProjectFetchSuccess = false;
+                state.isProjectFetchError = false;
+                state.isProjectFetchLoading = true;
+            })
+            .addCase(getSingleProject.fulfilled, (state, { payload }) => {
+                state.isProjectFetchLoading = false;
+                state.isProjectFetchError = false;
+                state.isProjectFetchSuccess = true;
+                state.singleProject = payload.project;
+            })
+            .addCase(getSingleProject.rejected, (state, { payload }) => {
+                state.isProjectFetchLoading = false;
+                state.isProjectFetchSuccess = false;
+                state.projectFetchErrorMessage = payload;
+                state.isProjectFetchError = true;
+            })
+
             .addCase(getAllProjects.pending, (state) => {
                 state.isProjectFetchSuccess = false;
                 state.isProjectFetchError = false;
@@ -132,6 +162,9 @@ const projectsSlice = createSlice({
                 state.isProjectFetchLoading = false;
                 state.isProjectFetchError = false;
                 state.isProjectFetchSuccess = true;
+                state.singleProject = null;
+                resetAllComments();
+                resetReactions();
                 state.projects = !payload.projects ? [] : payload.projects.slice().sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
                 state.totalProjects = !payload.projects ? 0 : payload.totalCount;
                 state.completed = !payload.projects ? 0 : payload.projects.filter(project => project.status === "completed").length;
@@ -172,7 +205,6 @@ const projectsSlice = createSlice({
                 state.projectFetchErrorMessage = payload;
                 state.isProjectFetchError = true;
             });
-
     }
 });
 
@@ -184,6 +216,7 @@ export const {
     setAddModeProjectUpdate,
     clearProjectStore,
     setUploadedImagesArray,
-    clearUploadedImagesArray
+    clearUploadedImagesArray,
+    resetSingleProject
 } = projectsSlice.actions;
 export default projectsSlice.reducer;

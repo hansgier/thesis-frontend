@@ -1,13 +1,11 @@
 import { Empty } from "antd";
 import React from "react";
 import { useDispatch } from "react-redux";
-import { setSingleProject } from "../../app/features/projects/projectsSlice.js";
 
 export const FeaturedProject = ({ project }) => {
     const dispatch = useDispatch();
     return (
         <div
-            onClick={ () => dispatch(setSingleProject({ payload: project })) }
             className="bg-white border-b border-green-400 border-t flex items-center p-2 rounded-lg md:flex md:flex-col md:gap-4 md:pb-2 md:pt-1.5 md:px-1.5 md:rounded-3xl h-96">
             <div className="relative md:h-64 md:w-full">
                 { project.media.length < 1 ?
