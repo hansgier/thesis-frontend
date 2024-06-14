@@ -1,11 +1,12 @@
 import { filterSort } from "../utils/data-components.jsx";
 import { useDispatch, useSelector } from "react-redux";
 import { resetView, toggleView } from "../app/features/auth/authSlice.js";
-import { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { RiSortAlphabetAsc, RiSortAlphabetDesc, RiSortAsc, RiSortDesc } from "react-icons/ri";
 import { Modal } from "antd";
 import { Filters } from "./Filters.jsx";
 import { useWindowSize } from "../hooks/index.jsx";
+import { resetProjectFilters, sortProjects } from "../app/features/projects/projectsSlice.js";
 
 
 const sortButtons = {
@@ -27,8 +28,9 @@ const sortButtons = {
     }
 };
 
-export const FilterSort = ({ page }) => {
+export const FilterSort = React.memo(({ page }) => {
     const { view } = useSelector((store) => store.auth);
+    const { sort: projectSort } = useSelector((store) => store.projects);
     const [viewClicked, setViewClicked] = useState(1);
     const [toggleSort, setToggleSort] = useState(0);
     const [openFilterMobile, setOpenFilterMobile] = useState(false);
@@ -37,11 +39,12 @@ export const FilterSort = ({ page }) => {
 
     useEffect(() => {
         dispatch(resetView());
+        dispatch(resetProjectFilters());
     }, []);
 
-    const toggleNextSort = () => {
+    const toggleNextSort = useCallback(() => {
         setToggleSort((prevToggleSort) => (prevToggleSort + 1) % 4);
-    };
+    }, []);
 
     return (
         <>
@@ -50,9 +53,7 @@ export const FilterSort = ({ page }) => {
             >
                 <div className="w-full">
                     <h2 className="font-semibold select-none text-xl mb-3">{ page }</h2>
-
                     <div className="pt-0 pb-3 px-0 space-y-4 flex flex-col">
-
                         {/*-----------------------VIEW-----------------------*/ }
                         <div className="space-y-2">
                             <span className="font-extrabold select-none text-Thesis-300 text-xs">VIEW</span>
@@ -83,7 +84,8 @@ export const FilterSort = ({ page }) => {
                                     return (
                                         <button
                                             key={ sort.id }
-                                            className="border disabled:opacity-50 focus-visible:ring-Thesis-50 focus:border-Thesis-200 focus:outline-none font-normal h-9 hover:bg-white hover:border-green-800 hover:text-gray-700 items-center justify-center px-3 rounded-md text-gray-700 text-sm transition-colors whitespace-nowrap">
+                                            onClick={ () => dispatch(sortProjects(sort.value)) }
+                                            className={ `border disabled:opacity-50 focus-visible:ring-Thesis-50 focus:border-Thesis-200 focus:outline-none font-normal h-9 hover:bg-white hover:border-green-800 hover:text-gray-700 items-center justify-center px-3 rounded-md text-gray-700 text-sm transition-colors whitespace-nowrap ${ sort.value === projectSort && "border-green-800" }` }>
                                             { sort.name }
                                         </button>
                                     );
@@ -209,4 +211,4 @@ export const FilterSort = ({ page }) => {
             </div>
         </>
     );
-};
+});

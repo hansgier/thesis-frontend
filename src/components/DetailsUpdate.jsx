@@ -54,6 +54,8 @@ export const DetailsUpdate = () => {
     const [state, dispatch] = useReducer(reducer, initialState);
     const dispatchRedux = useDispatch();
 
+    const isAdmin = user.role === "admin";
+
     const getNameByCreatedBy = useCallback(
         (createdBy) => {
             const user = users4admin.find((user) => user.id === createdBy);
@@ -182,16 +184,19 @@ export const DetailsUpdate = () => {
                                             icon={ state.updateSort === 0 ?
                                                 <RiSortAsc /> : state.updateSort === 1 && <RiSortDesc /> }
                                             type="text" />
-                                    <div>
-                                        <Button onClick={ () => {
-                                            dispatchRedux(toggleAddModeProjectUpdate());
-                                        } }
-                                                icon={ <FiPlus /> } type="text" />
-                                        <Button onClick={ () => {
-                                            dispatchRedux(toggleEditModeProjectUpdate());
-                                        } }
-                                                icon={ <CiEdit /> } type="text" />
-                                    </div>
+                                    {/*Add/Edit Update buttons*/ }
+                                    { isAdmin && (
+                                        <div>
+                                            <Button onClick={ () => {
+                                                dispatchRedux(toggleAddModeProjectUpdate());
+                                            } }
+                                                    icon={ <FiPlus /> } type="text" />
+                                            <Button onClick={ () => {
+                                                dispatchRedux(toggleEditModeProjectUpdate());
+                                            } }
+                                                    icon={ <CiEdit /> } type="text" />
+                                        </div>
+                                    ) }
                                     <Modal open={ isAddModeProjectUpdate } centered footer={ null } closeIcon={ null }
                                            onCancel={ () => {
                                                return;

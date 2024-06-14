@@ -119,22 +119,26 @@ export const filterSort = {
         {
             id: 1,
             name: "Newest",
-            icon: <PiSortDescendingBold />
+            icon: <PiSortDescendingBold />,
+            value: "newest"
         },
         {
             id: 2,
             name: "Oldest",
-            icon: <PiSortAscendingBold />
+            icon: <PiSortAscendingBold />,
+            value: "oldest"
         },
         {
             id: 3,
             name: "A-Z",
-            icon: <FaSortAlphaUp />
+            icon: <FaSortAlphaUp />,
+            value: "az"
         },
         {
             id: 4,
             name: "Z-A",
-            icon: <FaSortAlphaDownAlt />
+            icon: <FaSortAlphaDownAlt />,
+            value: "za"
         }
 
     ]
@@ -236,6 +240,12 @@ export const projectDetails_sidebar = [
         color: "bg-sky-600"
     },
     {
+        name: "Tags",
+        value: "tags",
+        pds_type: "multiple",
+        color: "bg-rose-600"
+    },
+    {
         name: "Locations",
         value: "barangays",
         pds_type: "multiple",
@@ -248,10 +258,22 @@ export const projectDetails_sidebar = [
         color: "bg-teal-600"
     },
     {
+        name: "Implementing Agency",
+        value: "implementing agency",
+        pds_type: "single",
+        color: "bg-pink-600"
+    },
+    {
         name: "Contract Term",
         value: "contract_term",
         pds_type: "single",
         color: "bg-fuchsia-600"
+    },
+    {
+        name: "Contractor",
+        value: "contractor",
+        pds_type: "single",
+        color: "bg-sky-600"
     }
 ];
 

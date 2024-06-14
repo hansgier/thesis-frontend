@@ -1,24 +1,25 @@
 import { useDispatch, useSelector } from "react-redux";
 import { Button, Modal, Popconfirm, Skeleton, Tooltip } from "antd";
 import { useNavigate } from "react-router-dom";
-import React, { useEffect, useState } from "react";
-import { MdDeleteOutline } from "react-icons/md";
+import React, { useCallback, useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { CiEdit } from "react-icons/ci";
-import { AddEditProjectComponent } from "./AddEditProjectComponent.jsx";
 import moment from "moment";
 import { getAllProjectReactions } from "../app/features/reactions/reactionsSlice.js";
 import { capitalizeFirstLetter } from "../utils/functions.js";
-import { deleteProject } from "../app/features/projects/projectsSlice.js";
+import { deleteProject, setSelectedProject } from "../app/features/projects/projectsSlice.js";
 import { LikeDislikeButtons } from "./LikeDislikeButtons.jsx";
 import { proj_status } from "../utils/data-components.jsx";
+import { CiEdit } from "react-icons/ci";
+import { toggleEditProjectMode } from "../app/features/auth/authSlice.js";
+import { AddEditProjectComponent } from "./AddEditProjectComponent.jsx";
+import { MdDeleteOutline } from "react-icons/md";
 
 
 export const ProjectContainer = React.memo(({ project }) => {
-    const { view, user } = useSelector((store) => store.auth);
+    const { view, user, isEditProjectMode } = useSelector((store) => store.auth);
     const { users4admin } = useSelector((store) => store.users);
     const { barangays } = useSelector((store) => store.barangays);
-    const { isProjectFetchLoading } = useSelector((store) => store.projects);
+    const { isProjectFetchLoading, selected_project } = useSelector((store) => store.projects);
     const { reactions, totalReactions } = useSelector((store) => store.reactions);
     const [isHovered, setIsHovered] = useState(false);
     const [deleteProjectConfirm, setDeleteProjectConfirm] = useState(false);
@@ -43,7 +44,7 @@ export const ProjectContainer = React.memo(({ project }) => {
     const barangayNames = project.barangays.map(barangay => barangay.name);
     const formattedBarangayNames = barangayNames.join(" | ");
 
-    function getNameByCreatedBy(createdBy) {
+    const getNameByCreatedBy = useCallback((createdBy) => {
         const user = users4admin.find((user) => user.id === createdBy);
 
         if (user) {
@@ -58,7 +59,7 @@ export const ProjectContainer = React.memo(({ project }) => {
         }
 
         return "Unknown User";
-    }
+    }, [users4admin, barangays]);
 
     return (
         <>
@@ -127,14 +128,17 @@ export const ProjectContainer = React.memo(({ project }) => {
                     </>
                 )
                 : (
-                    <div onMouseOver={ () => setIsHovered(true) } onMouseLeave={ () => setIsHovered(false) }>
+                    <div onMouseOver={ () => {
+                        setIsHovered(true);
+                    } } onMouseLeave={ () => {
+                        setIsHovered(false);
+                    } }>
                         <div
                             className={ `accent-indigo-800 bg-white border ${ view === 1 ? "mb-2" : "mb-8" } md:mx-0 mx-3 rounded-xl` }>
                             <div className="flex gap-4 items-center pb-4 pt-6 px-4 md:px-6">
                                 <div className="flex items-center justify-center">
                                     <svg viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"
-                                         fill="#000000"
-                                         preserveAspectRatio="true" className="w-6 md:w-8">
+                                         fill="#000000" className="w-6 md:w-8">
                                         <g id="SVGRepo_bgCarrier" strokeWidth="0"></g>
                                         <g id="SVGRepo_tracerCarrier" strokeLinecap="round" strokeLinejoin="round"></g>
                                         <g id="SVGRepo_iconCarrier">
@@ -220,72 +224,80 @@ export const ProjectContainer = React.memo(({ project }) => {
                                         </div>
                                     </div>
                                 </div>
-                                { canEditOrDelete && isHovered ? (
-                                    <div id="ishovered"
-                                         className="flex items-center ml-auto space-x-2 text-Thesis-200 text-xs">
-                                        {/* Edit button */ }
-                                        { (isAdmin || (isBarangay && isProjectCreatedByUser)) && (
-                                            <>
-                                                <Button icon={ <CiEdit /> } type="dashed"
-                                                        onClick={ () => setEditProjectMode(true) } />
-                                                <Modal
-                                                    centered
-                                                    title="Edit Project"
-                                                    open={ editProjectMode }
-                                                    onCancel={ () => setEditProjectMode(false) }
-                                                    footer={ null }
-                                                    wrapClassName="add-project-modal"
-                                                    width={ 800 }
-                                                >
-                                                    <div className="pb-1 border-b-2 mb-3 select-none">
-                                                        Edit the details of the project.
-                                                    </div>
-                                                    <AddEditProjectComponent mode="edit" project={ project } />
-                                                </Modal>
-                                            </>
-                                        ) }
-                                        {/* Delete button */ }
-                                        { (isAdmin || (isBarangay && isProjectCreatedByUser)) && (
-                                            <Popconfirm
-                                                title="Delete Project"
-                                                description="Are you sure you want to delete this project?"
-                                                onConfirm={ onDeleteProjectConfirm }
+                                { canEditOrDelete && (
+                                    <>
+                                        <div id="not hovered"
+                                             className="flex items-center ml-auto space-x-2 text-Thesis-200 text-xs">
+                                            <svg
+                                                xmlns="http://www.w3.org/2000/svg"
+                                                width="24"
+                                                height="24"
+                                                viewBox="0 0 24 24"
+                                                fill="none"
+                                                stroke="currentColor"
+                                                strokeWidth="2"
+                                                strokeLinecap="round"
+                                                strokeLinejoin="round"
+                                                className="h-4 hidden w-4 lg:block"
                                             >
-                                                <Button icon={ <MdDeleteOutline /> } danger type="primary" />
-                                            </Popconfirm>
-                                        ) }
-                                    </div>
-                                ) : (
-                                    <div id="not hovered"
-                                         className="flex items-center ml-auto space-x-2 text-Thesis-200 text-xs">
-                                        <svg
-                                            xmlns="http://www.w3.org/2000/svg"
-                                            width="24"
-                                            height="24"
-                                            viewBox="0 0 24 24"
-                                            fill="none"
-                                            stroke="currentColor"
-                                            strokeWidth="2"
-                                            strokeLinecap="round"
-                                            strokeLinejoin="round"
-                                            className="h-4 hidden w-4 lg:block"
-                                        >
-                                            <rect width="16" height="20" x="4" y="2" rx="2" ry="2"></rect>
-                                            <path d="M9 22v-4h6v4"></path>
-                                            <path d="M8 6h.01"></path>
-                                            <path d="M16 6h.01"></path>
-                                            <path d="M12 6h.01"></path>
-                                            <path d="M12 10h.01"></path>
-                                            <path d="M12 14h.01"></path>
-                                            <path d="M16 10h.01"></path>
-                                            <path d="M16 14h.01"></path>
-                                            <path d="M8 10h.01"></path>
-                                            <path d="M8 14h.01"></path>
-                                        </svg>
-                                        <span className="font-bold hidden select-none lg:block">
-                                { getNameByCreatedBy(project.createdBy) }
-                            </span>
-                                    </div>
+                                                <rect width="16" height="20" x="4" y="2" rx="2" ry="2"></rect>
+                                                <path d="M9 22v-4h6v4"></path>
+                                                <path d="M8 6h.01"></path>
+                                                <path d="M16 6h.01"></path>
+                                                <path d="M12 6h.01"></path>
+                                                <path d="M12 10h.01"></path>
+                                                <path d="M12 14h.01"></path>
+                                                <path d="M16 10h.01"></path>
+                                                <path d="M16 14h.01"></path>
+                                                <path d="M8 10h.01"></path>
+                                                <path d="M8 14h.01"></path>
+                                            </svg>
+                                            <span className="font-bold hidden select-none lg:block">
+                                            { getNameByCreatedBy(project.createdBy) }
+                                        </span>
+                                            <div id="ishovered"
+                                                 className="flex items-center ml-auto space-x-2 text-Thesis-200 text-xs">
+                                                {/* Edit button */ }
+                                                { (isAdmin || (isBarangay && isProjectCreatedByUser)) && (
+                                                    <>
+                                                        <Button icon={ <CiEdit /> } type="dashed"
+                                                                onClick={ () => {
+                                                                    dispatch(toggleEditProjectMode());
+                                                                    dispatch(setSelectedProject(project));
+                                                                } } />
+                                                        <Modal
+                                                            centered
+                                                            title="Edit Project"
+                                                            open={ isEditProjectMode }
+                                                            closeIcon={ null }
+                                                            onCancel={ () => {
+                                                                return;
+                                                            } }
+                                                            footer={ null }
+                                                            wrapClassName="add-project-modal"
+                                                            width={ 800 }
+                                                        >
+                                                            <div className="pb-1 border-b-2 mb-3 select-none">
+                                                                Edit the details of the project.
+                                                            </div>
+                                                            <AddEditProjectComponent mode="edit"
+                                                                                     project={ selected_project } />
+                                                        </Modal>
+                                                    </>
+                                                ) }
+                                                {/* Delete button */ }
+                                                { (isAdmin || (isBarangay && isProjectCreatedByUser)) && (
+                                                    <Popconfirm
+                                                        title="Delete Project"
+                                                        description="Are you sure you want to delete this project?"
+                                                        onConfirm={ onDeleteProjectConfirm }
+                                                    >
+                                                        <Button icon={ <MdDeleteOutline /> } danger type="primary" />
+                                                    </Popconfirm>
+                                                ) }
+                                            </div>
+                                        </div>
+                                    </>
                                 ) }
                             </div>
                             <AnimatePresence>
@@ -300,12 +312,13 @@ export const ProjectContainer = React.memo(({ project }) => {
                                                 { project.description }
                                             </p>
                                         </motion.div>
-                                        { project.media.length > 0 &&
+                                        { project?.media.length > 0 &&
                                             <div className="mx-4 pt-[334px] px-4 relative md:mx-6 md:px-6">
                                                 <img alt="project_img" src={ project.media[0]?.url }
                                                      onClick={ () => {
                                                          navigate(`/projects/${ project.id }`);
                                                      } }
+                                                     loading="lazy"
                                                      className="absolute h-full left-0 object-center object-cover rounded-xl top-0 w-full hover:cursor-pointer" />
                                             </div>
                                         }
@@ -351,9 +364,10 @@ export const ProjectContainer = React.memo(({ project }) => {
                             </AnimatePresence>
                         </div>
                     </div>
-
                 )
             }
         </>
     );
+}, (prevProps, nextProps) => {
+    return prevProps.project.id === nextProps.project.id;
 });

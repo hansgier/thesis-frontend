@@ -52,6 +52,7 @@ export const deleteProjectThunk = async (id, thunkAPI) => {
 };
 
 export const createProjectThunk = async (project, thunkAPI) => {
+    console.log("create project");
     try {
         const state = thunkAPI.getState().auth;
         const headers = { Authorization: `Bearer ${ state.user.accessToken }` };
@@ -66,6 +67,9 @@ export const createProjectThunk = async (project, thunkAPI) => {
             tagsIds,
             barangayIds,
             funding_source,
+            implementing_agency,
+            contract_term,
+            contractor,
             uploadedImages
         } = project;
 
@@ -88,6 +92,9 @@ export const createProjectThunk = async (project, thunkAPI) => {
                     tagsIds,
                     barangayIds,
                     funding_source,
+                    implementing_agency,
+                    contract_term,
+                    contractor,
                     uploadedImages
                 },
                 { headers }
@@ -108,6 +115,7 @@ export const createProjectThunk = async (project, thunkAPI) => {
 };
 
 export const editProjectThunk = async ({ id, project }, thunkAPI) => {
+    console.log("edit project");
     try {
         const state = thunkAPI.getState().auth;
         const headers = { Authorization: `Bearer ${ state.user.accessToken }` };

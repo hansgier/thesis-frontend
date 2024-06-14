@@ -1,6 +1,6 @@
 import { useNavigate, useParams } from "react-router-dom";
 import { useWindowSize } from "../../hooks/index.jsx";
-import { useEffect, useReducer } from "react";
+import { useCallback, useEffect, useReducer } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
     getSingleProject,
@@ -16,7 +16,7 @@ import { ProjectUpdate } from "./ProjectUpdate.jsx";
 import { EditProjectUpdate } from "./EditProjectUpdate.jsx";
 import { CommentSection } from "./CommentSection.jsx";
 import moment from "moment";
-import { projectDetails_sidebar } from "../../utils/data-components.jsx";
+import { proj_status, projectDetails_sidebar } from "../../utils/data-components.jsx";
 import { getAllUsers } from "../../app/features/users/usersSlice.js";
 import { getAllBarangays } from "../../app/features/users/barangaysSlice.js";
 import { getAllProjectUpdates } from "../../app/features/projects/updatesSlice.js";
@@ -70,7 +70,7 @@ export const SingleProject = () => {
     const navigate = useNavigate();
     const { width } = useWindowSize();
     const [state, dispatch] = useReducer(reducer, initialState);
-    
+
 
     useEffect(() => {
         dispatchRedux(getAllProjectUpdates(projectId));
@@ -79,7 +79,7 @@ export const SingleProject = () => {
         dispatchRedux(getAllBarangays());
     }, []);
 
-    function getNameByCreatedBy(createdBy) {
+    const getNameByCreatedBy = useCallback((createdBy) => {
         const user = users4admin.find((user) => user.id === createdBy);
 
         if (user) {
@@ -94,7 +94,7 @@ export const SingleProject = () => {
         }
 
         return "Unknown User";
-    }
+    }, [users4admin, barangays]);
 
     if (isProjectFetchLoading)
         return <div>Loading...</div>;
@@ -308,7 +308,7 @@ export const SingleProject = () => {
                                         </div>
                                         {/*STATUS*/ }
                                         <div
-                                            className="bg-gray-100 border border-transparent focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-ring font-semibold hover:bg-secondary/80 inline-flex items-center px-2.5 py-0.5 rounded-full select-none text-secondary-foreground text-xs transition-colors w-fit whitespace-nowrap">
+                                            className={ `${ proj_status[singleProject?.status] } border border-transparent focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-ring font-semibold hover:bg-secondary/80 inline-flex items-center px-2.5 py-0.5 rounded-full select-none text-secondary-foreground text-xs transition-colors w-fit whitespace-nowrap` }>
                                             { singleProject?.status?.charAt(0).toUpperCase() }
                                             { singleProject?.status?.slice(1) }
                                         </div>
@@ -340,11 +340,8 @@ export const SingleProject = () => {
                                 </p>
                             </div>
                             {/*PROJECT IMAGE CAROUSEL*/ }
-                            { singleProject?.media > 1 && <div className="px-4 md:px-6">
-                                {/*TODO: put the project images array in the images prop for image carousel*/ }
-                                <ImageCarousel images={ [
-                                    "https://pinegrow.com/placeholders/img18.jpg"
-                                ] } />
+                            { singleProject?.media.length > 0 && <div className="px-4 md:px-6">
+                                <ImageCarousel images={ singleProject?.media.map((media) => media.url) } />
                             </div> }
 
                             <div className="border-b gap-2 grid pb-3 px-4 md:px-6">

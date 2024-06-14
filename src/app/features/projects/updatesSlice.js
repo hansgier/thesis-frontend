@@ -5,6 +5,7 @@ import {
     editProjectUpdateThunk,
     getAllProjectUpdatesThunk
 } from "./updatesThunk.js";
+import { clearUploadedMedia } from "../media/mediaSlice.js";
 
 const initialFiltersState = {
     search: "",
@@ -66,6 +67,7 @@ const updatesSlice = createSlice({
                 state.isUpdateFetchLoading = false;
                 state.isUpdateFetchError = false;
                 state.isUpdateFetchSuccess = true;
+                clearUploadedMedia();
             })
             .addCase(createProjectUpdate.rejected, (state, { payload }) => {
                 state.isUpdateFetchLoading = false;
@@ -83,6 +85,7 @@ const updatesSlice = createSlice({
                 state.isUpdateFetchLoading = false;
                 state.isUpdateFetchError = false;
                 state.isUpdateFetchSuccess = true;
+                clearUploadedMedia();
             })
             .addCase(editProjectUpdate.rejected, (state, { payload }) => {
                 state.isUpdateFetchLoading = false;

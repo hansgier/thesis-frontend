@@ -1,5 +1,5 @@
 import { AddEditProjectComponent, FilterSort, ProjectContainer } from "../components/index.jsx";
-import { useEffect, useRef } from "react";
+import { useCallback, useEffect, useRef } from "react";
 import { GoPlus } from "react-icons/go";
 import { Empty, FloatButton, Modal, Skeleton } from "antd";
 import { useDispatch, useSelector } from "react-redux";
@@ -11,6 +11,7 @@ import { getAllBarangays } from "../app/features/users/barangaysSlice.js";
 export const Projects = () => {
     const { isAddProjectMode, user } = useSelector((store) => store.auth);
     const {
+        filtered_projects,
         projects,
         isProjectFetchLoading,
         isProjectFetchSuccess,
@@ -27,18 +28,18 @@ export const Projects = () => {
     }, []);
 
     // Function to save the scroll position to sessionStorage
-    const saveScrollPosition = () => {
+    const saveScrollPosition = useCallback(() => {
         const scrollY = scrollDivRef.current.scrollTop;
         sessionStorage.setItem("scrollPosition", scrollY);
-    };
+    }, []);
 
     // Function to restore the scroll position from sessionStorage
-    const restoreScrollPosition = () => {
+    const restoreScrollPosition = useCallback(() => {
         const savedScrollY = sessionStorage.getItem("scrollPosition");
         if (savedScrollY) {
             scrollDivRef.current.scrollTop = parseInt(savedScrollY, 10);
         }
-    };
+    }, []);
 
     // Effect to add event listener for saving scroll position on unmount
     useEffect(() => {
@@ -53,7 +54,6 @@ export const Projects = () => {
         };
     }, []);
 
-
     return (
         <>
             {/*-----------------------VIEW FILTER SORT SECTION-----------------------*/ }
@@ -64,10 +64,10 @@ export const Projects = () => {
                 ref={ scrollDivRef }
                 onScroll={ saveScrollPosition }
                 className="absolute top-16 h-[calc(100%-64px)] md:h-full md:absolute md:flex md:top-0 md:left-[270px] md:pl-0 md:pr-4 md:w-[calc(100%-270px)] overflow-y-scroll pt-0 px-0 w-full">
-                <div className="md:mt-0 w-full h-full">
+                <div className="md:mt-0 w-full h-screen flex flex-col">
                     { isProjectFetchLoading ?
                         <>
-                            <div className="mx-3 mb-8">
+                            <div className="mb-8">
                                 <div className="accent-indigo-800 bg-white border md:mx-0 mx-3 rounded-xl">
                                     <div className="flex gap-4 items-center pb-4 pt-6 px-4 md:px-6">
                                         <div className="flex items-center justify-center">
@@ -87,7 +87,7 @@ export const Projects = () => {
                                     </div>
                                 </div>
                             </div>
-                            <div className="mx-3 mb-8">
+                            <div className="mb-8">
                                 <div className="accent-indigo-800 bg-white border md:mx-0 mx-3 rounded-xl">
                                     <div className="flex gap-4 items-center pb-4 pt-6 px-4 md:px-6">
                                         <div className="flex items-center justify-center">
@@ -107,7 +107,7 @@ export const Projects = () => {
                                     </div>
                                 </div>
                             </div>
-                            <div className="mx-3 mb-8">
+                            <div className="mb-8">
                                 <div className="accent-indigo-800 bg-white border md:mx-0 mx-3 rounded-xl">
                                     <div className="flex gap-4 items-center pb-4 pt-6 px-4 md:px-6">
                                         <div className="flex items-center justify-center">
@@ -129,11 +129,10 @@ export const Projects = () => {
                             </div>
 
                         </>
-
                         :
                         <>
-                            { projects.length > 0 ? projects.map((project, i) => (
-                                    <ProjectContainer key={ i } project={ project } />
+                            { filtered_projects?.length > 0 ? filtered_projects.map((project, i) => (
+                                    <ProjectContainer key={ project.id } project={ project } />
                                 ))
                                 :
                                 <div className="h-full flex flex-col items-center justify-center bg-white">
@@ -160,6 +159,7 @@ export const Projects = () => {
                            onCancel={ () => {
                                return;
                            } }
+                           keepMounted
                            footer={ null } wrapClassName="add-project-modal" width={ 800 }>
                         <div className="pb-1 border-b-2 mb-3 select-none">Fill in the details of the new project.
                         </div>

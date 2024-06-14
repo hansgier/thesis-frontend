@@ -15,7 +15,7 @@ export const FeaturedProject = ({ project }) => {
                     </div>
                     :
                     <img
-                        src={ project.media.url }
+                        src={ project.media[0].url }
                         className="absolute bg-cover h-12 rounded-lg w-12 md:h-full md:rounded-3xl md:w-full"
                         alt="Project" />
                 }

@@ -27,6 +27,40 @@ const mediaSlice = createSlice({
     },
     extraReducers: (builder) => {
         builder
+            // .addCase(deleteUpdateMediaWithoutUrl.pending, (state) => {
+            //     state.isMediumFetchSuccess = false;
+            //     state.isMediumFetchError = false;
+            //     state.isMediumFetchLoading = true;
+            // })
+            // .addCase(deleteUpdateMediaWithoutUrl.fulfilled, (state, { payload }) => {
+            //     state.isMediumFetchLoading = false;
+            //     state.isMediumFetchError = false;
+            //     state.isMediumFetchSuccess = true;
+            // })
+            // .addCase(deleteUpdateMediaWithoutUrl.rejected, (state, { payload }) => {
+            //     state.isMediumFetchLoading = false;
+            //     state.isMediumFetchSuccess = false;
+            //     state.isMediumFetchError = true;
+            //     state.mediumFetchErrorMessage = payload;
+            // })
+            //
+            // .addCase(deleteMediaWithoutUrl.pending, (state) => {
+            //     state.isMediumFetchSuccess = false;
+            //     state.isMediumFetchError = false;
+            //     state.isMediumFetchLoading = true;
+            // })
+            // .addCase(deleteMediaWithoutUrl.fulfilled, (state, { payload }) => {
+            //     state.isMediumFetchLoading = false;
+            //     state.isMediumFetchError = false;
+            //     state.isMediumFetchSuccess = true;
+            // })
+            // .addCase(deleteMediaWithoutUrl.rejected, (state, { payload }) => {
+            //     state.isMediumFetchLoading = false;
+            //     state.isMediumFetchSuccess = false;
+            //     state.isMediumFetchError = true;
+            //     state.mediumFetchErrorMessage = payload;
+            // })
+
             .addCase(deleteMedium.pending, (state) => {
                 state.isMediumFetchSuccess = false;
                 state.isMediumFetchError = false;

@@ -38,6 +38,7 @@ export const EditProjectUpdate = React.memo(({ update }) => {
         console.log(`Project Update Form Failed: ${ errorInfo }`);
     };
 
+
     return (
         <>
             { isEditModeProjectUpdate ?

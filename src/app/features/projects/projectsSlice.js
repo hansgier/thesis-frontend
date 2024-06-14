@@ -8,16 +8,13 @@ import {
 } from "./projectsThunk.js";
 import { resetReactions } from "../reactions/reactionsSlice.js";
 import { resetAllComments } from "../comments/commentsSlice.js";
+import { setEditProjectMode } from "../auth/authSlice.js";
+import { message } from "antd";
+
 
 const initialFitlersState = {
     search: "",
-    tags: "",
-    barangays: "",
-    status: "",
-    sort: "newest",
-    budgetRange: "",
-    progressRange: "",
-    viewsRange: ""
+    sort: "newest"
 };
 
 const initialState = {
@@ -27,8 +24,10 @@ const initialState = {
     isProjectFetchError: false,
     totalProjects: 0,
     projects: [],
+    filtered_projects: null,
     project: null,
     singleProject: null,
+    selected_project: null,
     completed: 0,
     ongoing: 0,
     planned: 0,
@@ -73,6 +72,10 @@ const projectsSlice = createSlice({
         setAddModeProjectUpdate: (state, { payload }) => {
             state.isAddModeProjectUpdate = payload;
         },
+        setSelectedProject: (state, action) => {
+            state.selected_project = action.payload;
+        },
+        clearSelectedProject: (state, action) => state.selected_project = action.payload,
         toggleAddModeProjectUpdate: (state) => {
             state.isAddModeProjectUpdate = !state.isAddModeProjectUpdate;
         },
@@ -80,7 +83,37 @@ const projectsSlice = createSlice({
             state.uploadedImagesArray = action.payload;
         },
         clearUploadedImagesArray: (state) => state.uploadedImagesArray = [],
-        clearProjectStore: () => initialState
+        clearProjectStore: () => initialState,
+        sortProjects: (state, action) => {
+            state.sort = action.payload;
+            if (action.payload === "newest") {
+                state.projects = state.projects.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+                state.filtered_projects = state.filtered_projects.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+            } else if (action.payload === "oldest") {
+                state.projects = state.projects.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
+                state.filtered_projects = state.filtered_projects.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
+            } else if (action.payload === "az") {
+                state.projects = state.projects.sort((a, b) => {
+                    return a.title.toUpperCase() === b.title.toUpperCase() ? 0 : a.title.toUpperCase() > b.title.toUpperCase() ? 1 : -1;
+                });
+                state.filtered_projects = state.filtered_projects.sort((a, b) => {
+                    return a.title.toUpperCase() === b.title.toUpperCase() ? 0 : a.title.toUpperCase() > b.title.toUpperCase() ? 1 : -1;
+                });
+            } else if (action.payload === "za") {
+                state.projects = state.projects.sort((a, b) => {
+                    return b.title.toUpperCase() === a.title.toUpperCase() ? 0 : b.title.toUpperCase() > a.title.toUpperCase() ? 1 : -1;
+                });
+                state.filtered_projects = state.filtered_projects.sort((a, b) => {
+                    return b.title.toUpperCase() === a.title.toUpperCase() ? 0 : b.title.toUpperCase() > a.title.toUpperCase() ? 1 : -1;
+                });
+            }
+        },
+        setFilteredProjects: (state, action) => {
+            state.filtered_projects = action?.payload;
+        },
+        resetProjectFilters: (state) => {
+            state.filtered_projects = null;
+        }
     },
     extraReducers: (builder) => {
         builder
@@ -88,34 +121,46 @@ const projectsSlice = createSlice({
                 state.isProjectFetchSuccess = false;
                 state.isProjectFetchError = false;
                 state.isProjectFetchLoading = true;
+                message.loading({ content: "Deleting project...", key: "deletable_project" });
             })
             .addCase(deleteProject.fulfilled, (state, { payload }) => {
                 state.isProjectFetchLoading = false;
                 state.isProjectFetchError = false;
                 state.isProjectFetchSuccess = true;
+                message.success({ content: "Project deleted!", key: "deletable_project" });
             })
             .addCase(deleteProject.rejected, (state, { payload }) => {
                 state.isProjectFetchLoading = false;
                 state.isProjectFetchSuccess = false;
                 state.projectFetchErrorMessage = payload;
                 state.isProjectFetchError = true;
+                message.error({ content: "There was an error in deleting the project", key: "deletable_project" });
             })
 
             .addCase(editProject.pending, (state) => {
                 state.isProjectFetchSuccess = false;
                 state.isProjectFetchError = false;
                 state.isProjectFetchLoading = true;
+                message.loading({ content: "Updating project...", key: "updatable" });
+                setEditProjectMode(false);
             })
             .addCase(editProject.fulfilled, (state, { payload }) => {
                 state.isProjectFetchLoading = false;
                 state.isProjectFetchError = false;
                 state.isProjectFetchSuccess = true;
+                state.uploadedImagesArray = [];
+                state.selected_project = null;
+                setEditProjectMode(false);
+                message.success({ content: "Project updated successfully!", key: "updatable" });
+
             })
             .addCase(editProject.rejected, (state, { payload }) => {
                 state.isProjectFetchLoading = false;
                 state.isProjectFetchSuccess = false;
                 state.projectFetchErrorMessage = payload;
                 state.isProjectFetchError = true;
+                message.error({ content: "There was an error updating the project", key: "updatable" });
+
             })
 
             .addCase(createProject.pending, (state) => {
@@ -127,12 +172,14 @@ const projectsSlice = createSlice({
                 state.isProjectFetchLoading = false;
                 state.isProjectFetchError = false;
                 state.isProjectFetchSuccess = true;
+                state.uploadedImagesArray = [];
             })
             .addCase(createProject.rejected, (state, { payload }) => {
                 state.isProjectFetchLoading = false;
                 state.isProjectFetchSuccess = false;
                 state.projectFetchErrorMessage = payload;
                 state.isProjectFetchError = true;
+                message.error({ content: "There was an error in creating the project", key: "creatable_project" });
             })
 
             .addCase(getSingleProject.pending, (state) => {
@@ -172,6 +219,7 @@ const projectsSlice = createSlice({
                 state.planned = !payload.projects ? 0 : payload.projects.filter(project => project.status === "planned").length;
                 state.cancelled = !payload.projects ? 0 : payload.projects.filter(project => project.status === "cancelled").length;
                 state.on_hold = !payload.projects ? 0 : payload.projects.filter(project => project.status === "on_hold").length;
+                state.filtered_projects = state.projects;
 
                 if (payload.projects) {
                     // Select 3 random featured projects
@@ -217,6 +265,13 @@ export const {
     clearProjectStore,
     setUploadedImagesArray,
     clearUploadedImagesArray,
-    resetSingleProject
+    resetSingleProject,
+    sortProjects,
+    resetProjectSort,
+    resetProjectFilters,
+    filterProjects,
+    setFilteredProjects,
+    setSelectedProject,
+    clearSelectedProject
 } = projectsSlice.actions;
 export default projectsSlice.reducer;
