@@ -7,7 +7,6 @@ import { getAllComments } from "../../app/features/comments/commentsSlice.js";
 
 export const CommentSection = React.memo(({ projectId }) => {
     const { projects, singleProject } = useSelector((store) => store.projects);
-    const { user } = useSelector((store) => store.auth);
     const { users4admin } = useSelector((store) => store.users);
     const { barangays } = useSelector((store) => store.barangays);
     const {
@@ -17,6 +16,7 @@ export const CommentSection = React.memo(({ projectId }) => {
         isCommentFetchSuccess
     } = useSelector((store) => store.comments);
     const dispatch = useDispatch();
+
 
     useEffect(() => {
         dispatch(getAllComments(projectId));

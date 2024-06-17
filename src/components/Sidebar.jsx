@@ -71,6 +71,11 @@ export const Sidebar = () => {
                         {/*Desktop version*/ }
                         <nav className="flex-col gap-6 hidden md:flex">
                             { sideLinks.map((sideLink) => {
+                                if (sideLink.id === 4) {
+                                    if (user.role === "guest") {
+                                        return;
+                                    }
+                                }
                                 if (sideLink.id === 6) {
                                     if (user.role !== "admin") {
                                         return;
@@ -118,7 +123,9 @@ export const Sidebar = () => {
                             exit={ { opacity: 0 } }
                             transition={ { duration: 0.05 } }
                             className="bg-black bg-opacity-25 block fixed h-full w-full z-50 md:hidden"
-                            onClick={ () => toggleSide() }></motion.div>
+                            onClick={ () => toggleSide() }>
+                            
+                        </motion.div>
                         <motion.div
                             initial={ { width: 0, opacity: 0 } }
                             animate={ { width: "auto", opacity: 1 } }
@@ -129,7 +136,7 @@ export const Sidebar = () => {
                                 <div className="cursor-pointer flex items-center w-full md:hidden">
                                     <img src={ logo } alt="logo" loading="lazy"
                                          className="mx-3 select-none w-7 md:block" />
-                                    <h1 className="flex font-Gilroy font-extrabold h-full items-center select-none text-2xl">ormocpis</h1>
+                                    <h1 className="flex font-Gilroy font-bold  h-full items-center select-none text-xl">ormocpis</h1>
                                 </div>
 
                                 {/*-----------------------Navigation Bars-----------------------*/ }
@@ -137,6 +144,11 @@ export const Sidebar = () => {
                                 {/*Mobile version*/ }
                                 <nav className="flex flex-col gap-2 w-full md:hidden">
                                     { sideLinks.map((sideLink) => {
+                                        if (sideLink.id === 4) {
+                                            if (user.role === "guest") {
+                                                return;
+                                            }
+                                        }
                                         if (sideLink.id === 6) {
                                             if (user.role !== "admin") {
                                                 return;

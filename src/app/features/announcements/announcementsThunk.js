@@ -5,7 +5,7 @@ import { getAllAnnouncements } from "./announcementsSlice.js";
 export const getAllAnnouncementsThunk = async (_, thunkAPI) => {
     try {
         const state = thunkAPI.getState().auth;
-        const headers = { Authorization: `Bearer ${ state.user.accessToken }` };
+        const headers = state.user.role === "guest" ? { Authorization: `Bearer guest` } : { Authorization: `Bearer ${ state.user.accessToken }` };
         const response = await customFetch.get(ANNOUNCEMENTS_URL, { headers });
         return response.data;
     } catch (e) {

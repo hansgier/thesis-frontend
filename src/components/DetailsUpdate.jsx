@@ -10,8 +10,6 @@ import { FiPlus } from "react-icons/fi";
 import { toggleAddModeProjectUpdate, toggleEditModeProjectUpdate } from "../app/features/projects/projectsSlice.js";
 import { EditProjectUpdate } from "../pages/project/EditProjectUpdate.jsx";
 
-const uimgsrc = ["/src/assets/logo.png", "/src/assets/logo.png", "/src/assets/logo.png"];
-
 const initialState = {
     isDetailsUpdateMobileOpen: false,
     isDetailsMobileMode: true,
@@ -54,7 +52,7 @@ export const DetailsUpdate = () => {
     const [state, dispatch] = useReducer(reducer, initialState);
     const dispatchRedux = useDispatch();
 
-    const isAdmin = user.role === "admin";
+    const isAdmin = user.role === "admin" || user.role === "barangay";
 
     const getNameByCreatedBy = useCallback(
         (createdBy) => {
@@ -224,7 +222,6 @@ export const DetailsUpdate = () => {
                                 </div>
                             </>
                         ) }
-
                     </div>
                 </div>
             </div>

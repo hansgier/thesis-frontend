@@ -1,9 +1,10 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Button, Form, Input, Select, Spin } from "antd";
 import { useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { barangaysList } from "../utils/barangaysList.js";
 import { updateUser } from "../app/features/auth/authSlice.js";
+import { getAllBarangays } from "../app/features/users/barangaysSlice.js";
 
 export const Profile = () => {
     const [isEditMode, setIsEditMode] = useState(false);
@@ -18,32 +19,31 @@ export const Profile = () => {
         authError,
         user
     } = useSelector((store) => store.auth);
+    const { barangays } = useSelector((store) => store.barangays);
     const location = useLocation();
     const dispatch = useDispatch();
     const [form] = Form.useForm();
     const [saved, setSaved] = useState(false);
 
-    function getBarangayLabel(val) {
+    const getBarangayLabel = useCallback((val) => {
         const barangay = barangaysList.find(b => b.value === val);
         return barangay ? barangay.label : null;
-    }
+    }, []);
 
     useEffect(() => {
+        dispatch(getAllBarangays());
         if (authSuccess) setIsEditMode(false);
-    }, [authSuccess]);
-
-    useEffect(() => {
         if (location.pathname !== "/project" || location.pathname !== "/singleproject") {
             sessionStorage.setItem("scrollPosition", "0");
         }
-    }, []);
+    }, [authSuccess]);
 
     const onFinish = (values) => {
         dispatch(updateUser({
-            username: values.username || user.username,
-            email: values.email || user.email,
-            password: values.password || oldPassword,
-            barangay_id: values.barangay_id || user.barangay_id
+            username: values.username,
+            email: values.email,
+            password: values.password,
+            barangay_id: values.barangay_id
         }));
     };
 
@@ -85,8 +85,6 @@ export const Profile = () => {
                             <p className="break-words col-span-2 mb-4 select-none text-sm md:col-span-1 md:mb-0 md:text-base">{ userProfile.username }</p>
                             <h6 className="col-span-2 max-w-lg select-none text-gray-600 text-sm md:col-span-1 md:text-base">Email</h6>
                             <p className="break-words col-span-2 mb-4 select-none text-sm md:col-span-1 md:mb-0 md:text-base">{ userProfile.email }</p>
-                            <h6 className="break-words col-span-2 select-none text-gray-600 text-sm md:col-span-1 md:text-base">Password</h6>
-                            <p className="col-span-2 mb-4 select-none text-sm md:col-span-1 md:mb-0 md:text-base">{ userProfile.password.replace(/./g, "*") }</p>
                             <h6 className="col-span-2 select-none text-gray-600 text-sm md:col-span-1 md:text-base">Barangay</h6>
                             <p className="break-words col-span-2 mb-4 select-none text-sm md:col-span-1 md:mb-0 md:text-base">
                                 { getBarangayLabel(userProfile.barangay_id) }
@@ -94,7 +92,13 @@ export const Profile = () => {
                         </div>
                     ) : (
                         <Form form={ form } onFinish={ onFinish }
-                              className="grid grid-cols-1 md:grid-cols-2 pb-6 pt-0 px-6 md:gap-y-4">
+                              className="grid grid-cols-1 md:grid-cols-2 pb-6 pt-0 px-6 md:gap-y-4"
+                              initialValues={ {
+                                  username: user.username,
+                                  email: user.email,
+                                  barangay_id: user.barangay_id
+                              } }
+                        >
                             <h6 className="font-semibold mb-2 select-none text-Thesis-300 text-xs md:mb-0 md:text-sm">Details</h6>
                             <div className="flex justify-end mb-2 md:justify-start md:mb-0">
                                 <button
@@ -125,11 +129,19 @@ export const Profile = () => {
                             </Form.Item>
                             <h6 className="col-span-2 select-none text-gray-600 text-sm md:col-span-1 md:text-base">Password</h6>
                             <Form.Item name="password" className="m-0 p-0 mb-4">
-                                <Input.Password placeholder="Input password" />
+                                <Input.Password placeholder="Password must be at least 6 characters" />
                             </Form.Item>
                             <h6 className="col-span-2 select-none text-gray-600 text-sm md:col-span-1 md:text-base">Barangay</h6>
                             <Form.Item name="barangay_id" className="m-0 p-0 mb-4">
-                                <Select placeholder="Select barangay" options={ barangaysList } />
+                                <Select placeholder="Select barangay" allowClear showSearch
+                                        filterOption={ (input, option) => (option?.children.toLowerCase()).includes(input.toLowerCase()) }
+                                >
+                                    { barangays.map((barangay) => {
+                                        return <Select.Option key={ barangay.id }
+                                                              value={ barangay.id }>{ barangay.name }
+                                        </Select.Option>;
+                                    }) }
+                                </Select>
                             </Form.Item>
                             {/*Edit mode buttons*/ }
                             <div className="col-span-2 flex justify-end space-x-2">

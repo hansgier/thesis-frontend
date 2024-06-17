@@ -1,11 +1,9 @@
 import { BARANGAYS_URL } from "../../constants.js";
 import customFetch, { checkForUnauthorizedResponse } from "../../../utils/axios.js";
 
-export const getAllBarangaysThunk = async (conversationId, thunkAPI) => {
+export const getAllBarangaysThunk = async (_, thunkAPI) => {
     try {
-        const state = thunkAPI.getState().auth;
-        const headers = { Authorization: `Bearer ${ state.user.accessToken }` };
-        const response = await customFetch.get(BARANGAYS_URL, { headers });
+        const response = await customFetch.get(BARANGAYS_URL);
         return response.data;
     } catch (e) {
         return checkForUnauthorizedResponse(e, thunkAPI);

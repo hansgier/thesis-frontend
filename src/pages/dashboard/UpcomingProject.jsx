@@ -1,6 +1,6 @@
 import React from "react";
 
-export const UpcomingProject = ({ title, description }) => {
+export const UpcomingProject = React.memo(({ title, description }) => {
     return (
         <div
             className="cursor-pointer flex gap-4 hover:bg-Thesis-50 hover:bg-opacity-5 hover:duration-300 hover:ease-out hover:transition-all items-center">
@@ -10,4 +10,4 @@ export const UpcomingProject = ({ title, description }) => {
             </div>
         </div>
     );
-};
+});

@@ -43,7 +43,6 @@ export const registerUser = createAsyncThunk("auth/register", async (user, thunk
             const resp = await customFetch.post(`${ AUTH_URL }/register`, user);
             return resp.data;
         } catch (e) {
-            console.log(e.response.data.message);
             return thunkAPI.rejectWithValue(e.response.data.message);
         }
     }
@@ -51,10 +50,14 @@ export const registerUser = createAsyncThunk("auth/register", async (user, thunk
 
 export const loginUser = createAsyncThunk("auth/login", async (user, thunkAPI) => {
         try {
-            const resp = await customFetch.post(`${ AUTH_URL }/login`, user);
-            return resp.data;
+            if (user === "guest") return {
+                username: "Guest",
+                role: "guest"
+            }; else {
+                const resp = await customFetch.post(`${ AUTH_URL }/login`, user);
+                return resp.data;
+            }
         } catch (e) {
-            console.log(e.response.data.message);
             return thunkAPI.rejectWithValue(e.response.data.message);
         }
     }
@@ -63,11 +66,10 @@ export const loginUser = createAsyncThunk("auth/login", async (user, thunkAPI) =
 export const logout = createAsyncThunk("auth/logout", async (user, thunkAPI) => {
         try {
             const state = thunkAPI.getState().auth;
-            const headers = { Authorization: `Bearer ${ state.user.accessToken }` };
+            const headers = state.user.role === "guest" ? { Authorization: `Bearer guest` } : { Authorization: `Bearer ${ state.user.accessToken }` };
             const resp = await customFetch.delete(`${ AUTH_URL }/logout`, { headers });
             return resp.data;
         } catch (e) {
-            console.log(e.response.data.message);
             return thunkAPI.rejectWithValue(e.response.data.message);
         }
     }
@@ -81,10 +83,8 @@ export const updateUser = createAsyncThunk("users/updateUser", async (user, thun
         const resp = await customFetch.patch(`${ USERS_URL }/update-user`, user, {
             headers
         });
-        console.log(resp);
         return resp.data;
     } catch (e) {
-        console.log(e.response.data.message);
         return thunkAPI.rejectWithValue(e.response.data.message);
     }
 });
@@ -147,9 +147,10 @@ const authSlice = createSlice({
             clearProjectStore();
             clearUpdateStore();
             clearReactionStore();
-            clearAuthStore();
-            state.user = null;
-            state.userProfile = null;
+            // clearAuthStore();
+            // state.user = null;
+            // state.userProfile = null;
+            return { ...state, ...initialState, user: null, userProfile: null };
         }
     },
     extraReducers(builder) {
@@ -212,6 +213,8 @@ const authSlice = createSlice({
                 state.authErrorMessage = "";
                 state.guestMode = false;
                 removeUserFromLocalStorage();
+                clearStore();
+                state.isSidebarOpen = false;
             })
             .addCase(logout.rejected, (state, { payload }) => {
                 state.isLoading = false;
@@ -229,13 +232,13 @@ const authSlice = createSlice({
             .addCase(loginUser.fulfilled, (state, { payload }) => {
                 const { user } = payload;
                 state.isLoading = false;
-                state.userProfile = user;
-                state.user = user;
+                state.userProfile = payload.role === "guest" ? payload : user;
+                state.user = payload.role === "guest" ? payload : user;
                 state.authSuccess = true;
                 state.authError = false;
                 state.authErrorMessage = "";
                 state.guestMode = false;
-                addUserToLocalStorage(user);
+                payload.role === "guest" ? addUserToLocalStorage(payload) : addUserToLocalStorage(user);
             })
             .addCase(loginUser.rejected, (state, { payload }) => {
                 state.isLoading = false;
@@ -254,10 +257,8 @@ export const {
     toggleAddAnnouncementMode,
     toggleView,
     resetView,
-    setLoading,
     setGuestMode,
     setOldPassword,
-    logoutUser,
     clearAuthStore,
     clearStore,
     toggleEditProjectMode,

@@ -36,14 +36,10 @@ export const Dashboard = () => {
         dispatch(getAllAnnouncements());
         dispatch(getAllBarangays());
         dispatch(getAllUsers());
-    }, []);
-
-    useEffect(() => {
         if (location.pathname !== "/project" || location.pathname !== "/singleproject") {
             sessionStorage.setItem("scrollPosition", "0");
         }
     }, []);
-
 
     return (
         <>
@@ -176,7 +172,7 @@ export const Dashboard = () => {
                                         { announcements.length < 1 ?
                                             <div
                                                 className="p-10 flex items-center justify-center text-xs md:text-base">
-                                                <Empty description="No important annoucements" />
+                                                <Empty description="No important announcements" />
                                             </div>
                                             :
                                             announcements.map((announcement, i) => (

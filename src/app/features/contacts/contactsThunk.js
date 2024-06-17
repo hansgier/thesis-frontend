@@ -5,7 +5,7 @@ import { getAllContacts } from "./contactsSlice.js";
 export const getAllContactsThunk = async (_, thunkAPI) => {
     try {
         const state = thunkAPI.getState().auth;
-        const headers = { Authorization: `Bearer ${ state.user.accessToken }` };
+        const headers = state.user.role === "guest" ? { Authorization: `Bearer guest` } : { Authorization: `Bearer ${ state.user.accessToken }` };
         const response = await customFetch.get(`${ CONTACTS_URL }`, { headers });
         return response.data;
     } catch (e) {

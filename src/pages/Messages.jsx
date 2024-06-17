@@ -1,5 +1,5 @@
 import { useWindowSize } from "../hooks/index.jsx";
-import React, { useEffect, useReducer } from "react";
+import React, { useCallback, useEffect, useReducer } from "react";
 import { IoReturnDownBack, IoSearch } from "react-icons/io5";
 import { Button, Form, Input, Modal, Select, Skeleton, Tooltip } from "antd";
 import { motion } from "framer-motion";
@@ -72,11 +72,11 @@ export const Messages = () => {
         dispatchRedux(getAllConversations());
     }, []);
 
-    const handleSearch = (newValue) => {
+    const handleSearch = useCallback((newValue) => {
         dispatch({
             type: "setSearchData", payload: newValue ? barangaysList : []
         });
-    };
+    }, []);
     //TODO: tiwasa ning create conversation functionality
     const handleChange = async (newValue) => {
         if (newValue) {
@@ -86,7 +86,7 @@ export const Messages = () => {
                 const { conversation } = response.payload;
                 console.log(response);
                 // Fetch the updated list of conversations
-                await dispatchRedux(getAllConversations());
+                dispatchRedux(getAllConversations());
 
                 // Remove the selected barangay from the options
                 const updatedBarangaysList = barangaysList.filter(
@@ -243,8 +243,8 @@ export const Messages = () => {
                                                         <span
                                                             className="dark:text-gray-400 select-none text-gray-500 text-xs"
                                                             data-id="40">
-              { moment(message.createdAt).format("h:mm a") }
-            </span>
+                                                          { moment(message.createdAt).format("h:mm a") }
+                                                        </span>
                                                     </div>
                                                 </div>
                                             );
@@ -260,8 +260,8 @@ export const Messages = () => {
                                                         <span
                                                             className="dark:text-gray-400 select-none text-gray-500 text-xs"
                                                             data-id="35">
-              { moment(message.createdAt).format("h:mm a") }
-            </span>
+                                                          { moment(message.createdAt).format("h:mm a") }
+                                                        </span>
                                                     </div>
                                                 </div>
                                             );

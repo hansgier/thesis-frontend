@@ -5,7 +5,7 @@ import { getAllProjects } from "./projectsSlice.js";
 export const getAllProjectsThunk = async (_, thunkAPI) => {
     try {
         const state = thunkAPI.getState().auth;
-        const headers = { Authorization: `Bearer ${ state.user.accessToken }` };
+        const headers = state.user.role === "guest" ? { Authorization: `Bearer guest` } : { Authorization: `Bearer ${ state.user.accessToken }` };
         const response = await customFetch.get(PROJECTS_URL, { headers });
         return response.data;
     } catch (e) {
@@ -16,7 +16,7 @@ export const getAllProjectsThunk = async (_, thunkAPI) => {
 export const getProjectThunk = async (id, thunkAPI) => {
     try {
         const state = thunkAPI.getState().auth;
-        const headers = { Authorization: `Bearer ${ state.user.accessToken }` };
+        const headers = state.user.role === "guest" ? { Authorization: `Bearer guest` } : { Authorization: `Bearer ${ state.user.accessToken }` };
         const response = await customFetch.get(`${ PROJECTS_URL }/${ id }`, { headers });
         return response.data;
     } catch (e) {
@@ -52,7 +52,6 @@ export const deleteProjectThunk = async (id, thunkAPI) => {
 };
 
 export const createProjectThunk = async (project, thunkAPI) => {
-    console.log("create project");
     try {
         const state = thunkAPI.getState().auth;
         const headers = { Authorization: `Bearer ${ state.user.accessToken }` };
@@ -115,7 +114,6 @@ export const createProjectThunk = async (project, thunkAPI) => {
 };
 
 export const editProjectThunk = async ({ id, project }, thunkAPI) => {
-    console.log("edit project");
     try {
         const state = thunkAPI.getState().auth;
         const headers = { Authorization: `Bearer ${ state.user.accessToken }` };

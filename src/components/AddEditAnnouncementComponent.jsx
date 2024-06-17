@@ -1,11 +1,11 @@
 import { Button, Form, Input } from "antd";
 import { project_attributes } from "../utils/data-components.jsx";
 import { useDispatch, useSelector } from "react-redux";
-import { useEffect } from "react";
+import React, { useEffect } from "react";
 import { editAnnouncement, postAnnouncement } from "../app/features/announcements/announcementsSlice.js";
 
 
-export const AddEditAnnouncementComponent = ({ mode, announcement }) => {
+export const AddEditAnnouncementComponent = React.memo(({ mode, announcement }) => {
     const [form] = Form.useForm();
     const { isAddAnnouncementMode } = useSelector((store) => store.auth);
     const { isAnnouncementFetchLoading, isAnnouncementFetchSuccess } = useSelector((store) => store.announcements);
@@ -73,17 +73,6 @@ export const AddEditAnnouncementComponent = ({ mode, announcement }) => {
                     <Input.TextArea autoSize={ project_attributes[1].autoSize }
                                     placeholder={ mode === "add" ? "Type your content..." : announcement.content } />
                 </Form.Item>
-
-                {/*/!*----------TYPE----------*/ }
-                {/*<div className="text-xs mb-1 uppercase font-bold select-none">TYPE</div>*/ }
-                {/*<Form.Item*/ }
-                {/*    name="type"*/ }
-                {/*    rules={ [{ required: true, message: "Type of announcement is required" }] }*/ }
-
-                {/*>*/ }
-                {/*    <Select placeholder="Select type of announcement" options={ announcement_types } />*/ }
-                {/*</Form.Item>*/ }
-
             </div>
             <div className="flex justify-end pr-3">
                 <Form.Item>
@@ -103,4 +92,6 @@ export const AddEditAnnouncementComponent = ({ mode, announcement }) => {
             </div>
         </Form>
     );
-};
+}, (prevProps, nextProps) => {
+    return prevProps.mode === nextProps.mode && prevProps.announcement?.id === nextProps.announcement?.id;
+});

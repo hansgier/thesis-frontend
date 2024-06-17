@@ -18,7 +18,7 @@ export const LogViewProfilePopup = React.memo(({ comp_id, mode }) => {
             exit={ { opacity: 0 } }
             onClick={ (e) => e.stopPropagation() }
             className={ `bg-transparent flex flex-col ${ mode === "desktop" ? "w-[200px]" : "absolute right-0" +
-                " bottom-16 w-full" } p-0 space-y-2 ` }>
+                " bottom-16 w-full shadow-2xl" } p-0 space-y-2 ` }>
             { user.role !== "guest" && (
                 isLoading ?
                     <button disabled={ isLoading }
@@ -73,7 +73,7 @@ export const LogViewProfilePopup = React.memo(({ comp_id, mode }) => {
                 onClick={ () => {
                     dispatch(logout());
                 } }
-                className="flex hover:bg-gray-500 hover:bg-opacity-10 items-center justify-between p-2 rounded-md text-gray-700 text-sm md:text-base hover:text-blue-400"
+                className={ `flex hover:bg-gray-500 hover:bg-opacity-10 items-center justify-between p-2 rounded-md text-gray-700 text-sm md:text-base hover:text-blue-400` }
                 type="button">
                 Log out
                 { isLoading ? <Spin spinning={ isLoading } /> :

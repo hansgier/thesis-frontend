@@ -4,7 +4,6 @@ import { useNavigate } from "react-router-dom";
 import React, { useCallback, useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import moment from "moment";
-import { getAllProjectReactions } from "../app/features/reactions/reactionsSlice.js";
 import { capitalizeFirstLetter } from "../utils/functions.js";
 import { deleteProject, setSelectedProject } from "../app/features/projects/projectsSlice.js";
 import { LikeDislikeButtons } from "./LikeDislikeButtons.jsx";
@@ -20,7 +19,12 @@ export const ProjectContainer = React.memo(({ project }) => {
     const { users4admin } = useSelector((store) => store.users);
     const { barangays } = useSelector((store) => store.barangays);
     const { isProjectFetchLoading, selected_project } = useSelector((store) => store.projects);
-    const { reactions, totalReactions } = useSelector((store) => store.reactions);
+    const {
+        reactions,
+        totalReactions,
+        isReactionFetchLoading,
+        isReactionFetchSuccess
+    } = useSelector((store) => store.reactions);
     const [isHovered, setIsHovered] = useState(false);
     const [deleteProjectConfirm, setDeleteProjectConfirm] = useState(false);
     const [editProjectMode, setEditProjectMode] = useState(false);
@@ -33,8 +37,8 @@ export const ProjectContainer = React.memo(({ project }) => {
     const canEditOrDelete = isAdmin || (isBarangay && isProjectCreatedByUser);
 
     useEffect(() => {
-        dispatch(getAllProjectReactions(project.id));
-    }, []);
+        
+    }, [isReactionFetchSuccess, isReactionFetchLoading]);
 
     const onDeleteProjectConfirm = () => {
         setDeleteProjectConfirm(true);
@@ -224,7 +228,7 @@ export const ProjectContainer = React.memo(({ project }) => {
                                         </div>
                                     </div>
                                 </div>
-                                { canEditOrDelete && (
+                                { canEditOrDelete ? (
                                     <>
                                         <div id="not hovered"
                                              className="flex items-center ml-auto space-x-2 text-Thesis-200 text-xs">
@@ -253,8 +257,8 @@ export const ProjectContainer = React.memo(({ project }) => {
                                                 <path d="M8 14h.01"></path>
                                             </svg>
                                             <span className="font-bold hidden select-none lg:block">
-                                            { getNameByCreatedBy(project.createdBy) }
-                                        </span>
+                                                { getNameByCreatedBy(project.createdBy) }
+                                            </span>
                                             <div id="ishovered"
                                                  className="flex items-center ml-auto space-x-2 text-Thesis-200 text-xs">
                                                 {/* Edit button */ }
@@ -296,6 +300,39 @@ export const ProjectContainer = React.memo(({ project }) => {
                                                     </Popconfirm>
                                                 ) }
                                             </div>
+                                        </div>
+                                    </>
+                                ) : (
+                                    <>
+                                        <div id="not hovered"
+                                             className="flex items-center ml-auto space-x-2 text-Thesis-200 text-xs">
+                                            <svg
+                                                xmlns="http://www.w3.org/2000/svg"
+                                                width="24"
+                                                height="24"
+                                                viewBox="0 0 24 24"
+                                                fill="none"
+                                                stroke="currentColor"
+                                                strokeWidth="2"
+                                                strokeLinecap="round"
+                                                strokeLinejoin="round"
+                                                className="h-4 hidden w-4 lg:block"
+                                            >
+                                                <rect width="16" height="20" x="4" y="2" rx="2" ry="2"></rect>
+                                                <path d="M9 22v-4h6v4"></path>
+                                                <path d="M8 6h.01"></path>
+                                                <path d="M16 6h.01"></path>
+                                                <path d="M12 6h.01"></path>
+                                                <path d="M12 10h.01"></path>
+                                                <path d="M12 14h.01"></path>
+                                                <path d="M16 10h.01"></path>
+                                                <path d="M16 14h.01"></path>
+                                                <path d="M8 10h.01"></path>
+                                                <path d="M8 14h.01"></path>
+                                            </svg>
+                                            <span className="font-bold hidden select-none lg:block">
+                                            { getNameByCreatedBy(project.createdBy) }
+                                        </span>
                                         </div>
                                     </>
                                 ) }

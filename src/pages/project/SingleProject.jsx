@@ -71,6 +71,7 @@ export const SingleProject = () => {
     const { width } = useWindowSize();
     const [state, dispatch] = useReducer(reducer, initialState);
 
+    const isAdmin = user.role === "admin" || user.role === "barangay";
 
     useEffect(() => {
         dispatchRedux(getAllProjectUpdates(projectId));
@@ -129,7 +130,7 @@ export const SingleProject = () => {
                                 { `By ${ getNameByCreatedBy(singleProject?.createdBy) }` }
                             </div>
                         </div>
-                        <div className="border-t mt-4  pt-2 w-full">
+                        <div className="border-t mt-4 pt-2 w-full overflow-y-auto">
                             <div className="h-[474px]">
                                 { state.isDetailsMobileMode ? (
                                     projectDetails_sidebar
@@ -204,12 +205,16 @@ export const SingleProject = () => {
                                                     icon={ state.updateSort === 0 ?
                                                         <RiSortAsc /> : state.updateSort === 1 && <RiSortDesc /> }
                                                     type="text" />
-                                            <div>
-                                                <Button onClick={ () => dispatchRedux(toggleAddModeProjectUpdate()) }
+                                            { isAdmin &&
+                                                <div>
+                                                    <Button
+                                                        onClick={ () => dispatchRedux(toggleAddModeProjectUpdate()) }
                                                         icon={ <FiPlus /> } type="text" />
-                                                <Button onClick={ () => dispatchRedux(toggleEditModeProjectUpdate()) }
+                                                    <Button
+                                                        onClick={ () => dispatchRedux(toggleEditModeProjectUpdate()) }
                                                         icon={ <CiEdit /> } type="text" />
-                                            </div>
+                                                </div>
+                                            }
                                         </div>
                                         <Modal open={ isAddModeProjectUpdate } centered footer={ null }
                                                onCancel={ () => dispatchRedux(toggleAddModeProjectUpdate()) }

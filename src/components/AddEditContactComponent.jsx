@@ -9,6 +9,7 @@ import {
     toggleEditContactMode,
     updateContact
 } from "../app/features/contacts/contactsSlice.js";
+import React from "react";
 
 export const AddEditContactComponent = ({ mode, contact }) => {
     const [form] = Form.useForm();

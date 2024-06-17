@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { getAllProjectReactionsThunk } from "./reactionsThunk.js";
+import { createProjectReactionThunk, getAllProjectReactionsThunk } from "./reactionsThunk.js";
 
 const initialFiltersState = {
     search: "",
@@ -9,7 +9,7 @@ const initialFiltersState = {
 
 const initialState = {
     isReactionFetchLoading: false,
-    isReactionFetchSuccess: true,
+    isReactionFetchSuccess: false,
     reactionFetchErrorMessage: "",
     isReactionFetchError: false,
     totalReactions: 0,
@@ -19,6 +19,8 @@ const initialState = {
 };
 
 export const getAllProjectReactions = createAsyncThunk("reactions/getAllProjectReactionsThunk", getAllProjectReactionsThunk);
+
+export const createProjectReaction = createAsyncThunk("reactions/createProjectReactionThunk", createProjectReactionThunk);
 
 
 const reactionsSlice = createSlice({
@@ -30,6 +32,23 @@ const reactionsSlice = createSlice({
     },
     extraReducers: (builder) => {
         builder
+            .addCase(createProjectReaction.pending, (state, action) => {
+                state.isReactionFetchSuccess = false;
+                state.isReactionFetchError = false;
+                state.isReactionFetchLoading = true;
+            })
+            .addCase(createProjectReaction.fulfilled, (state, { payload }) => {
+                state.isReactionFetchLoading = false;
+                state.isReactionFetchError = false;
+                state.isReactionFetchSuccess = true;
+            })
+            .addCase(createProjectReaction.rejected, (state, { payload }) => {
+                state.isReactionFetchLoading = false;
+                state.isReactionFetchSuccess = false;
+                state.isReactionFetchError = true;
+                state.reactionFetchErrorMessage = payload;
+            })
+
             .addCase(getAllProjectReactions.pending, (state) => {
                 state.isReactionFetchSuccess = false;
                 state.isReactionFetchError = false;
@@ -39,8 +58,8 @@ const reactionsSlice = createSlice({
                 state.isReactionFetchLoading = false;
                 state.isReactionFetchError = false;
                 state.isReactionFetchSuccess = true;
-                state.reactions = !payload.reactions ? [] : payload.reactions;
-                state.totalReactions = payload.reactions.length;
+                // state.reactions = !payload.reactions ? [] : payload.reactions;
+                // state.totalReactions = payload.reactions.length;
             })
             .addCase(getAllProjectReactions.rejected, (state, { payload }) => {
                 state.isReactionFetchLoading = false;
@@ -48,7 +67,6 @@ const reactionsSlice = createSlice({
                 state.isReactionFetchError = true;
                 state.reactionFetchErrorMessage = payload;
             });
-
     }
 });
 

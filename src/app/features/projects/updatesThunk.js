@@ -5,7 +5,7 @@ import { getAllProjectUpdates } from "./updatesSlice.js";
 export const getAllProjectUpdatesThunk = async (projectId, thunkAPI) => {
     try {
         const state = thunkAPI.getState().auth;
-        const headers = { Authorization: `Bearer ${ state.user.accessToken }` };
+        const headers = state.user.role === "guest" ? { Authorization: `Bearer guest` } : { Authorization: `Bearer ${ state.user.accessToken }` };
         const url = `${ PROJECTS_URL }/${ projectId }/update`;
         const response = await customFetch.get(url, { headers });
         return response.data;
@@ -45,7 +45,7 @@ export const editProjectUpdateThunk = async ({ id, projectId, update }, thunkAPI
     try {
         const state = thunkAPI.getState().auth;
         const headers = { Authorization: `Bearer ${ state.user.accessToken }` };
-        
+
         const editTimeout = setTimeout(() => {
             throw new Error("Create operation timed out");
         }, 150000); // 2 minutes and 30 seconds (150000 milliseconds)

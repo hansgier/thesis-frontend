@@ -4,27 +4,33 @@ import { useEffect, useState } from "react";
 import { Form, Input, Select, Spin } from "antd";
 import { loginUser, registerUser, setGuestMode, setOldPassword } from "../app/features/auth/authSlice.js";
 import indexbg from "../assets/indexbg.png";
-import { barangaysList } from "../utils/barangaysList.js";
 import cityGovLogo from "../assets/city-government.png";
+import { getAllBarangays } from "../app/features/users/barangaysSlice.js";
 
 export const LoginRegister = () => {
-    const { isLoading, user, authError, authSuccess, guestMode } = useSelector((store) => store.auth);
+    const {
+        isLoading,
+        user,
+        authError,
+        authSuccess,
+        guestMode,
+        authErrorMessage
+    } = useSelector((store) => store.auth);
+    const { barangays, isBarangayFetchLoading, isBarangayFetchSuccess } = useSelector((store) => store.barangays);
     const dispatch = useDispatch();
     const [form] = Form.useForm();
     const navigate = useNavigate();
     const [isLoginMode, setIsLoginMode] = useState(true);
 
     useEffect(() => {
+        dispatch(getAllBarangays());
         if (user) {
             navigate("/dashboard");
         }
-    }, [user]);
-
-    useEffect(() => {
         if (!isLoginMode) {
             setIsLoginMode(true);
         }
-    }, [authSuccess]);
+    }, [user, authSuccess]);
 
 
     const onFinish = (values) => {
@@ -85,10 +91,17 @@ export const LoginRegister = () => {
                             <>
                                 <Form.Item
                                     name="email"
-                                    rules={ [{
-                                        required: true,
-                                        message: "Email is required"
-                                    }] }
+                                    rules={ [
+                                        {
+                                            required: true,
+                                            message: "Email is required"
+                                        },
+                                        {
+                                            type: "email",
+                                            message: "Please enter a valid email address",
+                                            validateTrigger: ["onSubmit"]
+                                        }
+                                    ] }
                                     validateStatus={ isLoading ? "validating" : authError ? "error" : null }
                                 >
                                     <Input placeholder="Email Address"
@@ -98,12 +111,19 @@ export const LoginRegister = () => {
                                 </Form.Item>
                                 <Form.Item
                                     name="password"
-                                    rules={ [{
-                                        required: true,
-                                        message: "Password is required"
-                                    }] }
+                                    rules={ [
+                                        {
+                                            required: true,
+                                            message: "Password is required"
+                                        },
+                                        {
+                                            min: 6,
+                                            message: "Password must be at least 6 characters",
+                                            validateTrigger: ["onSubmit"]
+                                        }
+                                    ] }
                                     validateStatus={ isLoading ? "validating" : authError ? "error" : null }
-                                    help={ "Password must be at least 6 characters" }
+                                    help={ authError && authErrorMessage === "Incorrect password" ? authErrorMessage : null }
                                 >
                                     <Input.Password placeholder="Password"
                                                     rootClassName="index-input-password"
@@ -120,32 +140,56 @@ export const LoginRegister = () => {
                                            id="index_input"
                                            className="bg-transparent hover:bg-transparent focus:bg-transparent focus-within:bg-transparent indexinput border-t-0 border-l-0 border-r-0 border-b-2 rounded-none px-4 py-2 outline-0 focus-within:outline-0 focus-within:ring-0 focus:!outline-0 focus:border-t-0 ring-0" />
                                 </Form.Item>
-                                <Form.Item name="email" rules={ [{
-                                    required: true,
-                                    message: "Email is required"
-                                }] }>
+                                <Form.Item name="email" rules={ [
+                                    {
+                                        required: true,
+                                        message: "Email is required"
+                                    },
+                                    {
+                                        type: "email",
+                                        message: "Enter a valid email address",
+                                        validateTrigger: ["onBlur"]
+                                    }
+                                ] }>
                                     <Input placeholder="Email Address"
                                            id="index_input"
                                            className="bg-transparent hover:bg-transparent focus:bg-transparent focus-within:bg-transparent indexinput border-t-0 border-l-0 border-r-0 border-b-2 rounded-none px-4 py-2 outline-0 focus-within:outline-0 focus-within:ring-0 focus:!outline-0 focus:border-t-0 ring-0" />
                                 </Form.Item>
-                                <Form.Item name="password" rules={ [{
-                                    required: true,
-                                    message: "Password is required"
-                                }] }>
+                                <Form.Item name="password" rules={ [
+                                    {
+                                        required: true,
+                                        message: "Password is required"
+                                    },
+                                    {
+                                        min: 6,
+                                        message: "Password must be at least 6 characters",
+                                        validateTrigger: ["onBlur"]
+                                    }
+                                ] }>
                                     <Input.Password placeholder="Password"
                                                     rootClassName="index-input-password"
                                                     className="bg-transparent hover:bg-transparent focus:bg-transparent focus-within:bg-transparent indexinput border-t-0 border-l-0 border-r-0 border-b-2 rounded-none px-4 py-2 outline-0 focus-within:outline-0 focus-within:ring-0 focus:!outline-0 focus:border-t-0" />
                                 </Form.Item>
                                 <Form.Item name="barangay_id" rules={ [{
                                     required: true,
-                                    message: "Please select a barangay. Choose guest if you're a visitor"
-                                }] }>
+                                    message: "Please select a barangay"
+                                }] }
+                                           help="Select Guest if you're a visitor"
+                                >
                                     <Select placeholder="Barangay"
-                                            options={ barangaysList }
                                             rootClassName="index-select-barangay"
                                             popupClassName="tae"
-
-                                    />
+                                            filterOption={ (input, option) => (option?.children.toLowerCase()).includes(input.toLowerCase()) }
+                                            allowClear
+                                            showSearch
+                                            disabled={ isBarangayFetchLoading }
+                                    >
+                                        { barangays.map((barangay) => {
+                                            return <Select.Option key={ barangay.id } value={ barangay.id }>
+                                                { barangay.name }
+                                            </Select.Option>;
+                                        }) }
+                                    </Select>
                                 </Form.Item>
                             </>
                         ) }
@@ -176,7 +220,7 @@ export const LoginRegister = () => {
                         <button
                             onClick={ () => {
                                 dispatch(setGuestMode({ payload: true }));
-                                dispatch(loginUser({ email: "guest@guest.com", password: "guest123456" }));
+                                dispatch(loginUser("guest"));
                             } }
                             className="bg-opacity-25 border-opacity-100 border-2 border-Thesis-100 border-solid font-medium hover:border-Thesis-300 hover:duration-300 hover:ease-in-out hover:text-Thesis-300 hover:transition-all inline-block px-4 py-2 ring-0 ring-offset-0 rounded-sm text-base text-black w-full md:px-0"
                         >

@@ -22,6 +22,7 @@ export const Contacts = () => {
         isContactSaved
     } = useSelector((store) => store.contacts);
     const { isMediumFetchLoading, isMediumFetchSuccess, uploadedMedia } = useSelector((store) => store.media);
+    const { user } = useSelector((store) => store.auth);
     const dispatch = useDispatch();
 
     useEffect(() => {
@@ -30,6 +31,8 @@ export const Contacts = () => {
             sessionStorage.setItem("scrollPosition", "0");
         }
     }, []);
+
+    const isAdmin = user.role === "admin" || user.role === "barangay";
 
 
     return (
@@ -53,27 +56,32 @@ export const Contacts = () => {
                 </div>
             </div>
             {/*-----------------------ADD CONTACT-----------------------*/ }
-            <FloatButton icon={ <GoPlus /> } type="primary"
-                         className="float-add-btn"
-                         style={ {
-                             right: 24,
-                             width: "50px",
-                             height: "50px"
-                         } }
-                         onClick={ () => {
-                             dispatch(toggleAddContactMode());
-                             dispatch(toggleContactFetchSuccess(false));
-                         } } />
-            <Modal centered title="Add Contact Info" open={ isAddContactMode }
-                   closeIcon={ null }
-                   onCancel={ () => {
-                       return;
-                   } }
-                   footer={ null } wrapClassName="add-project-modal" width={ 800 }>
-                <div className="pb-1 border-b-2 mb-3 select-none">Fill in the details of the new contact information.
-                </div>
-                <AddEditContactComponent mode="add" />
-            </Modal>
+            { isAdmin && (
+                <>
+                    <FloatButton icon={ <GoPlus /> } type="primary"
+                                 className="float-add-btn"
+                                 style={ {
+                                     right: 24,
+                                     width: "50px",
+                                     height: "50px"
+                                 } }
+                                 onClick={ () => {
+                                     dispatch(toggleAddContactMode());
+                                     dispatch(toggleContactFetchSuccess(false));
+                                 } } />
+                    <Modal centered title="Add Contact Info" open={ isAddContactMode }
+                           closeIcon={ null }
+                           onCancel={ () => {
+                               return;
+                           } }
+                           footer={ null } wrapClassName="add-project-modal" width={ 800 }>
+                        <div className="pb-1 border-b-2 mb-3 select-none">Fill in the details of the new contact
+                                                                          information.
+                        </div>
+                        <AddEditContactComponent mode="add" />
+                    </Modal>
+                </>
+            ) }
         </>
     );
 };

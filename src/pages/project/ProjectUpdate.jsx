@@ -13,12 +13,6 @@ export const ProjectUpdate = React.memo(({ mode }) => {
     const dispatch = useDispatch();
     const { singleProject, isEditModeProjectUpdate, isAddModeProjectUpdate } = useSelector((store) => store.projects);
     const { isUpdateFetchLoading, isUpdateFetchSuccess } = useSelector((store) => store.updates);
-    const normFile = (e) => {
-        if (Array.isArray(e)) {
-            return e;
-        }
-        return e?.fileList;
-    };
 
     const onFinish = (values) => {
         dispatch(createProjectUpdate({
