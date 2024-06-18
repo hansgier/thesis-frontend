@@ -1,9 +1,9 @@
 import { Button, Col, Form, Input, Modal, Row, Select } from "antd";
 import { IoAdd } from "react-icons/io5";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 
-export const AddEditUser = ({ mode }) => {
+export const AddEditUser = React.memo(({ mode }) => {
     const [openAddNewUserModal, setOpenAddNewUserModal] = useState(false);
     const { barangays } = useSelector((store) => store.barangays);
     const [form] = Form.useForm();
@@ -92,14 +92,14 @@ export const AddEditUser = ({ mode }) => {
                                 name="addnewuser_barangay"
                                 label="Barangay"
                             >
-                                <Select defaultValue={ barangays[0].name } onChange={ (value) => console.log(value) }>
+                                <Select defaultValue={ barangays[0]?.name } onChange={ (value) => console.log(value) }>
                                     { barangays.map((barangay) => {
                                         return (
-                                            <Select.Option key={ barangay.id }
-                                                           value={ barangay.id }
+                                            <Select.Option key={ barangay?.id }
+                                                           value={ barangay?.id }
 
                                             >
-                                                { barangay.name }
+                                                { barangay?.name }
                                             </Select.Option>
                                         );
                                     }) }
@@ -135,4 +135,4 @@ export const AddEditUser = ({ mode }) => {
             </Modal>
         </>
     );
-};
+});

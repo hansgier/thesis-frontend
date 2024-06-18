@@ -57,8 +57,6 @@ const projectsSlice = createSlice({
     initialState,
     reducers: {
         setSingleProject: (state, { payload }) => {
-            // state.singleProject = payload;
-            // addToLocalStorage(payload, "singleProject");
         },
         resetSingleProject: (state) => {
             state.singleProject = null;
@@ -112,7 +110,7 @@ const projectsSlice = createSlice({
             state.filtered_projects = action?.payload;
         },
         resetProjectFilters: (state) => {
-            state.filtered_projects = null;
+            state.filtered_projects = state.projects;
         }
     },
     extraReducers: (builder) => {
@@ -167,19 +165,21 @@ const projectsSlice = createSlice({
                 state.isProjectFetchSuccess = false;
                 state.isProjectFetchError = false;
                 state.isProjectFetchLoading = true;
+                message.loading({ content: "Posting project...", key: "creatable-project" });
             })
             .addCase(createProject.fulfilled, (state, { payload }) => {
                 state.isProjectFetchLoading = false;
                 state.isProjectFetchError = false;
                 state.isProjectFetchSuccess = true;
                 state.uploadedImagesArray = [];
+                message.success({ content: "Project created!", key: "creatable-project" });
             })
             .addCase(createProject.rejected, (state, { payload }) => {
                 state.isProjectFetchLoading = false;
                 state.isProjectFetchSuccess = false;
                 state.projectFetchErrorMessage = payload;
                 state.isProjectFetchError = true;
-                message.error({ content: "There was an error in creating the project", key: "creatable_project" });
+                message.error({ content: "There was an error in creating the project", key: "creatable-project" });
             })
 
             .addCase(getSingleProject.pending, (state) => {

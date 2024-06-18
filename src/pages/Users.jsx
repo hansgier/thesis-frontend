@@ -169,7 +169,7 @@ export const Users = () => {
                                         </tr>
                                         :
                                         users4admin.map((ua) => (
-                                            <tr key={ ua.id } className="bg-white border-b text-xs md:text-sm">
+                                            <tr key={ ua?.id } className="bg-white border-b text-xs md:text-sm">
                                                 <td className="w-4 p-4">
                                                     <div className="flex items-center">
                                                         <input id={ `checkbox-table-search-${ user.id }` }
@@ -185,17 +185,17 @@ export const Users = () => {
                                                     className="dark:text-white flex items-center pl-0 pr-6 py-4 text-gray-900 whitespace-nowrap">
                                                     <div>
                                                         <div
-                                                            className="font-semibold select-none text-base text-gray-900">{ ua.username }
+                                                            className="font-semibold select-none text-base text-gray-900">{ ua?.username }
                                                         </div>
                                                         <div
-                                                            className="font-normal select-none text-gray-500 truncate w-72">{ ua.email }
+                                                            className="font-normal select-none text-gray-500 truncate w-72">{ ua?.email }
                                                         </div>
                                                     </div>
                                                 </th>
                                                 <td className="px-0 py-4 text-center"><span
-                                                    className={ `${ ua.role === "admin" ? roleColors.admin : ua.role === "assistant_admin" ? roleColors.assistant_admin : ua.role === "barangay" ? roleColors.barangay : ua.role === "resident" && roleColors.resident } font-medium px-4 py-1 rounded-xl select-none` }>{ capitalizeFirstLetter(ua.role) }</span>
+                                                    className={ `${ ua?.role === "admin" ? roleColors.admin : ua?.role === "assistant_admin" ? roleColors.assistant_admin : ua?.role === "barangay" ? roleColors.barangay : ua?.role === "resident" && roleColors.resident } font-medium px-4 py-1 rounded-xl select-none` }>{ capitalizeFirstLetter(ua?.role) }</span>
                                                 </td>
-                                                <td className="px-6 py-4 select-none">{ ua.barangay_id }</td>
+                                                <td className="px-6 py-4 select-none">{ ua?.barangay_id }</td>
                                                 <td className="px-6 py-4 space-x-3">
                                                     <div className="flex">
                                                         <AddEditUser mode="edit" />

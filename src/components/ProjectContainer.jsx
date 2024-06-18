@@ -1,7 +1,7 @@
 import { useDispatch, useSelector } from "react-redux";
 import { Button, Modal, Popconfirm, Skeleton, Tooltip } from "antd";
 import { useNavigate } from "react-router-dom";
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import moment from "moment";
 import { capitalizeFirstLetter } from "../utils/functions.js";
@@ -35,10 +35,6 @@ export const ProjectContainer = React.memo(({ project }) => {
     const isBarangay = user.role === "barangay";
     const isProjectCreatedByUser = project.createdBy === user.id;
     const canEditOrDelete = isAdmin || (isBarangay && isProjectCreatedByUser);
-
-    useEffect(() => {
-        
-    }, [isReactionFetchSuccess, isReactionFetchLoading]);
 
     const onDeleteProjectConfirm = () => {
         setDeleteProjectConfirm(true);

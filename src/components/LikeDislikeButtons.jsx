@@ -59,7 +59,7 @@ export const LikeDislikeButtons = React.memo(({ project }) => {
                         color={ reactStatus === "pending-like" ? "#0284c7" : reactStatus === "fulfilled" && reaction === "like" ? "#0284c7" : null }
                         className={ `${ !isGuest && "hover:cursor-pointer hover:scale-125 hover:duration-200 hover:transition-all" }` } />
                 <span
-                    className={ `flex h-auto items-center select-none ${ reactStatus === "pending-like" ? "text-[#0284c7]" : reactStatus === "fulfilled" && reaction ? "text-[#0284c7]" : "text-[#454545]" } text-xs md:text-sm` }>
+                    className={ `flex h-auto items-center select-none ${ reactStatus === "pending-like" ? "text-[#0284c7]" : reactStatus === "fulfilled" && reaction === "like" ? "text-[#0284c7]" : "text-[#454545]" } text-xs md:text-sm` }>
                     { !likeCount ? "0" : likeCount }
                 </span>
             </div>

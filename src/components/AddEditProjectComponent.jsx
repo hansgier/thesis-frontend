@@ -10,7 +10,7 @@ import {
     setSelectedProject,
     setUploadedImagesArray
 } from "../app/features/projects/projectsSlice.js";
-import { toggleAddProjectMode, toggleEditProjectMode } from "../app/features/auth/authSlice.js";
+import { setAddProjectMode, toggleAddProjectMode, toggleEditProjectMode } from "../app/features/auth/authSlice.js";
 import { deleteMedium } from "../app/features/media/mediaSlice.js";
 import moment from "moment";
 import dayjs from "dayjs";
@@ -38,7 +38,6 @@ export const AddEditProjectComponent = React.memo(({
     const [inputCompletionDate, setInputCompletionDate] = useState("");
 
     useEffect(() => {
-        console.log("project 1");
         if (mode === "edit") {
             const initialValues = {
                 title: project?.title || null,
@@ -109,12 +108,12 @@ export const AddEditProjectComponent = React.memo(({
                     status,
                     tagsIds,
                     barangayIds,
-                    funding_source: funding_source || "",
-                    contract_term: contract_term || "",
-                    contractor: contractor || "",
-                    uploadedImages: uploadedImagesArray.length > 0 ? uploadedImagesArray : []
+                    funding_source: funding_source || null,
+                    contract_term: contract_term || null,
+                    contractor: contractor || null,
+                    uploadedImages: uploadedImagesArray.length > 0 ? uploadedImagesArray : null
                 })
-            );
+            ).then(() => dispatch(setAddProjectMode(false)));
         } else if (mode === "edit") {
             if (uploadedImagesArray.length < 1 && uploadedMediaList.length === project?.media.length) {
                 // return dispatch(toggleEditProjectMode());

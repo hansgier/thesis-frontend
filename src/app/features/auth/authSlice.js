@@ -25,6 +25,7 @@ const initialState = {
     isAddProjectMode: false,
     isEditProjectMode: false,
     isAddAnnouncementMode: false,
+    isEditAnnouncementMode: false,
     view: 0,
     isLoading: false,
     user: getUserFromLocalStorage(),
@@ -114,6 +115,15 @@ const authSlice = createSlice({
         },
         toggleAddAnnouncementMode: (state) => {
             state.isAddAnnouncementMode = !state.isAddAnnouncementMode;
+        },
+        setEditAnnouncementMode: (state, action) => {
+            state.isEditAnnouncementMode = action.payload;
+        },
+        setAddProjectMode: (state, action) => {
+            state.isAddProjectMode = action.payload;
+        },
+        setAddAnnouncementMode: (state, action) => {
+            state.isAddAnnouncementMode = action.payload;
         },
         toggleView: (state) => {
             state.view = (state.view + 1) % 2;
@@ -262,6 +272,9 @@ export const {
     clearAuthStore,
     clearStore,
     toggleEditProjectMode,
-    setEditProjectMode
+    setEditProjectMode,
+    setEditAnnouncementMode,
+    setAddProjectMode,
+    setAddAnnouncementMode
 } = authSlice.actions;
 export default authSlice.reducer;

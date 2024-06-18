@@ -7,6 +7,8 @@ import { GoPlus } from "react-icons/go";
 import { toggleAddAnnouncementMode } from "../app/features/auth/authSlice.js";
 import { useDispatch, useSelector } from "react-redux";
 import { getAllAnnouncements } from "../app/features/announcements/announcementsSlice.js";
+import { getAllBarangays } from "../app/features/users/barangaysSlice.js";
+import { getAllUsers } from "../app/features/users/usersSlice.js";
 
 export const Announcements = () => {
     const { isAddAnnouncementMode, user } = useSelector((store) => store.auth);
@@ -14,20 +16,21 @@ export const Announcements = () => {
         announcements,
         isAnnouncementFetchLoading,
         isAnnouncementFetchSuccess,
-        totalAnnouncements
+        totalAnnouncements,
+        filtered_announcements
     } = useSelector((store) => store.announcements);
     const dispatch = useDispatch();
     const location = useLocation();
 
     useEffect(() => {
         dispatch(getAllAnnouncements());
-    }, []);
-
-    useEffect(() => {
+        dispatch(getAllBarangays());
+        dispatch(getAllUsers());
         if (location.pathname !== "/project" || location.pathname !== "/singleproject") {
             sessionStorage.setItem("scrollPosition", "0");
         }
     }, []);
+
     return (
         <>
             {/*-----------------------FILTER SORT SECTION-----------------------*/ }
@@ -107,8 +110,8 @@ export const Announcements = () => {
                     </>
                     :
                     <>
-                        { totalAnnouncements > 0 ? announcements.map((announcement, i) => (
-                                <AnnouncementCard key={ i } announcement={ announcement } />
+                        { filtered_announcements?.length > 0 ? filtered_announcements.map((announcement, i) => (
+                                <AnnouncementCard key={ announcement.id } announcement={ announcement } />
                             ))
                             :
                             <div className="h-full flex flex-col items-center justify-center bg-white">
@@ -129,6 +132,7 @@ export const Announcements = () => {
                                  } }
                                  onClick={ () => dispatch(toggleAddAnnouncementMode()) } />
                     <Modal centered title="Add Announcement" open={ isAddAnnouncementMode }
+                           closeIcon={ null }
                            onCancel={ () => dispatch(toggleAddAnnouncementMode()) }
                            footer={ null } wrapClassName="add-project-modal" width={ 800 }>
                         <div className="pb-1 border-b-2 mb-3 select-none">Fill in the details of the new announcement.

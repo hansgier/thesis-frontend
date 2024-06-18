@@ -127,7 +127,7 @@ export const AddEditContactComponent = ({ mode, contact }) => {
                                 message: "Name is required"
                             }] : false }
                         >
-                            <Input placeholder={ mode === "add" ? "Enter name" : contact.name } />
+                            <Input placeholder={ mode === "add" ? "Enter     name" : contact.name } />
                         </Form.Item>
                     </div>
 

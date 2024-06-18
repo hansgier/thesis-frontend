@@ -10,7 +10,7 @@ import { clearUploadedMedia } from "../media/mediaSlice.js";
 
 const initialFiltersState = {
     search: "",
-    sort: "",
+    sort: "az",
     contacted_by: ""
 };
 
@@ -23,6 +23,7 @@ const initialState = {
     isContactFetchError: false,
     totalContacts: 0,
     contacts: [],
+    filtered_contacts: [],
     isAddContactMode: false,
     isEditContactMode: false,
     isContactSaved: false,
@@ -56,6 +57,27 @@ const contactsSlice = createSlice({
         },
         contactFormReset: (state, action) => {
             state.isContactFormReset = action.payload;
+        },
+        sortContacts: (state, action) => {
+            state.sort = action.payload;
+            if (action.payload === "az") {
+                state.contacts = state.contacts.sort((a, b) => {
+                    return a.name.toUpperCase() === b.name.toUpperCase() ? 0 : a.name.toUpperCase() > b.name.toUpperCase() ? 1 : -1;
+                });
+                state.filtered_contacts = state.filtered_contacts.sort((a, b) => {
+                    return a.name.toUpperCase() === b.name.toUpperCase() ? 0 : a.name.toUpperCase() > b.name.toUpperCase() ? 1 : -1;
+                });
+            } else if (action.payload === "za") {
+                state.contacts = state.contacts.sort((a, b) => {
+                    return b.name.toUpperCase() === a.name.toUpperCase() ? 0 : b.name.toUpperCase() > a.name.toUpperCase() ? 1 : -1;
+                });
+                state.filtered_contacts = state.filtered_contacts.sort((a, b) => {
+                    return b.name.toUpperCase() === a.name.toUpperCase() ? 0 : b.name.toUpperCase() > a.name.toUpperCase() ? 1 : -1;
+                });
+            }
+        },
+        setFilteredContacts: (state, action) => {
+            state.filtered_contacts = action?.payload;
         },
         clearContactStore: () => initialState
     },
@@ -170,6 +192,7 @@ const contactsSlice = createSlice({
                     return 0;
                 });
                 state.totalContacts = !payload.totalCount ? 0 : payload?.totalCount;
+                state.filtered_contacts = state.contacts;
             })
             .addCase(getAllContacts.rejected, (state, { payload }) => {
                 state.isContactFetchLoading = false;
@@ -186,6 +209,8 @@ export const {
     toggleContactFetchSuccess,
     contactSaved,
     contactFormReset,
-    toggleEditContactMode
+    toggleEditContactMode,
+    sortContacts,
+    setFilteredContacts
 } = contactsSlice.actions;
 export default contactsSlice.reducer;

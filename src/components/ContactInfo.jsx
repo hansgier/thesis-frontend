@@ -1,7 +1,6 @@
 import { GrLocation } from "react-icons/gr";
 import { Button, Modal, Popconfirm, Skeleton } from "antd";
 import React, { useState } from "react";
-import isEqual from "lodash/isEqual";
 import { HiOutlineMail } from "react-icons/hi";
 import { LuPhone } from "react-icons/lu";
 import { CiEdit } from "react-icons/ci";
@@ -137,6 +136,6 @@ export const ContactInfo = React.memo(({ contact }) => {
         );
     },
     (prevProps, nextProps) => {
-        return isEqual(prevProps.contact, nextProps.contact);
+        return prevProps.contact.id === nextProps.contact.id;
     }
 );

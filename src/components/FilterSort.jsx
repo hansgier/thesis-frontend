@@ -7,9 +7,10 @@ import { Modal } from "antd";
 import { Filters } from "./Filters.jsx";
 import { useWindowSize } from "../hooks/index.jsx";
 import { resetProjectFilters, sortProjects } from "../app/features/projects/projectsSlice.js";
+import { resetAnnouncementFilters, sortAnnouncements } from "../app/features/announcements/announcementsSlice.js";
 
 
-const sortButtons = {
+export const sortButtons = {
     newest: {
         key: 0,
         icon: <RiSortAsc />
@@ -31,6 +32,7 @@ const sortButtons = {
 export const FilterSort = React.memo(({ page }) => {
     const { view } = useSelector((store) => store.auth);
     const { sort: projectSort } = useSelector((store) => store.projects);
+    const { sort: announcementSort } = useSelector((store) => store.announcements);
     const [viewClicked, setViewClicked] = useState(1);
     const [toggleSort, setToggleSort] = useState(0);
     const [openFilterMobile, setOpenFilterMobile] = useState(false);
@@ -40,6 +42,7 @@ export const FilterSort = React.memo(({ page }) => {
     useEffect(() => {
         dispatch(resetView());
         dispatch(resetProjectFilters());
+        dispatch(resetAnnouncementFilters());
     }, []);
 
     const toggleNextSort = useCallback(() => {
@@ -51,9 +54,9 @@ export const FilterSort = React.memo(({ page }) => {
             <div
                 className="bg-white border hidden mb-6 overflow-hidden pt-0 relative rounded-2xl md:fixed md:flex md:h-[calc(100%-84px)] md:mr-4 md:p-4 md:w-64 md:z-50"
             >
-                <div className="w-full">
+                <div className="w-full flex flex-col">
                     <h2 className="font-semibold select-none text-xl mb-3">{ page }</h2>
-                    <div className="pt-0 pb-3 px-0 space-y-4 flex flex-col">
+                    <div className="pt-0 pb-3 px-0 space-y-4 flex flex-col h-full">
                         {/*-----------------------VIEW-----------------------*/ }
                         <div className="space-y-2">
                             <span className="font-extrabold select-none text-Thesis-300 text-xs">VIEW</span>
@@ -84,8 +87,10 @@ export const FilterSort = React.memo(({ page }) => {
                                     return (
                                         <button
                                             key={ sort.id }
-                                            onClick={ () => dispatch(sortProjects(sort.value)) }
-                                            className={ `border disabled:opacity-50 focus-visible:ring-Thesis-50 focus:border-Thesis-200 focus:outline-none font-normal h-9 hover:bg-white hover:border-green-800 hover:text-gray-700 items-center justify-center px-3 rounded-md text-gray-700 text-sm transition-colors whitespace-nowrap ${ sort.value === projectSort && "border-green-800" }` }>
+                                            onClick={ () => {
+                                                page === "Projects" ? dispatch(sortProjects(sort.value)) : page === "Announcements" && dispatch(sortAnnouncements(sort.value));
+                                            } }
+                                            className={ `border disabled:opacity-50 focus-visible:ring-Thesis-50 focus:border-Thesis-200 focus:outline-none font-normal h-9 hover:bg-white hover:border-green-800 hover:text-gray-700 items-center justify-center px-3 rounded-md text-gray-700 text-sm transition-colors whitespace-nowrap ${ page === "Projects" ? (sort.value === projectSort) && "border-green-800" : page === "Announcements" && (sort.value === announcementSort) && "border-green-800" }` }>
                                             { sort.name }
                                         </button>
                                     );
@@ -99,7 +104,7 @@ export const FilterSort = React.memo(({ page }) => {
                 </div>
             </div>
 
-
+            {/*---------------------------------MOBILE VERSION---------------------------------*/ }
             <div className="fixed w-full z-30 md:hidden bg-[#f1f4f9]">
                 <div
                     className="bg-white border-b-2 hidden mb-0 mx-4 overflow-hidden pb-4 pt-0 relative rounded-xl md:hidden md:mx-0 md:pt-3">
