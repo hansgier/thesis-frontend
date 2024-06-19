@@ -85,10 +85,14 @@ export const Profile = () => {
                             <p className="break-words col-span-2 mb-4 select-none text-sm md:col-span-1 md:mb-0 md:text-base">{ userProfile.username }</p>
                             <h6 className="col-span-2 max-w-lg select-none text-gray-600 text-sm md:col-span-1 md:text-base">Email</h6>
                             <p className="break-words col-span-2 mb-4 select-none text-sm md:col-span-1 md:mb-0 md:text-base">{ userProfile.email }</p>
-                            <h6 className="col-span-2 select-none text-gray-600 text-sm md:col-span-1 md:text-base">Barangay</h6>
-                            <p className="break-words col-span-2 mb-4 select-none text-sm md:col-span-1 md:mb-0 md:text-base">
-                                { getBarangayLabel(userProfile.barangay_id) }
-                            </p>
+                            { user.role !== "admin" && (
+                                <>
+                                    <h6 className="col-span-2 select-none text-gray-600 text-sm md:col-span-1 md:text-base">Barangay</h6>
+                                    <p className="break-words col-span-2 mb-4 select-none text-sm md:col-span-1 md:mb-0 md:text-base">
+                                        { getBarangayLabel(userProfile.barangay_id) }
+                                    </p>
+                                </>
+                            ) }
                         </div>
                     ) : (
                         <Form form={ form } onFinish={ onFinish }
@@ -131,18 +135,22 @@ export const Profile = () => {
                             <Form.Item name="password" className="m-0 p-0 mb-4">
                                 <Input.Password placeholder="Password must be at least 6 characters" />
                             </Form.Item>
-                            <h6 className="col-span-2 select-none text-gray-600 text-sm md:col-span-1 md:text-base">Barangay</h6>
-                            <Form.Item name="barangay_id" className="m-0 p-0 mb-4">
-                                <Select placeholder="Select barangay" allowClear showSearch
-                                        filterOption={ (input, option) => (option?.children.toLowerCase()).includes(input.toLowerCase()) }
-                                >
-                                    { barangays.map((barangay) => {
-                                        return <Select.Option key={ barangay.id }
-                                                              value={ barangay.id }>{ barangay.name }
-                                        </Select.Option>;
-                                    }) }
-                                </Select>
-                            </Form.Item>
+                            { user.role !== "admin" && (
+                                <>
+                                    <h6 className="col-span-2 select-none text-gray-600 text-sm md:col-span-1 md:text-base">Barangay</h6>
+                                    <Form.Item name="barangay_id" className="m-0 p-0 mb-4">
+                                        <Select placeholder="Select barangay" allowClear showSearch
+                                                filterOption={ (input, option) => (option?.children.toLowerCase()).includes(input.toLowerCase()) }
+                                        >
+                                            { barangays.map((barangay) => {
+                                                return <Select.Option key={ barangay.id }
+                                                                      value={ barangay.id }>{ barangay.name }
+                                                </Select.Option>;
+                                            }) }
+                                        </Select>
+                                    </Form.Item>
+                                </>
+                            ) }
                             {/*Edit mode buttons*/ }
                             <div className="col-span-2 flex justify-end space-x-2">
                                 <Button

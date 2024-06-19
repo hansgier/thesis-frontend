@@ -3,14 +3,27 @@ import { IoAdd } from "react-icons/io5";
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 
-export const AddEditUser = React.memo(({ mode }) => {
+export const AddEditUser = React.memo(({ mode, user }) => {
     const [openAddNewUserModal, setOpenAddNewUserModal] = useState(false);
     const { barangays } = useSelector((store) => store.barangays);
+    const { selected_user } = useSelector((store) => store.users);
     const [form] = Form.useForm();
 
     useEffect(() => {
-        form.resetFields();
-    }, [openAddNewUserModal]);
+        if (mode === "edit") {
+            const initialValues = {
+                username: user?.username || null,
+                email: user?.email || null,
+                password: null,
+                role: user?.role || null,
+                barangay_id: user?.barangay_id || null
+            };
+            form.setFieldsValue(initialValues);
+        } else {
+            form.resetFields();
+
+        }
+    }, [openAddNewUserModal, user?.key, mode, form]);
 
     const handleSubmit = (values) => {
         console.log(values);
@@ -50,11 +63,12 @@ export const AddEditUser = React.memo(({ mode }) => {
                 </div>
                 {/*TODO: in edit mode, retain the values to be edited, otherwise in add mode, set it to default
                  initial values*/ }
-                <Form form={ form } onFinish={ handleSubmit } layout="vertical">
+                <Form form={ form } onFinish={ handleSubmit } layout="vertical"
+                      onFinishFailed={ (val) => console.log("Add User Failed", val) }>
                     <Row gutter={ 16 }>
                         <Col xs={ { flex: "100%" } } md={ { flex: "50%" } }>
                             <Form.Item
-                                name="addnewuser_username"
+                                name="username"
                                 label="Username"
                                 rules={ [
                                     { required: true, message: "Username is required" }
@@ -65,10 +79,11 @@ export const AddEditUser = React.memo(({ mode }) => {
                         </Col>
                         <Col xs={ { flex: "100%" } } md={ { flex: "50%" } }>
                             <Form.Item
-                                name="addnewuser_email"
+                                name="email"
                                 label="Email"
                                 rules={ [
-                                    { required: true, message: "Email is required" }
+                                    { required: true, message: "Email is required" },
+                                    { type: "email", message: "Please enter a valid email" }
                                 ] }
                             >
                                 <Input placeholder="Enter email address" />
@@ -78,10 +93,15 @@ export const AddEditUser = React.memo(({ mode }) => {
                     <Row gutter={ 16 }>
                         <Col xs={ { flex: "100%" } } md={ { flex: "50%" } }>
                             <Form.Item
-                                name="addnewuser_password"
+                                name="password"
                                 label="Password"
                                 rules={ [
-                                    { required: true, message: "Password is required" }
+                                    { required: true, message: "Password is required" },
+                                    {
+                                        min: 6,
+                                        message: "Password must be at least 6 characters",
+                                        validateTrigger: ["onBlur", "onSubmit"]
+                                    }
                                 ] }
                             >
                                 <Input.Password placeholder="Enter password" visibilityToggle="false" />
@@ -89,10 +109,10 @@ export const AddEditUser = React.memo(({ mode }) => {
                         </Col>
                         <Col xs={ { flex: "100%" } } md={ { flex: "50%" } }>
                             <Form.Item
-                                name="addnewuser_barangay"
+                                name="barangay_id"
                                 label="Barangay"
                             >
-                                <Select defaultValue={ barangays[0]?.name } onChange={ (value) => console.log(value) }>
+                                <Select defaultValue={ barangays[0]?.id }>
                                     { barangays.map((barangay) => {
                                         return (
                                             <Select.Option key={ barangay?.id }
@@ -110,10 +130,10 @@ export const AddEditUser = React.memo(({ mode }) => {
                     <Row gutter={ 16 }>
                         <Col flex="1">
                             <Form.Item
-                                name="addnewuser_role"
+                                name="role"
                                 label="Role"
                             >
-                                <Select defaultValue="resident" options={ [
+                                <Select options={ [
                                     { value: "admin", label: "Admin" },
                                     { value: "assistant_admin", label: "Assistant Admin" },
                                     { value: "barangay", label: "Barangay" },
@@ -135,4 +155,6 @@ export const AddEditUser = React.memo(({ mode }) => {
             </Modal>
         </>
     );
+}, (prevProps, nextProps) => {
+    return prevProps.mode === nextProps.mode && prevProps.user?.id === nextProps.user?.id;
 });

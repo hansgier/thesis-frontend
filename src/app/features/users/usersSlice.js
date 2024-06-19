@@ -13,6 +13,7 @@ const initialState = {
     isUserFetchError: false,
     totalUsers: 0,
     users4admin: [],
+    selected_user: null,
     ...initialFiltersState
 };
 
@@ -24,7 +25,7 @@ const usersSlice = createSlice({
     initialState,
     reducers: {
         setSelectedUser: (state, { payload }) => {
-            state.selectedUser = payload;
+            state.selected_user = payload;
         },
         clearUsersStore: () => initialState
     },
