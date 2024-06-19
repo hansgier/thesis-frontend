@@ -17,8 +17,7 @@ export const LogViewProfilePopup = React.memo(({ comp_id, mode }) => {
             animate={ { opacity: 1 } }
             exit={ { opacity: 0 } }
             onClick={ (e) => e.stopPropagation() }
-            className={ `bg-transparent flex flex-col ${ mode === "desktop" ? "w-[200px]" : "absolute right-0" +
-                " bottom-16 w-full shadow-2xl" } p-0 space-y-2 ` }>
+            className={ `bg-transparent flex flex-col ${ mode === "desktop" ? "w-[200px]" : mode === "mobile" && "w-full" } p-0 space-y-2 ` }>
             { user.role !== "guest" && (
                 isLoading ?
                     <button disabled={ isLoading }
@@ -26,7 +25,8 @@ export const LogViewProfilePopup = React.memo(({ comp_id, mode }) => {
                             type="button">
                         View Profile
                         <svg viewBox="0 -3 123 123" version="1.1" xmlns="http://www.w3.org/2000/svg"
-                             xmlnsXlink="http://www.w3.org/1999/xlink" fill="#000000" className="w-4 md:w-5">
+                             xmlnsXlink="http://www.w3.org/1999/xlink" fill="#000000"
+                             className="w-4 md:w-5 ml-12 md:ml-0">
                             <g id="SVGRepo_bgCarrier" strokeWidth="0"></g>
                             <g id="SVGRepo_tracerCarrier" strokeLinecap="round" strokeLinejoin="round"></g>
                             <g id="SVGRepo_iconCarrier">
@@ -50,7 +50,8 @@ export const LogViewProfilePopup = React.memo(({ comp_id, mode }) => {
                              type="button">
                         View Profile
                         <svg viewBox="0 -3 123 123" version="1.1" xmlns="http://www.w3.org/2000/svg"
-                             xmlnsXlink="http://www.w3.org/1999/xlink" fill="#000000" className="w-4 md:w-5">
+                             xmlnsXlink="http://www.w3.org/1999/xlink" fill="#000000"
+                             className="ml-12 md:ml-0 w-4 md:w-5">
                             <g id="SVGRepo_bgCarrier" strokeWidth="0"></g>
                             <g id="SVGRepo_tracerCarrier" strokeLinecap="round" strokeLinejoin="round"></g>
                             <g id="SVGRepo_iconCarrier">
@@ -78,7 +79,7 @@ export const LogViewProfilePopup = React.memo(({ comp_id, mode }) => {
                 Log out
                 { isLoading ? <Spin spinning={ isLoading } /> :
                     <svg fill="#000000" viewBox="0 0 24 24" id="sign-out-2" data-name="Line Color"
-                         xmlns="http://www.w3.org/2000/svg" className="icon line-color w-4 md:w-5">
+                         xmlns="http://www.w3.org/2000/svg" className="icon line-color w-4 md:w-5 ml-12 md:ml-0">
                         <g id="SVGRepo_bgCarrier" strokeWidth="0"></g>
                         <g id="SVGRepo_tracerCarrier" strokeLinecap="round" strokeLinejoin="round"></g>
                         <g id="SVGRepo_iconCarrier">

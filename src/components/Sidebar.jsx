@@ -56,7 +56,7 @@ export const Sidebar = () => {
 
     return (
         <>
-            {/*Desktop version*/ }
+            {/*--------------------------------------------Desktop version--------------------------------------------*/ }
             <aside>
                 <div
                     className="bg-white fixed hidden h-full md:h-[calc(100%-68px)] left-0 top-0 md:top-[68px] w-4/6 z-50 sm:w-1/2 md:bg-opacity-100 md:bg-transparent md:flex md:flex-col md:w-[100px]">
@@ -112,7 +112,7 @@ export const Sidebar = () => {
                 </div>
             </aside>
 
-            {/*Mobile version*/ }
+            {/*--------------------------------------------Mobile version--------------------------------------------*/ }
             <AnimatePresence>
                 { isSidebarOpen && (
                     <aside>
@@ -124,7 +124,7 @@ export const Sidebar = () => {
                             transition={ { duration: 0.05 } }
                             className="bg-black bg-opacity-25 block fixed h-full w-full z-50 md:hidden"
                             onClick={ () => toggleSide() }>
-                            
+
                         </motion.div>
                         <motion.div
                             initial={ { width: 0, opacity: 0 } }

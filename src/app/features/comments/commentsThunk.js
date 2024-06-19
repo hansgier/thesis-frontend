@@ -14,12 +14,26 @@ export const getAllCommentsThunk = async (id, thunkAPI) => {
 };
 
 export const postCommentThunk = async ({ id, comments }, thunkAPI) => {
+    const { content } = comments;
     try {
         const state = thunkAPI.getState().auth;
         const headers = { Authorization: `Bearer ${ state.user.accessToken }` };
-        const response = await customFetch.post(`${ PROJECTS_URL }/${ id }/comments`, comments, { headers });
-        thunkAPI.dispatch(getAllComments(id));
-        return response.data;
+
+        // Set a timeout for the post request
+        const postTimeout = setTimeout(() => {
+            throw new Error("Post operation timed out");
+        }, 150000); // 2 minutes and 30 seconds (150000 milliseconds)
+
+        const postResponse = await Promise.race([
+            customFetch.post(`${ PROJECTS_URL }/${ id }/comments`, { content }, { headers }),
+            new Promise((_, reject) => postTimeout)
+        ]);
+
+        clearTimeout(postTimeout);
+
+        const getAllCommentsPromise = thunkAPI.dispatch(getAllComments(id));
+        const [postData, getAllCommentsData] = await Promise.all([postResponse.data, getAllCommentsPromise]);
+        return postData;
     } catch (e) {
         return checkForUnauthorizedResponse(e, thunkAPI);
     }
