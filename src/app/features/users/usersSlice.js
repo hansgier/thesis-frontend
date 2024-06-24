@@ -1,5 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { getAllUsersThunk } from "./usersThunk.js";
+import { editUserThunk, getAllUsersThunk } from "./usersThunk.js";
+import { message } from "antd";
 
 const initialFiltersState = {
     search: "",
@@ -18,6 +19,7 @@ const initialState = {
 };
 
 export const getAllUsers = createAsyncThunk("users/getAllUsers", getAllUsersThunk);
+export const editUser = createAsyncThunk("users/editUser", editUserThunk);
 
 
 const usersSlice = createSlice({
@@ -31,6 +33,25 @@ const usersSlice = createSlice({
     },
     extraReducers: (builder) => {
         builder
+            .addCase(editUser.pending, (state) => {
+                state.isUserFetchSuccess = false;
+                state.isUserFetchError = false;
+                state.isUserFetchLoading = true;
+            })
+            .addCase(editUser.fulfilled, (state, { payload }) => {
+                state.isUserFetchLoading = false;
+                state.isUserFetchError = false;
+                state.isUserFetchSuccess = true;
+                message.success({ content: "User edited successfully", key: "editable-user" });
+            })
+            .addCase(editUser.rejected, (state, { payload }) => {
+                state.isUserFetchLoading = false;
+                state.isUserFetchSuccess = false;
+                state.isUserFetchError = true;
+                state.userFetchErrorUser = payload;
+                message.error({ content: "Error user edit", key: "editable-user" });
+            })
+
             .addCase(getAllUsers.pending, (state) => {
                 state.isUserFetchSuccess = false;
                 state.isUserFetchError = false;

@@ -7,7 +7,7 @@ import {
     toggleAddModeProjectUpdate,
     toggleEditModeProjectUpdate
 } from "../../app/features/projects/projectsSlice.js";
-import { DetailsUpdate, ImageCarousel, LikeDislikeButtons } from "../../components/index.jsx";
+import { DetailsUpdate, ImageCarousel, LikeDislikeButtons, SingleProjectSkeleton } from "../../components/index.jsx";
 import { Button, Modal, Segmented, Skeleton } from "antd";
 import { RiSortAsc, RiSortDesc } from "react-icons/ri";
 import { FiPlus } from "react-icons/fi";
@@ -19,7 +19,7 @@ import moment from "moment";
 import { proj_status, projectDetails_sidebar } from "../../utils/data-components.jsx";
 import { getAllUsers } from "../../app/features/users/usersSlice.js";
 import { getAllBarangays } from "../../app/features/users/barangaysSlice.js";
-import { getAllProjectUpdates } from "../../app/features/projects/updatesSlice.js";
+import { getAllProjectUpdates, sortUpdates } from "../../app/features/projects/updatesSlice.js";
 
 const initialState = {
     isDetailsUpdateMobileOpen: false,
@@ -98,7 +98,7 @@ export const SingleProject = () => {
     }, [users4admin, barangays]);
 
     if (isProjectFetchLoading)
-        return <div>Loading...</div>;
+        return <SingleProjectSkeleton />;
 
     return (
         <>
@@ -200,7 +200,10 @@ export const SingleProject = () => {
                                     <>
                                         <div className="pb-2 pt-0 pr-3 flex justify-between">
                                             {/*Updates Sort Button*/ }
-                                            <Button onClick={ () => dispatch({ type: "toggleUpdateSort" }) }
+                                            <Button onClick={ () => {
+                                                dispatch({ type: "toggleUpdateSort" });
+                                                state.updateSort === 1 ? dispatchRedux(sortUpdates("newest")) : dispatchRedux(sortUpdates("oldest"));
+                                            } }
                                                     disabled={ state.editUpdateMode }
                                                     icon={ state.updateSort === 0 ?
                                                         <RiSortAsc /> : state.updateSort === 1 && <RiSortDesc /> }

@@ -146,17 +146,16 @@ export const AnnouncementCard = React.memo(({ announcement }) => {
                 </AnimatePresence>
             </div>
             <AnimatePresence>
-                { view === 0 && <div className="mb-4 pb-2 px-4 md:px-6">
+                { view === 0 && <div className="mb-4 pb-2 px-4 md:px-6 w-full">
                     <motion.p
                         initial={ { opacity: 0 } }
                         animate={ { opacity: 1 } }
                         exit={ { opacity: 0 } }
-                        className="leading-relaxed md:text-base select-none text-gray-700 text-justify text-sm">
+                        className="md:text-base select-none text-gray-700 text-justify text-sm break-words">
                         { announcement.content }
                     </motion.p>
                 </div> }
             </AnimatePresence>
-
         </div>
     );
 }, (prevProps, nextProps) => {

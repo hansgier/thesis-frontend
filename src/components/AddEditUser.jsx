@@ -1,13 +1,15 @@
 import { Button, Col, Form, Input, Modal, Row, Select } from "antd";
 import { IoAdd } from "react-icons/io5";
 import React, { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { registerUser } from "../app/features/auth/authSlice.js";
 
-export const AddEditUser = React.memo(({ mode, user }) => {
+export const AddEditUser = React.memo(({ mode, user, selectedRowKeys }) => {
     const [openAddNewUserModal, setOpenAddNewUserModal] = useState(false);
     const { barangays } = useSelector((store) => store.barangays);
-    const { selected_user } = useSelector((store) => store.users);
+    const { isUserFetchLoading } = useSelector((store) => store.users);
     const [form] = Form.useForm();
+    const dispatch = useDispatch();
 
     useEffect(() => {
         if (mode === "edit") {
@@ -26,7 +28,32 @@ export const AddEditUser = React.memo(({ mode, user }) => {
     }, [openAddNewUserModal, user?.key, mode, form]);
 
     const handleSubmit = (values) => {
-        console.log(values);
+        console.log("selected", selectedRowKeys);
+        if (mode === "edit") {
+            // dispatch(editUser({
+            //     id: user?.id,
+            //     username: values.username,
+            //     email: values.email,
+            //     password: values.password,
+            //     role: values.role,
+            //     barangay_id: values.barangay_id
+            // })).then(() => {
+            //     setOpenAddNewUserModal(false);
+            //     form.resetFields();
+            // }).catch(() => setOpenAddNewUserModal(true));
+        } else if (mode === "add") {
+            dispatch(registerUser({
+                username: values.username,
+                email: values.email,
+                password: values.password,
+                barangay_id: values.barangay_id,
+                role: values.role
+            })).then(() => {
+                setOpenAddNewUserModal(false);
+                form.resetFields();
+            }).catch(() => setOpenAddNewUserModal(true));
+        }
+
     };
 
     return (
@@ -56,15 +83,15 @@ export const AddEditUser = React.memo(({ mode, user }) => {
 
             <Modal title={ mode === "add" ? "Add New User" : "Edit User" } centered open={ openAddNewUserModal }
                    onOk={ () => setOpenAddNewUserModal(false) }
-                   onCancel={ () => setOpenAddNewUserModal(false) } footer={ null }>
+                   onCancel={ () => setOpenAddNewUserModal(false) } footer={ null } closeIcon={ null }>
                 <div className="bg-transparent border-b-2 mb-2 pb-2 text-gray-800 text-xs md:text-sm">
-                    { mode === "add" ? "Enter the auth's information to add them to the system." : "Edit the auth's" +
+                    { mode === "add" ? "Enter the user's information to add them to the system." : "Edit the user's" +
                         " information" }
                 </div>
                 {/*TODO: in edit mode, retain the values to be edited, otherwise in add mode, set it to default
                  initial values*/ }
                 <Form form={ form } onFinish={ handleSubmit } layout="vertical"
-                      onFinishFailed={ (val) => console.log("Add User Failed", val) }>
+                      onFinishFailed={ (val) => console.log(`${ mode === "add" ? "Add User Failed" : "Edit User Failed" }`, val) }>
                     <Row gutter={ 16 }>
                         <Col xs={ { flex: "100%" } } md={ { flex: "50%" } }>
                             <Form.Item
@@ -95,7 +122,7 @@ export const AddEditUser = React.memo(({ mode, user }) => {
                             <Form.Item
                                 name="password"
                                 label="Password"
-                                rules={ [
+                                rules={ mode === "add" && [
                                     { required: true, message: "Password is required" },
                                     {
                                         min: 6,
@@ -134,7 +161,6 @@ export const AddEditUser = React.memo(({ mode, user }) => {
                                 label="Role"
                             >
                                 <Select options={ [
-                                    { value: "admin", label: "Admin" },
                                     { value: "assistant_admin", label: "Assistant Admin" },
                                     { value: "barangay", label: "Barangay" },
                                     { value: "resident", label: "Resident" }
@@ -144,10 +170,12 @@ export const AddEditUser = React.memo(({ mode, user }) => {
                     </Row>
                     <Form.Item className="flex justify-end">
                         <Button key="cancel" type="text" onClick={ () => setOpenAddNewUserModal(false) }
+                                disabled={ isUserFetchLoading }
                                 className="hover:border-red-700 hover:!text-red-700 hover:bg-none mr-2">
                             Cancel
                         </Button>
-                        <Button key="submit" type="default" htmlType="submit" className="bg-cyan-600 text-white">
+                        <Button key="submit" type="default" htmlType="submit" className="bg-cyan-600 text-white"
+                                loading={ isUserFetchLoading }>
                             { mode === "add" ? "Submit" : "Save" }
                         </Button>
                     </Form.Item>

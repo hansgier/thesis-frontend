@@ -145,7 +145,7 @@ export const Dashboard = () => {
                                                 </div>
                                                 :
                                                 upcomingProjects.map((project, i) => (
-                                                    <li className="p-4" key={ i }>
+                                                    i < 3 && <li className="p-4" key={ i }>
                                                         <UpcomingProject title={ project.title }
                                                                          description={ project.description } />
                                                     </li>
@@ -176,7 +176,7 @@ export const Dashboard = () => {
                                             </div>
                                             :
                                             announcements.map((announcement, i) => (
-                                                <li className="p-4" key={ i }>
+                                                i < 3 && <li className="p-4" key={ i }>
                                                     <Announcement announcement={ announcement } />
                                                 </li>
                                             )) }

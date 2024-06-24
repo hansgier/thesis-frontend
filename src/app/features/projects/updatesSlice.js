@@ -6,10 +6,11 @@ import {
     getAllProjectUpdatesThunk
 } from "./updatesThunk.js";
 import { clearUploadedMedia } from "../media/mediaSlice.js";
+import { message } from "antd";
 
 const initialFiltersState = {
     search: "",
-    sort: "",
+    sort: "newest",
     updated_by: ""
 };
 
@@ -37,7 +38,16 @@ const updatesSlice = createSlice({
         setSelectedUpdate: (state, { payload }) => {
             state.selectedUpdate = payload;
         },
-        clearUpdateStore: () => initialState
+        clearUpdateStore: () => initialState,
+        sortUpdates: (state, action) => {
+            state.sort = action.payload;
+
+            if (action.payload === "newest") {
+                state.updates = state.updates.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+            } else if (action.payload === "oldest") {
+                state.updates = state.updates.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
+            }
+        }
     },
     extraReducers: (builder) => {
         builder
@@ -50,12 +60,14 @@ const updatesSlice = createSlice({
                 state.isUpdateFetchLoading = false;
                 state.isUpdateFetchError = false;
                 state.isUpdateFetchSuccess = true;
+                message.success({ content: "Update deleted!", key: "deletable_update" });
             })
             .addCase(deleteProjectUpdate.rejected, (state, { payload }) => {
                 state.isUpdateFetchLoading = false;
                 state.isUpdateFetchSuccess = false;
                 state.isUpdateFetchError = true;
                 state.updateFetchErrorMessage = payload;
+                message.error({ content: "Error update delete", key: "deletable_update" });
             })
 
             .addCase(createProjectUpdate.pending, (state) => {
@@ -67,6 +79,7 @@ const updatesSlice = createSlice({
                 state.isUpdateFetchLoading = false;
                 state.isUpdateFetchError = false;
                 state.isUpdateFetchSuccess = true;
+                message.success({ content: "Update created!", key: "creatable_update" });
                 clearUploadedMedia();
             })
             .addCase(createProjectUpdate.rejected, (state, { payload }) => {
@@ -74,6 +87,7 @@ const updatesSlice = createSlice({
                 state.isUpdateFetchSuccess = false;
                 state.isUpdateFetchError = true;
                 state.updateFetchErrorMessage = payload;
+                message.error({ content: "Error update create!", key: "creatable_update" });
             })
 
             .addCase(editProjectUpdate.pending, (state) => {
@@ -85,6 +99,7 @@ const updatesSlice = createSlice({
                 state.isUpdateFetchLoading = false;
                 state.isUpdateFetchError = false;
                 state.isUpdateFetchSuccess = true;
+                message.success({ content: "Update edited successfully!", key: "editable_update" });
                 clearUploadedMedia();
             })
             .addCase(editProjectUpdate.rejected, (state, { payload }) => {
@@ -92,6 +107,7 @@ const updatesSlice = createSlice({
                 state.isUpdateFetchSuccess = false;
                 state.isUpdateFetchError = true;
                 state.updateFetchErrorMessage = payload;
+                message.error({ content: "Error update edit!", key: "editable_update" });
             })
 
             .addCase(getAllProjectUpdates.pending, (state) => {
@@ -118,6 +134,7 @@ const updatesSlice = createSlice({
 
 export const {
     setSelectedUpdate,
-    clearUpdateStore
+    clearUpdateStore,
+    sortUpdates
 } = updatesSlice.actions;
 export default updatesSlice.reducer;

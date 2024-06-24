@@ -5,7 +5,7 @@ import moment from "moment";
 import { deleteProjectUpdate, editProjectUpdate } from "../../app/features/projects/updatesSlice.js";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
-import React from "react";
+import React, { useEffect } from "react";
 
 export const EditProjectUpdate = React.memo(({ update }) => {
     const [form] = Form.useForm();
@@ -13,12 +13,13 @@ export const EditProjectUpdate = React.memo(({ update }) => {
     const dispatch = useDispatch();
     const { singleProject, isEditModeProjectUpdate, isAddModeProjectUpdate } = useSelector((store) => store.projects);
     const { isUpdateFetchLoading, isUpdateFetchSuccess } = useSelector((store) => store.updates);
-    const normFile = (e) => {
-        if (Array.isArray(e)) {
-            return e;
-        }
-        return e?.fileList;
-    };
+
+    useEffect(() => {
+        const initialValues = {
+            remarks: update?.remarks || null
+        };
+        form.setFieldsValue(initialValues);
+    }, [update?.id, form]);
 
     const onFinish = (values) => {
         dispatch(editProjectUpdate({
@@ -128,4 +129,6 @@ export const EditProjectUpdate = React.memo(({ update }) => {
         </>
 
     );
+}, (prevProps, nextProps) => {
+    return prevProps.update.id === nextProps.update.id;
 });

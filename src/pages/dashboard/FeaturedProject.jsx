@@ -26,12 +26,16 @@ export const FeaturedProject = React.memo(({ project }) => {
                     }
                 </div>
             }
-
             <div
                 className={ `md:gap-1 md:grid h-20 ml-0 md:ml-0 w-full flex flex-col justify-center md:justify-start ${ width <= 768 && "px-3" }` }>
                 <p className="font-semibold mx-2 select-none text-sm md:text-base line-clamp-2">{ project.title }</p>
                 <p className="mx-2 select-none text-gray-600 text-xs md:text-gray-600 md:text-sm ">
-                    { project.description.length < 109 ? project.description : project.description.substring(0, 109) + "..." }</p>
+                    { width > 768 ?
+                        project.description.length < 109 ? project.description : project.description.substring(0, 109) + "..."
+                        :
+                        project.description.length < 130 ? project.description : project.description.substring(0, 130) + "..."
+                    }
+                </p>
             </div>
             <button onClick={ () => navigate(`/projects/${ project.id }`) }
                     className="border-2 font-bold hidden p-3 rounded-full text-center text-xs w-full md:block hover:border-[#10c9aa] hover:text-[#10c9aa] transition-all duration-200">

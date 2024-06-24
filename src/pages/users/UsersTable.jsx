@@ -11,6 +11,7 @@ import { BarangayCell } from "./BarangayCell.jsx";
 export const UsersTable = () => {
     const { users4admin, isUserFetchLoading } = useSelector((store) => store.users);
     const { barangays } = useSelector((store) => store.barangays);
+
     const [selectedRowKeys, setSelectedRowKeys] = useState([]);
 
     return (
@@ -84,7 +85,8 @@ export const UsersTable = () => {
                     key: "action",
                     render: (_, record) => {
                         return <div className="flex">
-                            <AddEditUser mode="edit" user={ users4admin.find((person) => person.id === record.key) } />
+                            <AddEditUser mode="edit" user={ users4admin.find((person) => person.id === record.key) }
+                                         selectedRowKeys={ selectedRowKeys } />
                             <button type="button">
                                 <svg viewBox="0 0 1024 1024"
                                      xmlns="http://www.w3.org/2000/svg"
@@ -106,7 +108,10 @@ export const UsersTable = () => {
             ] }
             rowSelection={ {
                 selectedRowKeys,
-                onChange: (newSelectedRowKeys) => setSelectedRowKeys(newSelectedRowKeys),
+                onChange: (newSelectedRowKeys) => {
+                    setSelectedRowKeys(newSelectedRowKeys);
+                    console.log(selectedRowKeys);
+                },
                 columnWidth: "60px",
                 renderCell: (checked, record, index, originNode) => {
                     return <CheckboxCell originNode={ originNode } checked={ checked } record={ record }
