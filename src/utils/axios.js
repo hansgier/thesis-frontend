@@ -8,19 +8,6 @@ const customFetch = axios.create({
     baseURL: BASE_URL
 });
 
-// customFetch.interceptors.request.use(
-//     (config) => {
-//         const auth = getUserFromLocalStorage();
-//         if (auth) {
-//             config.headers["Authorization"] = `Bearer ${ auth.token }`;
-//         }
-//         return config;
-//     },
-//     (error) => {
-//         return Promise.reject(error);
-//     }
-// );
-//
 export const checkForUnauthorizedResponse = (error, thunkAPI) => {
     if (error.response.status === 401) {
         removeUserFromLocalStorage();

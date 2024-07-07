@@ -1,10 +1,10 @@
-import { useWindowSize } from "../hooks/index.jsx";
-import React, { useCallback, useEffect, useReducer } from "react";
-import { IoReturnDownBack, IoSearch } from "react-icons/io5";
 import { Button, Form, Input, Modal, Select, Skeleton, Tooltip } from "antd";
 import { motion } from "framer-motion";
-import { useLocation } from "react-router-dom";
+import moment from "moment";
+import React, { useCallback, useEffect, useReducer } from "react";
+import { IoReturnDownBack, IoSearch } from "react-icons/io5";
 import { useDispatch, useSelector } from "react-redux";
+import { useLocation } from "react-router-dom";
 import {
     createConversation,
     getAllConversations,
@@ -12,11 +12,11 @@ import {
     sendMessages,
     setSelectedConversation
 } from "../app/features/messages/messagesSlice.js";
-import moment from "moment";
+import { useWindowSize } from "../hooks/index.jsx";
 import { barangaysList, barangaysListWithoutGuest } from "../utils/barangaysList.js";
 
 const filterOption = (input, option) =>
-    (option?.label ?? "").toLowerCase().includes(input.toLowerCase());
+    ( option?.label ?? "" ).toLowerCase().includes(input.toLowerCase());
 
 const initialState = {
     modalOpen: false,
@@ -70,13 +70,14 @@ export const Messages = () => {
             sessionStorage.setItem("scrollPosition", "0");
         }
         dispatchRedux(getAllConversations());
-    }, []);
+    }, [dispatchRedux, location.pathname]);
 
     const handleSearch = useCallback((newValue) => {
         dispatch({
             type: "setSearchData", payload: newValue ? barangaysList : []
         });
     }, []);
+
     //TODO: tiwasa ning create conversation functionality
     const handleChange = async (newValue) => {
         if (newValue) {
@@ -306,7 +307,7 @@ export const Messages = () => {
                                 <div className="flex flex-col items-center justify-center select-none w-full "
                                      data-id="24">
                                     <h2 className="text-xl">Search or select a barangay/city government to start
-                                                            chatting</h2>
+                                        chatting</h2>
                                 </div>
                             ) }
                     </>

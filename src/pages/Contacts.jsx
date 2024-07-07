@@ -1,7 +1,8 @@
-import { AddEditContactComponent, ContactInfo } from "../components/index.jsx";
-import { useLocation } from "react-router-dom";
+import { FloatButton, Modal, Select } from "antd";
 import React, { useEffect, useState } from "react";
+import { GoPlus } from "react-icons/go";
 import { useDispatch, useSelector } from "react-redux";
+import { useLocation } from "react-router-dom";
 import {
     getAllContacts,
     setFilteredContacts,
@@ -9,9 +10,8 @@ import {
     toggleAddContactMode,
     toggleContactFetchSuccess
 } from "../app/features/contacts/contactsSlice.js";
-import { FloatButton, Modal, Select } from "antd";
-import { GoPlus } from "react-icons/go";
 import { getAllUsers } from "../app/features/users/usersSlice.js";
+import { AddEditContactComponent, ContactInfo } from "../components/index.jsx";
 import { useWindowSize } from "../hooks/index.jsx";
 
 const filterContacts = (contacts, filters) => {
@@ -52,7 +52,7 @@ export const Contacts = () => {
         if (location.pathname !== "/project" || location.pathname !== "/singleproject") {
             sessionStorage.setItem("scrollPosition", "0");
         }
-    }, []);
+    }, [dispatch, location.pathname]);
 
     const isAdmin = user.role === "admin" || user.role === "barangay";
 
@@ -63,9 +63,9 @@ export const Contacts = () => {
                     className="bg-transparent border border-gray-400 flex-col mt-0 gap-1 grid mx-4 p-6 rounded-xl select-none space-y-1.5 md:mt-0 md:mx-0 bg-white">
                     <h3 className="text-2xl font-semibold whitespace-nowrap leading-none tracking-tight text-black">Contacts</h3>
                     <p className="text-sm text-muted-foreground text-gray-800">Important contact information about city
-                                                                               government,
-                                                                               rescue, police station, LGU, and
-                                                                               more.</p>
+                        government,
+                        rescue, police station, LGU, and
+                        more.</p>
                 </div>
                 <div className="flex mt-2 px-4 pt-1 rounded-lg bg-white border mx-4 md:mx-0 justify-between">
                     <div className="flex items-center">
@@ -85,13 +85,14 @@ export const Contacts = () => {
                                     dispatch(setFilteredContacts(filteredContacts));
                                 }
                             } }
-                            filterOption={ (input, option) => (option?.children.toLowerCase()).includes(input.toLowerCase()) }
+                            filterOption={ (input, option) => ( option.children.toLowerCase() ).includes(input.toLowerCase()) }
                             allowClear
                             showSearch
                         >
                             { users4admin.map((creator) => {
-                                return <Select.Option key={ creator.id }
-                                                      value={ creator.id }>{ creator.username }</Select.Option>;
+                                return ( creator.role === "barangay" || creator.role === "admin" ) &&
+                                    <Select.Option key={ creator.id }
+                                                   value={ creator.id }>{ creator.username }</Select.Option>;
                             }) }
                         </Select>
                     </div>
@@ -142,7 +143,7 @@ export const Contacts = () => {
                            } }
                            footer={ null } wrapClassName="add-project-modal" width={ 800 }>
                         <div className="pb-1 border-b-2 mb-3 select-none">Fill in the details of the new contact
-                                                                          information.
+                            information.
                         </div>
                         <AddEditContactComponent mode="add" />
                     </Modal>

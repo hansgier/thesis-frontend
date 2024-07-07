@@ -23,7 +23,6 @@ export const Profile = () => {
     const location = useLocation();
     const dispatch = useDispatch();
     const [form] = Form.useForm();
-    const [saved, setSaved] = useState(false);
 
     const getBarangayLabel = useCallback((val) => {
         const barangay = barangaysList.find(b => b.value === val);
