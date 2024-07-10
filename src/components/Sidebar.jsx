@@ -72,7 +72,7 @@ export const Sidebar = () => {
                         <nav className="flex-col gap-6 hidden md:flex">
                             { sideLinks.map((sideLink) => {
                                 if (sideLink.id === 4) {
-                                    if (user.role === "guest") {
+                                    if (user.role === "guest" || user.role === "admin") {
                                         return;
                                     }
                                 }

@@ -12,6 +12,7 @@ import { LoginRegister } from "./LoginRegister.jsx";
 import { Conversations } from "./messages/Conversations.jsx";
 import { ProtectedRoute } from "./ProtectedRoute.jsx";
 import { AdminRoute } from "./AdminRoute.jsx";
+import { AssistantAdminRoute } from "./AssistantAdminRoute.jsx";
 
 export {
     Announcements,
@@ -27,5 +28,6 @@ export {
     LoginRegister,
     Conversations,
     ProtectedRoute,
-    AdminRoute
+    AdminRoute,
+    AssistantAdminRoute
 };

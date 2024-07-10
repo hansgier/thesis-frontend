@@ -2,7 +2,7 @@ import { Button, Col, Form, Input, Modal, Row, Select } from "antd";
 import { IoAdd } from "react-icons/io5";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { registerUser } from "../app/features/auth/authSlice.js";
+import { addUser, editUser } from "../app/features/users/usersSlice.js";
 
 export const AddEditUser = React.memo(({ mode, user, selectedRowKeys }) => {
     const [openAddNewUserModal, setOpenAddNewUserModal] = useState(false);
@@ -17,32 +17,42 @@ export const AddEditUser = React.memo(({ mode, user, selectedRowKeys }) => {
                 username: user?.username || null,
                 email: user?.email || null,
                 password: null,
-                role: user?.role || null,
+                role: user?.role || "resident",
                 barangay_id: user?.barangay_id || null
+            };
+            form.setFieldsValue(initialValues);
+        } else if (mode === "add") {
+            const initialValues = {
+                username: null,
+                email: null,
+                password: null,
+                role: "resident",
+                barangay_id: 1
             };
             form.setFieldsValue(initialValues);
         } else {
             form.resetFields();
 
         }
-    }, [openAddNewUserModal, user?.key, mode, form]);
+    }, [openAddNewUserModal, user?.key, mode, form, user?.username, user?.email, user?.role, user?.barangay_id]);
 
     const handleSubmit = (values) => {
-        console.log("selected", selectedRowKeys);
         if (mode === "edit") {
-            // dispatch(editUser({
-            //     id: user?.id,
-            //     username: values.username,
-            //     email: values.email,
-            //     password: values.password,
-            //     role: values.role,
-            //     barangay_id: values.barangay_id
-            // })).then(() => {
-            //     setOpenAddNewUserModal(false);
-            //     form.resetFields();
-            // }).catch(() => setOpenAddNewUserModal(true));
+            dispatch(editUser({
+                id: user?.id,
+                username: values.username,
+                email: values.email,
+                password: values.password,
+                role: values.role,
+                barangay_id: values.barangay_id
+            })).then((payload) => {
+                setOpenAddNewUserModal(false);
+                form.resetFields();
+            }).catch(() => {
+                setOpenAddNewUserModal(true);
+            });
         } else if (mode === "add") {
-            dispatch(registerUser({
+            dispatch(addUser({
                 username: values.username,
                 email: values.email,
                 password: values.password,
@@ -110,7 +120,10 @@ export const AddEditUser = React.memo(({ mode, user, selectedRowKeys }) => {
                                 label="Email"
                                 rules={ [
                                     { required: true, message: "Email is required" },
-                                    { type: "email", message: "Please enter a valid email" }
+                                    {
+                                        type: "email",
+                                        message: "Please enter a valid email"
+                                    }
                                 ] }
                             >
                                 <Input placeholder="Enter email address" />
@@ -139,7 +152,7 @@ export const AddEditUser = React.memo(({ mode, user, selectedRowKeys }) => {
                                 name="barangay_id"
                                 label="Barangay"
                             >
-                                <Select defaultValue={ barangays[0]?.id }>
+                                <Select defaultValue={ mode === "add" ? barangays[0]?.id : null }>
                                     { barangays.map((barangay) => {
                                         return (
                                             <Select.Option key={ barangay?.id }
@@ -164,7 +177,7 @@ export const AddEditUser = React.memo(({ mode, user, selectedRowKeys }) => {
                                     { value: "assistant_admin", label: "Assistant Admin" },
                                     { value: "barangay", label: "Barangay" },
                                     { value: "resident", label: "Resident" }
-                                ] } />
+                                ] } defaultValue={ mode === "add" ? "resident" : null } />
                             </Form.Item>
                         </Col>
                     </Row>

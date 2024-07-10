@@ -30,7 +30,7 @@ export const LoginRegister = () => {
         if (!isLoginMode) {
             setIsLoginMode(true);
         }
-    }, [user, authSuccess]);
+    }, [user, authSuccess, dispatch, isLoginMode, navigate]);
 
 
     const onFinish = (values) => {
@@ -55,7 +55,7 @@ export const LoginRegister = () => {
                 backgroundSize: "cover",
                 backgroundPosition: "center"
             } }>
-            <img src={ indexbg } className="fixed h-screen rotate-180 w-full" loading="lazy" />
+            <img src={ indexbg } className="fixed h-screen rotate-180 w-full" loading="lazy" alt="bg" />
             <div className="bg-transparent flex flex-col h-full items-center justify-center w-full z-50">
                 <div className="flex items-center justify-center">
                     <img alt="Logo" width="100" height="100" className="bg-cover rounded-xl sm:mb-2"

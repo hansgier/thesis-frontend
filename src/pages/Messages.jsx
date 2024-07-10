@@ -1,7 +1,7 @@
 import { Button, Form, Input, Modal, Select, Skeleton, Tooltip } from "antd";
 import { motion } from "framer-motion";
 import moment from "moment";
-import React, { useCallback, useEffect, useReducer } from "react";
+import React, { useCallback, useEffect, useReducer, useRef } from "react";
 import { IoReturnDownBack, IoSearch } from "react-icons/io5";
 import { useDispatch, useSelector } from "react-redux";
 import { useLocation } from "react-router-dom";
@@ -13,10 +13,12 @@ import {
     setSelectedConversation
 } from "../app/features/messages/messagesSlice.js";
 import { useWindowSize } from "../hooks/index.jsx";
-import { barangaysList, barangaysListWithoutGuest } from "../utils/barangaysList.js";
+import { barangaysList } from "../utils/barangaysList.js";
+import { getAllUsers } from "../app/features/users/usersSlice.js";
+import { getAllBarangays } from "../app/features/users/barangaysSlice.js";
 
 const filterOption = (input, option) =>
-    ( option?.label ?? "" ).toLowerCase().includes(input.toLowerCase());
+    (option?.label ?? "").toLowerCase().includes(input.toLowerCase());
 
 const initialState = {
     modalOpen: false,
@@ -56,7 +58,8 @@ export const Messages = () => {
         messages,
         isMessageFetchLoading,
         isConversationFetchLoading,
-        selectedConversation
+        selectedConversation,
+        isMessageFetchSuccess
     } = useSelector((store) => store.messages);
     const { user } = useSelector((store) => store.auth);
     const { users4admin } = useSelector((store) => store.users);
@@ -64,28 +67,33 @@ export const Messages = () => {
     const location = useLocation();
     const [state, dispatch] = useReducer(reducer, initialState);
     const dispatchRedux = useDispatch();
+    const messageRef = useRef();
+
+    const scrollToBottom = useCallback(() => {
+        if (messageRef.current) {
+            messageRef.current.scrollTop = messageRef.current.scrollHeight;
+        }
+    }, []);
 
     useEffect(() => {
         if (location.pathname !== "/project" || location.pathname !== "/singleproject") {
             sessionStorage.setItem("scrollPosition", "0");
         }
         dispatchRedux(getAllConversations());
-    }, [dispatchRedux, location.pathname]);
+        dispatchRedux(getAllUsers());
+        dispatchRedux(getAllBarangays());
+        if (isMessageFetchSuccess && !isMessageFetchLoading) {
+            scrollToBottom();
+        }
+    }, [dispatchRedux, location.pathname, messages, isMessageFetchSuccess]);
 
-    const handleSearch = useCallback((newValue) => {
-        dispatch({
-            type: "setSearchData", payload: newValue ? barangaysList : []
-        });
-    }, []);
-
-    //TODO: tiwasa ning create conversation functionality
     const handleChange = async (newValue) => {
         if (newValue) {
             try {
                 // Create a new conversation with the selected auth
                 const response = await dispatchRedux(createConversation({ user2Id: newValue }));
                 const { conversation } = response.payload;
-                console.log(response);
+                console.log(response.payload);
                 // Fetch the updated list of conversations
                 dispatchRedux(getAllConversations());
 
@@ -96,9 +104,9 @@ export const Messages = () => {
                 dispatch({ type: "setSearchData", payload: updatedBarangaysList });
 
                 // Set the selected conversation and fetch messages
-                dispatch({ type: "setConvoSelected", payload: conversation.id });
-                dispatchRedux(setSelectedConversation({ payload: conversation.id }));
-                dispatchRedux(getAllMessages(conversation.id));
+                dispatch({ type: "setConvoSelected", payload: conversation?.id });
+                dispatchRedux(setSelectedConversation({ payload: conversation?.id }));
+                dispatchRedux(getAllMessages(conversation?.id));
 
                 // Set the chat mode to true
                 dispatch({ type: "setChatMode", payload: true });
@@ -108,6 +116,7 @@ export const Messages = () => {
         }
         dispatch({ type: "setValue", payload: newValue });
         dispatch({ type: "setModalClose" });
+        form.resetFields();
     };
 
     const onFinish = (values) => {
@@ -151,25 +160,31 @@ export const Messages = () => {
                                 >
                                     <Select
                                         showSearch
-                                        value={ state.value }
                                         style={ { width: "100%" } }
                                         dropdownStyle={ { maxHeight: 400 } }
                                         placeholder="Search for barangay or city government"
                                         suffixIcon={ null }
-                                        // filterOption={ filterOption }
-                                        // onSearch={ handleSearch }
                                         onChange={ handleChange }
-                                        notFoundContent={ null }>
+                                        allowClear
+                                        filterOption={ (input, option) => (option?.children.toLowerCase()).includes(input.toLowerCase()) }
+                                    >
                                         { users4admin.map((ua) => {
-                                            if (ua.role === "admin" || ua.role === "barangay")
-                                                if (ua.id !== user.id)
-                                                    return <Select.Option key={ ua.id }
-                                                                          value={ ua.username }>{ ua.username }</Select.Option>;
+                                            if (ua.role === "assistant_admin" || ua.role === "barangay") {
+                                                if (conversations.some((convo) => convo?.users.some((user) => Object.values(user).includes(ua.id)))) return;
+                                                else if (ua.id !== user.id)
+                                                    if (ua.role === "assistant_admin")
+                                                        return <Select.Option key={ ua.id }
+                                                                              value={ ua.id }>City
+                                                                                              Government</Select.Option>;
+                                                    else
+                                                        return <Select.Option key={ ua.id }
+                                                                              value={ ua.id }>{ ua.username }</Select.Option>;
+                                            }
                                         }) }
                                     </Select>
                                 </Modal>
                             </div>
-                            <div className="overflow-y-scroll pr-4">
+                            <div className="overflow-y-auto pr-4">
                                 {/*-----------------------CONVERSATIONS-----------------------*/ }
                                 <div className="h-full space-y-2" data-id="7">
                                     { isConversationFetchLoading ? <>
@@ -185,26 +200,25 @@ export const Messages = () => {
                                             <Skeleton active
                                                       spinning={ isConversationFetchLoading }
                                                       block />
-
                                         </> :
-                                        conversations.map((conversation, i) => (
-                                            <div
+                                        conversations.map((conversation, i) => {
+                                            return <div
                                                 onClick={ () => {
                                                     dispatch({ type: "setChatMode", payload: true });
-                                                    dispatch({ type: "setConvoSelected", payload: conversation.id });
-                                                    dispatchRedux(setSelectedConversation({ payload: conversation.id }));
-                                                    dispatchRedux(getAllMessages(conversation.id));
+                                                    dispatch({ type: "setConvoSelected", payload: conversation?.id });
+                                                    dispatchRedux(setSelectedConversation({ payload: conversation?.id }));
+                                                    dispatchRedux(getAllMessages(conversation?.id));
                                                 } }
                                                 key={ i }
-                                                className={ `flex items-center gap-3 rounded-md  p-3 ${ state.convoSelected === conversation.id ? "bg-sky-200" : "bg-white" } hover:bg-sky-100 transition-all duration-200` }>
+                                                className={ `flex items-center gap-3 rounded-md  p-3 ${ state.convoSelected === conversation?.id ? "bg-sky-200" : "bg-white" } hover:bg-sky-100 transition-all duration-200` }>
                                                 <div className="flex-1 space-y-1" data-id="12">
                                                     <p className="font-medium select-none text-sm md:text-sm"
                                                        data-id="13">
-                                                        { conversation.users.find((c) => c.id !== user.id).username }
+                                                        { conversation?.users.find((c) => c?.id !== user.id).username === "Assistant Admin" ? "City Government" : conversation?.users.find((c) => c?.id !== user.id).username }
                                                     </p>
                                                 </div>
-                                            </div>
-                                        )) }
+                                            </div>;
+                                        }) }
                                 </div>
                             </div>
                         </div>
@@ -216,7 +230,7 @@ export const Messages = () => {
                                     {/*--------NAME OF WHO YOU WANT TO CHAT--------*/ }
                                     <h2 className="flex-1 font-semibold select-none text-lg"
                                         data-id="26">
-                                        { conversations.find((conversation) => conversation.id === state.convoSelected).users.find((c) => c.id !== user.id).username }
+                                        { conversations.find((conversation) => conversation?.id === state.convoSelected).users.find((c) => c?.id !== user.id).username === "Assistant Admin" ? "City Government" : conversations.find((conversation) => conversation?.id === state.convoSelected).users.find((c) => c?.id !== user.id).username }
                                     </h2>
                                     { width < 768 && (
                                         <Tooltip title="Back">
@@ -227,30 +241,39 @@ export const Messages = () => {
                                     ) }
                                 </div>
                                 {/*---------------------------MESSAGES---------------------*/ }
-                                <div className="flex-1 mb-[70px] overflow-y-auto pt-4 px-4 flex flex-col">
-                                    { messages.map((message, index) => {
-                                        if (message.sender_id === user.id) {
-                                            return (
-                                                <div className="flex items-end gap-3 justify-end" data-id="36"
-                                                     key={ `sent-${ index }` }>
-                                                    <div className="flex flex-1 flex-col items-end space-y-2"
-                                                         data-id="37">
-                                                        <div
-                                                            className="bg-gradient-to-tr from-Thesis-200 p-3 rounded-lg text-sm text-white to-Thesis-300 w-3/5"
-                                                            data-id="38"
-                                                        >
-                                                            <p data-id="39">{ message.content }</p>
+                                <div ref={ messageRef }
+                                     className="flex-1 mb-[70px] overflow-y-auto pt-4 px-4 flex flex-col h-full">
+                                    { (messages.length < 1 || !messages) ?
+                                        <div
+                                            className="h-full flex items-center justify-center text-gray-500">Send
+                                                                                                              a
+                                                                                                              message
+                                                                                                              to
+                                                                                                              start
+                                                                                                              chatting</div>
+                                        :
+                                        messages.map((message, index) => {
+                                            if (message.sender_id === user.id) {
+                                                return (
+                                                    <div className="flex items-end gap-3 justify-end" data-id="36"
+                                                         key={ `sent-${ message.id }` }>
+                                                        <div className="flex flex-1 flex-col items-end space-y-2"
+                                                             data-id="37">
+                                                            <div
+                                                                className="bg-gradient-to-tr from-Thesis-200 p-3 rounded-lg text-sm text-white to-Thesis-300 w-3/5"
+                                                                data-id="38"
+                                                            >
+                                                                <p data-id="39">{ message.content }</p>
+                                                            </div>
+                                                            <span
+                                                                className="dark:text-gray-400 select-none text-gray-500 text-xs"
+                                                                data-id="40">
+                                                              { moment(message.createdAt).format("h:mm a") }
+                                                            </span>
                                                         </div>
-                                                        <span
-                                                            className="dark:text-gray-400 select-none text-gray-500 text-xs"
-                                                            data-id="40">
-                                                          { moment(message.createdAt).format("h:mm a") }
-                                                        </span>
                                                     </div>
-                                                </div>
-                                            );
-                                        } else {
-                                            return (
+                                                );
+                                            } else if (message.sender_id !== user.id && message.content !== "" && message.content) return (
                                                 <div className="flex items-start gap-3" data-id="28"
                                                      key={ `received-${ index }` }>
                                                     <div className="flex-1 space-y-2" data-id="32">
@@ -266,10 +289,8 @@ export const Messages = () => {
                                                     </div>
                                                 </div>
                                             );
-                                        }
-                                    }) }
+                                        }) }
                                 </div>
-
 
                                 {/*-----------------------TYPE YOUR MESSAGE SECTION-----------------------*/ }
                                 <div
@@ -285,9 +306,8 @@ export const Messages = () => {
                                                 placeholder="Type your message..." data-id="54" type="text" />
                                         </Form.Item>
                                         <Form.Item className="m-0 p-0">
-                                            <button
-                                                className="bg-gradient-to-b disabled:opacity-50 disabled:pointer-events-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 font-medium from-yellow-400 h-10 hover:bg-gradient-to-r hover:from-yellow-500 hover:to-yellow-600 inline-flex items-center justify-center rounded-md text-sm to-yellow-600 transition-colors w-10 whitespace-nowrap"
-                                                data-id="55" type="submit">
+                                            <Button htmlType="submit" className="h-full bg-sky-700 py-3"
+                                                    type="primary">
                                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                                                      viewBox="0 0 24 24"
                                                      fill="none" stroke="currentColor" strokeWidth="2"
@@ -297,7 +317,7 @@ export const Messages = () => {
                                                     <path d="m22 2-7 20-4-9-9-4Z"></path>
                                                     <path d="M22 2 11 13"></path>
                                                 </svg>
-                                            </button>
+                                            </Button>
                                         </Form.Item>
                                     </Form>
                                 </div>
@@ -307,7 +327,7 @@ export const Messages = () => {
                                 <div className="flex flex-col items-center justify-center select-none w-full "
                                      data-id="24">
                                     <h2 className="text-xl">Search or select a barangay/city government to start
-                                        chatting</h2>
+                                                            chatting</h2>
                                 </div>
                             ) }
                     </>
@@ -341,17 +361,27 @@ export const Messages = () => {
                                     >
                                         <Select
                                             showSearch
-                                            value={ state.value }
                                             style={ { width: "100%" } }
                                             dropdownStyle={ { maxHeight: 400 } }
                                             placeholder="Search for barangay or city government"
                                             suffixIcon={ null }
-                                            filterOption={ filterOption }
-                                            onSearch={ handleSearch }
+                                            filterOption={ (input, option) => (option?.children.toLowerCase()).includes(input.toLowerCase()) }
                                             onChange={ handleChange }
-                                            notFoundContent={ null }
-                                            options={ barangaysListWithoutGuest }
-                                        />
+                                        >
+                                            { users4admin.map((ua) => {
+                                                if (ua.role === "assistant_admin" || ua.role === "barangay") {
+                                                    if (conversations.some((convo) => convo?.users.some((user) => Object.values(user).includes(ua.id)))) return;
+                                                    else if (ua.id !== user.id)
+                                                        if (ua.role === "assistant_admin")
+                                                            return <Select.Option key={ ua.id }
+                                                                                  value={ ua.id }>City
+                                                                                                  Government</Select.Option>;
+                                                        else
+                                                            return <Select.Option key={ ua.id }
+                                                                                  value={ ua.id }>{ ua.username }</Select.Option>;
+                                                }
+                                            }) }
+                                        </Select>
                                     </Modal>
                                 </div>
                                 <div className="overflow-y-scroll pr-4">
@@ -378,17 +408,17 @@ export const Messages = () => {
                                                         dispatch({ type: "setChatMode", payload: true });
                                                         dispatch({
                                                             type: "setConvoSelected",
-                                                            payload: conversation.id
+                                                            payload: conversation?.id
                                                         });
-                                                        dispatchRedux(setSelectedConversation({ payload: conversation.id }));
-                                                        dispatchRedux(getAllMessages(conversation.id));
+                                                        dispatchRedux(setSelectedConversation({ payload: conversation?.id }));
+                                                        dispatchRedux(getAllMessages(conversation?.id));
                                                     } }
                                                     key={ i }
-                                                    className={ `flex items-center gap-3 rounded-md  p-3 ${ state.convoSelected === conversation.id ? "bg-sky-200" : "bg-white" } hover:bg-sky-100 transition-all duration-200` }>
+                                                    className={ `flex items-center gap-3 rounded-md  p-3 ${ state.convoSelected === conversation?.id ? "bg-sky-200" : "bg-white" } hover:bg-sky-100 transition-all duration-200` }>
                                                     <div className="flex-1 space-y-1" data-id="12">
                                                         <p className="font-medium select-none text-sm md:text-sm"
                                                            data-id="13">
-                                                            { conversation.users.find((c) => c.id !== user.id).username }
+                                                            { conversation?.users.find((c) => c?.id !== user.id).username === "Assistant Admin" ? "City Government" : conversation?.users.find((c) => c?.id !== user.id).username }
                                                         </p>
                                                     </div>
                                                 </div>
@@ -409,7 +439,7 @@ export const Messages = () => {
                                     data-id="25">
                                     <h2 className="flex-1 font-semibold select-none text-lg text-black"
                                         data-id="26">
-                                        { conversations.find((conversation) => conversation.id === state.convoSelected).users.find((c) => c.id !== user.id).username }
+                                        { conversations.find((conversation) => conversation?.id === state.convoSelected).users.find((c) => c?.id !== user.id).username === "Assistant Admin" ? "City Government" : conversations.find((conversation) => conversation?.id === state.convoSelected).users.find((c) => c?.id !== user.id).username }
                                     </h2>
                                     { width < 768 && (
                                         <Tooltip title="Back">
@@ -427,7 +457,7 @@ export const Messages = () => {
                                             <Skeleton active loading={ isMessageFetchLoading } />
                                             <Skeleton active loading={ isMessageFetchLoading } />
                                         </div> : messages.map((message, index) => {
-                                            if (message.sender_id === user.id) {
+                                            if (message?.sender_id === user.id) {
                                                 return (
                                                     <div className="flex items-end gap-3 justify-end" data-id="36"
                                                          key={ `sent-${ index }` }>
@@ -437,13 +467,13 @@ export const Messages = () => {
                                                                 className="bg-gradient-to-tr from-Thesis-200 p-3 rounded-lg text-sm text-white to-Thesis-300 w-3/5"
                                                                 data-id="38"
                                                             >
-                                                                <p data-id="39">{ message.content }</p>
+                                                                <p data-id="39">{ message?.content }</p>
                                                             </div>
                                                             <span
                                                                 className="dark:text-gray-400 select-none text-gray-500 text-xs"
                                                                 data-id="40">
-                        { moment(message.createdAt).format("h:mm a") }
-                    </span>
+                                                                { moment(message?.createdAt).format("h:mm a") }
+                                                            </span>
                                                         </div>
                                                     </div>
                                                 );
@@ -454,12 +484,12 @@ export const Messages = () => {
                                                         <div className="flex-1 space-y-2" data-id="32">
                                                             <div className="bg-gray-200 p-3 rounded-lg text-sm w-3/5"
                                                                  data-id="33">
-                                                                <p data-id="34">{ message.content }</p>
+                                                                <p data-id="34">{ message?.content }</p>
                                                             </div>
                                                             <span
                                                                 className="dark:text-gray-400 select-none text-gray-500 text-xs"
                                                                 data-id="35">
-                        { moment(message.createdAt).format("h:mm a") }
+                        { moment(message?.createdAt).format("h:mm a") }
                     </span>
                                                         </div>
                                                     </div>
@@ -480,9 +510,8 @@ export const Messages = () => {
                                                 placeholder="Type your message..." data-id="54" type="text" />
                                         </Form.Item>
                                         <Form.Item className="m-0 p-0">
-                                            <button
-                                                className="bg-gradient-to-b disabled:opacity-50 disabled:pointer-events-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 font-medium from-yellow-400 h-10 hover:bg-gradient-to-r hover:from-yellow-500 hover:to-yellow-600 inline-flex items-center justify-center rounded-md text-sm to-yellow-600 transition-colors w-10 whitespace-nowrap"
-                                                data-id="55" type="submit">
+                                            <Button htmlType="submit" className="h-full bg-sky-700 py-3"
+                                                    type="primary">
                                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                                                      viewBox="0 0 24 24"
                                                      fill="none" stroke="currentColor" strokeWidth="2"
@@ -492,7 +521,7 @@ export const Messages = () => {
                                                     <path d="m22 2-7 20-4-9-9-4Z"></path>
                                                     <path d="M22 2 11 13"></path>
                                                 </svg>
-                                            </button>
+                                            </Button>
                                         </Form.Item>
                                     </Form>
                                 </div>

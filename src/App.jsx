@@ -2,6 +2,7 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import {
     AdminRoute,
     Announcements,
+    AssistantAdminRoute,
     Contacts,
     Dashboard,
     LoginRegister,
@@ -28,7 +29,7 @@ function App() {
                     <Route path="projects" element={ <Projects /> } />
                     <Route path="projects/:projectId" element={ <SingleProject /> } />
                     <Route path="announcements" element={ <Announcements /> } />
-                    <Route path="messages" element={ <Messages /> } />
+                    <Route path="messages" element={ <AssistantAdminRoute><Messages /></AssistantAdminRoute> } />
                     <Route path="contacts" element={ <Contacts /> } />
                     <Route path="profile" element={ <Profile /> } />
                     <Route path="users" element={ <AdminRoute><Users /></AdminRoute> } />

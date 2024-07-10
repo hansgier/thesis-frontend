@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { editUserThunk, getAllUsersThunk } from "./usersThunk.js";
+import { addUserThunk, deleteUserThunk, editUserThunk, getAllUsersThunk } from "./usersThunk.js";
 import { message } from "antd";
 
 const initialFiltersState = {
@@ -19,7 +19,9 @@ const initialState = {
 };
 
 export const getAllUsers = createAsyncThunk("users/getAllUsers", getAllUsersThunk);
+export const addUser = createAsyncThunk("users/addUser", addUserThunk);
 export const editUser = createAsyncThunk("users/editUser", editUserThunk);
+export const deleteUser = createAsyncThunk("users/deleteUser", deleteUserThunk);
 
 
 const usersSlice = createSlice({
@@ -33,6 +35,44 @@ const usersSlice = createSlice({
     },
     extraReducers: (builder) => {
         builder
+            .addCase(deleteUser.pending, (state) => {
+                state.isUserFetchSuccess = false;
+                state.isUserFetchError = false;
+                state.isUserFetchLoading = true;
+            })
+            .addCase(deleteUser.fulfilled, (state) => {
+                state.isUserFetchLoading = false;
+                state.isUserFetchError = false;
+                state.isUserFetchSuccess = true;
+                message.success({ content: "User deleted successfully", key: "deletable-user" });
+            })
+            .addCase(deleteUser.rejected, (state, { payload }) => {
+                state.isUserFetchLoading = false;
+                state.isUserFetchSuccess = false;
+                state.isUserFetchError = true;
+                state.userFetchErrorUser = payload;
+                message.error({ content: "Error user deletion", key: "deletable-user" });
+            })
+
+            .addCase(addUser.pending, (state) => {
+                state.isUserFetchSuccess = false;
+                state.isUserFetchError = false;
+                state.isUserFetchLoading = true;
+            })
+            .addCase(addUser.fulfilled, (state) => {
+                state.isUserFetchLoading = false;
+                state.isUserFetchError = false;
+                state.isUserFetchSuccess = true;
+                message.success({ content: "User created successfully", key: "addable-user" });
+            })
+            .addCase(addUser.rejected, (state, { payload }) => {
+                state.isUserFetchLoading = false;
+                state.isUserFetchSuccess = false;
+                state.isUserFetchError = true;
+                state.userFetchErrorUser = payload;
+                message.error({ content: "Error user creation", key: "addable-user" });
+            })
+
             .addCase(editUser.pending, (state) => {
                 state.isUserFetchSuccess = false;
                 state.isUserFetchError = false;
@@ -49,7 +89,10 @@ const usersSlice = createSlice({
                 state.isUserFetchSuccess = false;
                 state.isUserFetchError = true;
                 state.userFetchErrorUser = payload;
-                message.error({ content: "Error user edit", key: "editable-user" });
+                message.error({
+                    content: payload === "Username or email already exists" ? "Username or email already" +
+                        " exists" : "Error user edit", key: "editable-user"
+                });
             })
 
             .addCase(getAllUsers.pending, (state) => {

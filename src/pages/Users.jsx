@@ -21,7 +21,7 @@ export const Users = () => {
         }
         dispatch(getAllUsers());
         dispatch(getAllBarangays());
-    }, []);
+    }, [dispatch, location.pathname]);
 
     return (
         <div className="h-full max-h-full overflow-y-scroll pt-4 px-4 md:px-6">

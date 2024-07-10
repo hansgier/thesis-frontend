@@ -5,6 +5,7 @@ import {
     getAllMessagesThunk,
     sendMessagesThunk
 } from "./messagesThunk.js";
+import { message } from "antd";
 
 const initialFiltersState = {
     search: "",
@@ -109,18 +110,22 @@ const messagesSlice = createSlice({
                 state.isConversationFetchSuccess = false;
                 state.isConversationFetchError = false;
                 state.isConversationFetchLoading = true;
+                message.loading({ content: "Creating conversation...", key: "creatable-convo" });
             })
             .addCase(createConversation.fulfilled, (state, { payload }) => {
                 state.isConversationFetchLoading = false;
                 state.isConversationFetchError = false;
                 state.isConversationFetchSuccess = true;
                 state.conversations = [...state.conversations, payload.conversation];
+                message.success({ content: "Conversation created!", key: "creatable-convo" });
             })
             .addCase(createConversation.rejected, (state, { payload }) => {
                 state.isConversationFetchLoading = false;
                 state.isConversationFetchSuccess = false;
                 state.isConversationFetchError = true;
                 state.isConversationFetchMessage = payload;
+                console.log("Convo error create", payload);
+                message.error({ content: "There was an error in creating a conversation.", key: "creatable-convo" });
             });
     }
 });
