@@ -241,16 +241,16 @@ export const Messages = () => {
                                     ) }
                                 </div>
                                 {/*---------------------------MESSAGES---------------------*/ }
-                                <div ref={ messageRef }
-                                     className="flex-1 mb-[70px] overflow-y-auto pt-4 px-4 flex flex-col h-full">
+                                <div
+                                    className="flex-1 mb-[70px] overflow-y-auto pt-4 px-4 flex flex-col h-full">
                                     { (messages.length < 1 || !messages) ?
                                         <div
-                                            className="h-full flex items-center justify-center text-gray-500">Send
-                                                                                                              a
-                                                                                                              message
-                                                                                                              to
-                                                                                                              start
-                                                                                                              chatting</div>
+                                            className="h-full flex items-center justify-center text-gray-500 select-none">Send
+                                                                                                                          a
+                                                                                                                          message
+                                                                                                                          to
+                                                                                                                          start
+                                                                                                                          chatting</div>
                                         :
                                         messages.map((message, index) => {
                                             if (message.sender_id === user.id) {
@@ -384,7 +384,7 @@ export const Messages = () => {
                                         </Select>
                                     </Modal>
                                 </div>
-                                <div className="overflow-y-scroll pr-4">
+                                <div className="overflow-y-auto pr-4">
                                     {/*-----------------------CONVERSATIONS-----------------------*/ }
                                     <div className="h-full space-y-2" data-id="7">
                                         { isConversationFetchLoading ? <>
@@ -450,14 +450,18 @@ export const Messages = () => {
                                     ) }
                                 </div>
 
-                                <div className="flex-1 mb-[73px] pb-20 overflow-y-auto pt-4 px-4 space-y-4 bg-white">
-                                    { isMessageFetchLoading ?
-                                        <div className="flex flex-col items-end gap-3 justify-end">
-                                            <Skeleton active loading={ isMessageFetchLoading } />
-                                            <Skeleton active loading={ isMessageFetchLoading } />
-                                            <Skeleton active loading={ isMessageFetchLoading } />
-                                        </div> : messages.map((message, index) => {
-                                            if (message?.sender_id === user.id) {
+                                <div ref={ messageRef }
+                                     className="flex-1 mb-[73px] pb-20 overflow-y-auto pt-4 px-4 space-y-4 bg-white h-full">
+                                    { (messages.length < 1 || !messages) ?
+                                        <div
+                                            className="h-full flex items-center justify-center text-gray-500 select-none">Send
+                                                                                                                          a
+                                                                                                                          message
+                                                                                                                          to
+                                                                                                                          start
+                                                                                                                          chatting</div>
+                                        : messages.map((message, index) => {
+                                            if (message.sender_id === user.id) {
                                                 return (
                                                     <div className="flex items-end gap-3 justify-end" data-id="36"
                                                          key={ `sent-${ index }` }>
@@ -467,29 +471,30 @@ export const Messages = () => {
                                                                 className="bg-gradient-to-tr from-Thesis-200 p-3 rounded-lg text-sm text-white to-Thesis-300 w-3/5"
                                                                 data-id="38"
                                                             >
-                                                                <p data-id="39">{ message?.content }</p>
+                                                                <p data-id="39">{ message.content }</p>
                                                             </div>
                                                             <span
                                                                 className="dark:text-gray-400 select-none text-gray-500 text-xs"
                                                                 data-id="40">
-                                                                { moment(message?.createdAt).format("h:mm a") }
+                                                                { moment(message.createdAt).format("h:mm a") }
                                                             </span>
                                                         </div>
                                                     </div>
                                                 );
-                                            } else {
+                                            } else if (message.sender_id !== user.id && message.content !== "" && message.content) {
                                                 return (
                                                     <div className="flex items-start gap-3" data-id="28"
                                                          key={ `received-${ index }` }>
                                                         <div className="flex-1 space-y-2" data-id="32">
-                                                            <div className="bg-gray-200 p-3 rounded-lg text-sm w-3/5"
-                                                                 data-id="33">
-                                                                <p data-id="34">{ message?.content }</p>
+                                                            <div
+                                                                className="bg-gray-200 p-3 rounded-lg text-sm w-3/5"
+                                                                data-id="33">
+                                                                <p data-id="34">{ message.content }</p>
                                                             </div>
                                                             <span
                                                                 className="dark:text-gray-400 select-none text-gray-500 text-xs"
                                                                 data-id="35">
-                        { moment(message?.createdAt).format("h:mm a") }
+                        { moment(message.createdAt).format("h:mm a") }
                     </span>
                                                         </div>
                                                     </div>
