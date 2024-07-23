@@ -8,7 +8,7 @@ import {
 import { message } from "antd";
 
 const initialFiltersState = {
-    search: "",
+    announcement_search: "",
     title: "",
     announcement_type: "",
     createdBy: "",
@@ -62,7 +62,16 @@ const announcementSlice = createSlice({
             }
         },
         setFilteredAnnouncements: (state, action) => {
-            state.filtered_announcements = action?.payload;
+            // state.filtered_announcements = action?.payload;
+            const searchTerm = action.payload.toLowerCase();
+            if (searchTerm === "") {
+                state.filtered_announcements = state.announcements;
+            } else {
+                state.filtered_announcements = state.announcements.filter(announcement =>
+                    announcement.title.toLowerCase().includes(searchTerm) ||
+                    announcement.content.toLowerCase().includes(searchTerm)
+                );
+            }
         },
         resetAnnouncementFilters: (state) => {
             state.filtered_announcements = state.announcements;

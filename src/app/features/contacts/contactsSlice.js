@@ -9,7 +9,7 @@ import {
 import { clearUploadedMedia } from "../media/mediaSlice.js";
 
 const initialFiltersState = {
-    search: "",
+    contact_search: "",
     sort: "az",
     contacted_by: ""
 };
@@ -77,7 +77,15 @@ const contactsSlice = createSlice({
             }
         },
         setFilteredContacts: (state, action) => {
-            state.filtered_contacts = action?.payload;
+            // state.filtered_contacts = action?.payload;
+            const searchTerm = action.payload.toLowerCase();
+            if (searchTerm === "") {
+                state.filtered_contacts = state.contacts;
+            } else {
+                state.filtered_contacts = state.contacts.filter(contact =>
+                    contact.name.toLowerCase().includes(searchTerm)
+                );
+            }
         },
         clearContactStore: () => initialState
     },

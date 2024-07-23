@@ -13,7 +13,7 @@ import { message } from "antd";
 
 
 const initialFitlersState = {
-    search: "",
+    project_search: "",
     sort: "newest"
 };
 
@@ -107,7 +107,16 @@ const projectsSlice = createSlice({
             }
         },
         setFilteredProjects: (state, action) => {
-            state.filtered_projects = action?.payload;
+            // state.filtered_projects = action?.payload;
+            const searchTerm = action.payload.toLowerCase();
+            if (searchTerm === "") {
+                state.filtered_projects = state.projects;
+            } else {
+                state.filtered_projects = state.projects.filter(project =>
+                    project.title.toLowerCase().includes(searchTerm) ||
+                    project.description.toLowerCase().includes(searchTerm)
+                );
+            }
         },
         resetProjectFilters: (state) => {
             state.filtered_projects = state.projects;

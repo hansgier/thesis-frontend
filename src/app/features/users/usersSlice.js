@@ -31,7 +31,7 @@ const usersSlice = createSlice({
         setSelectedUser: (state, { payload }) => {
             state.selected_user = payload;
         },
-        clearUsersStore: () => initialState
+        clearUsersStore: () => initialState,
     },
     extraReducers: (builder) => {
         builder
@@ -130,6 +130,6 @@ const usersSlice = createSlice({
 
 export const {
     setSelectedUser,
-    clearUsersStore
+    clearUsersStore,
 } = usersSlice.actions;
 export default usersSlice.reducer;

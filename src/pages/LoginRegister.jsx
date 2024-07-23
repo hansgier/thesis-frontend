@@ -30,7 +30,7 @@ export const LoginRegister = () => {
         if (!isLoginMode) {
             setIsLoginMode(true);
         }
-    }, [user, authSuccess, dispatch, isLoginMode, navigate]);
+    }, [user, authSuccess, dispatch, navigate]);
 
 
     const onFinish = (values) => {

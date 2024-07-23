@@ -148,7 +148,7 @@ export const Messages = () => {
                                     <IoSearch />
                                 </button>
                                 <Modal
-                                    title="Search a Conversation"
+                                    title="Start a Conversation"
                                     centered
                                     open={ state.modalOpen }
                                     onOk={ () => {
@@ -230,7 +230,7 @@ export const Messages = () => {
                                     {/*--------NAME OF WHO YOU WANT TO CHAT--------*/ }
                                     <h2 className="flex-1 font-semibold select-none text-lg"
                                         data-id="26">
-                                        { conversations.find((conversation) => conversation?.id === state.convoSelected).users.find((c) => c?.id !== user.id).username === "Assistant Admin" ? "City Government" : conversations.find((conversation) => conversation?.id === state.convoSelected).users.find((c) => c?.id !== user.id).username }
+                                        { conversations.find((conversation) => conversation?.id === state.convoSelected)?.users.find((c) => c?.id !== user.id).username === "Assistant Admin" ? "City Government" : conversations.find((conversation) => conversation?.id === state.convoSelected)?.users.find((c) => c?.id !== user.id).username }
                                     </h2>
                                     { width < 768 && (
                                         <Tooltip title="Back">
@@ -349,7 +349,7 @@ export const Messages = () => {
                                         <IoSearch />
                                     </button>
                                     <Modal
-                                        title="Search a Conversation"
+                                        title="Start a Conversation"
                                         centered
                                         open={ state.modalOpen }
                                         onOk={ () => {
@@ -439,7 +439,7 @@ export const Messages = () => {
                                     data-id="25">
                                     <h2 className="flex-1 font-semibold select-none text-lg text-black"
                                         data-id="26">
-                                        { conversations.find((conversation) => conversation?.id === state.convoSelected).users.find((c) => c?.id !== user.id).username === "Assistant Admin" ? "City Government" : conversations.find((conversation) => conversation?.id === state.convoSelected).users.find((c) => c?.id !== user.id).username }
+                                        { conversations.find((conversation) => conversation?.id === state.convoSelected)?.users.find((c) => c?.id !== user.id).username === "Assistant Admin" ? "City Government" : conversations.find((conversation) => conversation?.id === state.convoSelected)?.users.find((c) => c?.id !== user.id).username }
                                     </h2>
                                     { width < 768 && (
                                         <Tooltip title="Back">
