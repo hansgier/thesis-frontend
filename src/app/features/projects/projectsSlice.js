@@ -107,11 +107,24 @@ const projectsSlice = createSlice({
             }
         },
         setFilteredProjects: (state, action) => {
-            // state.filtered_projects = action?.payload;
-            const searchTerm = action.payload.toLowerCase();
-            if (searchTerm === "") {
-                state.filtered_projects = state.projects;
-            } else {
+            // // state.filtered_projects = action?.payload;
+            // const searchTerm = action?.payload
+            // if (searchTerm === "") {
+            //     state.filtered_projects = state.projects;
+            // } else {
+            //     state.filtered_projects = state.projects.filter(project =>
+            //         project.title.toLowerCase().includes(searchTerm) ||
+            //         project.description.toLowerCase().includes(searchTerm)
+            //     );
+            // }
+
+            // If action.payload is an array, it's filtered projects
+            if (Array.isArray(action.payload)) {
+                state.filtered_projects = action.payload;
+            }
+            // If action.payload is a string, it's a search term
+            else if (typeof action.payload === 'string') {
+                const searchTerm = action.payload.toLowerCase();
                 state.filtered_projects = state.projects.filter(project =>
                     project.title.toLowerCase().includes(searchTerm) ||
                     project.description.toLowerCase().includes(searchTerm)

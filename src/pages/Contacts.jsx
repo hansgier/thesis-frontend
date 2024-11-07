@@ -5,7 +5,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { useLocation } from "react-router-dom";
 import {
     getAllContacts,
-    setFilteredContacts,
     sortContacts,
     toggleAddContactMode,
     toggleContactFetchSuccess
@@ -68,34 +67,34 @@ export const Contacts = () => {
                         more.</p>
                 </div>
                 <div className="flex mt-2 px-4 pt-1 rounded-lg bg-white border mx-4 md:mx-0 justify-between">
-                    <div className="flex items-center">
-                        <span
-                            className="mr-2 text-sm font-medium text-gray-600 select-none hidden md:block">Posted by</span>
-                        <Select
-                            className="w-44 hover:border-b-2 hover:border-sky-200 hover:ease-in-out hover:duration-200 focus:border-sky-200"
-                            placeholder="All"
-                            variant="borderless"
-                            disabled={ isContactFetchLoading }
-                            onChange={ (val) => {
-                                const admin = users4admin.find((u) => u.role === "admin");
-                                if (!val || val === admin.id) {
-                                    dispatch(setFilteredContacts(contacts));
-                                } else {
-                                    const filteredContacts = filterContacts(contacts, val);
-                                    dispatch(setFilteredContacts(filteredContacts));
-                                }
-                            } }
-                            filterOption={ (input, option) => ( option.children.toLowerCase() ).includes(input.toLowerCase()) }
-                            allowClear
-                            showSearch
-                        >
-                            { users4admin.map((creator) => {
-                                return ( creator.role === "barangay" || creator.role === "admin" ) &&
-                                    <Select.Option key={ creator.id }
-                                                   value={ creator.id }>{ creator.username }</Select.Option>;
-                            }) }
-                        </Select>
-                    </div>
+                    {/*<div className="flex items-center">*/}
+                    {/*    <span*/}
+                    {/*        className="mr-2 text-sm font-medium text-gray-600 select-none hidden md:block">Posted by</span>*/}
+                    {/*    <Select*/}
+                    {/*        className="w-44 hover:border-b-2 hover:border-sky-200 hover:ease-in-out hover:duration-200 focus:border-sky-200"*/}
+                    {/*        placeholder="All"*/}
+                    {/*        variant="borderless"*/}
+                    {/*        disabled={ isContactFetchLoading }*/}
+                    {/*        onChange={ (val) => {*/}
+                    {/*            const admin = users4admin.find((u) => u.role === "admin");*/}
+                    {/*            if (!val || val === admin.id) {*/}
+                    {/*                dispatch(setFilteredContacts(contacts));*/}
+                    {/*            } else {*/}
+                    {/*                const filteredContacts = filterContacts(contacts, val);*/}
+                    {/*                dispatch(setFilteredContacts(filteredContacts));*/}
+                    {/*            }*/}
+                    {/*        } }*/}
+                    {/*        filterOption={ (input, option) => ( option.children.toLowerCase() ).includes(input.toLowerCase()) }*/}
+                    {/*        allowClear*/}
+                    {/*        showSearch*/}
+                    {/*    >*/}
+                    {/*        { users4admin.map((creator) => {*/}
+                    {/*            return ( creator.role === "barangay" || creator.role === "admin" ) &&*/}
+                    {/*                <Select.Option key={ creator.id }*/}
+                    {/*                               value={ creator.id }>{ creator.username }</Select.Option>;*/}
+                    {/*        }) }*/}
+                    {/*    </Select>*/}
+                    {/*</div>*/}
                     <div className="flex items-center">
                         <span className="mr-2 text-sm font-medium text-gray-600 select-none hidden md:block">Sort</span>
                         <Select

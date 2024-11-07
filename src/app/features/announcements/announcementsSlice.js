@@ -62,11 +62,24 @@ const announcementSlice = createSlice({
             }
         },
         setFilteredAnnouncements: (state, action) => {
-            // state.filtered_announcements = action?.payload;
-            const searchTerm = action.payload.toLowerCase();
-            if (searchTerm === "") {
-                state.filtered_announcements = state.announcements;
-            } else {
+            // // state.filtered_announcements = action?.payload;
+            // const searchTerm = action.payload.toLowerCase();
+            // if (searchTerm === "") {
+            //     state.filtered_announcements = state.announcements;
+            // } else {
+            //     state.filtered_announcements = state.announcements.filter(announcement =>
+            //         announcement.title.toLowerCase().includes(searchTerm) ||
+            //         announcement.content.toLowerCase().includes(searchTerm)
+            //     );
+            // }
+
+            // If action.payload is an array, it's filtered projects
+            if (Array.isArray(action.payload)) {
+                state.filtered_announcements = action.payload;
+            }
+            // If action.payload is a string, it's a search term
+            else if (typeof action.payload === 'string') {
+                const searchTerm = action.payload.toLowerCase();
                 state.filtered_announcements = state.announcements.filter(announcement =>
                     announcement.title.toLowerCase().includes(searchTerm) ||
                     announcement.content.toLowerCase().includes(searchTerm)

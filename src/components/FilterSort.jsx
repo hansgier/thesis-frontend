@@ -9,6 +9,13 @@ import { useWindowSize } from "../hooks/index.jsx";
 import { resetProjectFilters, sortProjects } from "../app/features/projects/projectsSlice.js";
 import { resetAnnouncementFilters, sortAnnouncements } from "../app/features/announcements/announcementsSlice.js";
 
+// sort values that correspond to the toggle states
+const sortValues = {
+    0: 'newest',    // newest first
+    1: 'oldest',    // oldest first
+    2: 'az',        // alphabetical A-Z
+    3: 'za'         // alphabetical Z-A
+};
 
 export const sortButtons = {
     newest: {
@@ -46,8 +53,17 @@ export const FilterSort = React.memo(({ page }) => {
     }, []);
 
     const toggleNextSort = useCallback(() => {
-        setToggleSort((prevToggleSort) => (prevToggleSort + 1) % 4);
-    }, []);
+        const nextToggleSort = (toggleSort + 1) % 4;
+        setToggleSort(nextToggleSort);
+
+        // Dispatch the appropriate sort action based on the page
+        const sortValue = sortValues[nextToggleSort];
+        if (page === "Projects") {
+            dispatch(sortProjects(sortValue));
+        } else if (page === "Announcements") {
+            dispatch(sortAnnouncements(sortValue));
+        }
+    }, [toggleSort, page, dispatch]);
 
     return (
         <>
