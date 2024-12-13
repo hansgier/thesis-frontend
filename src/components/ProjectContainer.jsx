@@ -341,7 +341,7 @@ export const ProjectContainer = React.memo(({ project }) => {
                                             animate={ { opacity: 1 } }
                                             exit={ { opacity: 0 } }
                                             className="mb-4 px-4 md:px-6">
-                                            <p className="leading-relaxed md:text-base select-none text-gray-700 text-justify text-sm">
+                                            <p className="leading-relaxed md:text-base select-none text-gray-700 text-justify text-sm line-clamp-5 break-words overflow-wrap-break-word whitespace-normal" style={{whiteSpace: "pre-wrap"}}>
                                                 { project.description }
                                             </p>
                                         </motion.div>

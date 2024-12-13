@@ -151,7 +151,7 @@ export const Filters = React.memo(({ mode, page }) => {
                             <>
                                 <Form.Item name="tags" className="m-0 p-0">
                                     <Select mode="multiple" placeholder="Tags" allowClear>
-                                        { project_tags.map((tag, i) => {
+                                        { project_tags.sort((a, b) => a.label.localeCompare(b.label)).map((tag, i) => {
                                             return <Select.Option key={ i }
                                                                   value={ tag.values }>{ tag.label }</Select.Option>;
                                         }) }

@@ -5,6 +5,7 @@ import {
     AssistantAdminRoute,
     Contacts,
     Dashboard,
+    EmailVerification,
     LoginRegister,
     Messages,
     NotFound,
@@ -20,6 +21,9 @@ function App() {
     return (
         <BrowserRouter>
             <Routes>
+                <Route index path="/" element={ <LoginRegister /> } />
+                <Route path="/verify-email" element={<EmailVerification />} />
+
                 <Route path="/" element={
                     <ProtectedRoute>
                         <SharedLayout />
@@ -34,7 +38,7 @@ function App() {
                     <Route path="profile" element={ <Profile /> } />
                     <Route path="users" element={ <AdminRoute><Users /></AdminRoute> } />
                 </Route>
-                <Route index path="/" element={ <LoginRegister /> } />
+
                 <Route path="*" element={ <NotFound /> } />
             </Routes>
         </BrowserRouter>

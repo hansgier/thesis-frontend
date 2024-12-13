@@ -78,7 +78,7 @@ export const EditProjectUpdate = React.memo(({ update }) => {
                 <div className="m-0 p-0">
                     <div className="hover:bg-blue-50 hover:cursor-pointer mb-5 mr-2 p-2 rounded-md">
                         {/*----------Project Update Content----------*/ }
-                        <div className="mb-3 text-gray-700 text-sm" data-id="19">
+                        <div className="mb-3 text-gray-700 text-sm" data-id="19" style={{whiteSpace: "pre-wrap"}}>
                             { update.remarks }
                         </div>
 

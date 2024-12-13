@@ -161,7 +161,7 @@ export const UsersTable = () => {
     ];
 
     const dataSource = users4admin
-        .filter((person) => person.role !== "admin")
+        .filter((person) => person.role !== "admin" && person.role !== "guest")
         .map((person) => ({
             key: person.id,
             name: person.username,
@@ -178,7 +178,6 @@ export const UsersTable = () => {
                 selectedRowKeys,
                 onChange: (newSelectedRowKeys) => {
                     setSelectedRowKeys(newSelectedRowKeys);
-                    console.log(selectedRowKeys);
                 },
                 columnWidth: "60px",
                 renderCell: (checked, record, index, originNode) => (

@@ -151,7 +151,9 @@ export const AnnouncementCard = React.memo(({ announcement }) => {
                         initial={ { opacity: 0 } }
                         animate={ { opacity: 1 } }
                         exit={ { opacity: 0 } }
-                        className="md:text-base select-none text-gray-700 text-justify text-sm break-words">
+                        className="md:text-base select-none text-gray-700 text-justify text-sm break-words"
+                        style={ {whiteSpace: "pre-wrap"}}
+                    >
                         { announcement.content }
                     </motion.p>
                 </div> }

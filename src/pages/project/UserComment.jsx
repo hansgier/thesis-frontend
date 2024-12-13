@@ -29,7 +29,6 @@ export const UserComment = React.memo(({ comment }) => {
         }
     }, [users4admin, barangays]);
 
-
     const userRole = useCallback((commentedBy) => {
         const userR = users4admin.find((user) => user.id === commentedBy);
 
@@ -45,20 +44,33 @@ export const UserComment = React.memo(({ comment }) => {
     }, [users4admin, user.id]);
 
     return (
-        <div className="flex items-start gap-4" data-id="60">
-            <div className="flex-1 pl-4" data-id="64">
+        <div className="flex items-start gap-4 w-full" data-id="60">
+            <div className="flex-1 pl-4 w-full overflow-hidden" data-id="64">
                 <div className="flex items-center justify-between mb-2" data-id="65">
-                    <div className={ `font-bold select-none text-sm md:text-base ${ userRole(comment.commented_by) }` }
-                         data-id="66">
+                    <div
+                        className={ `font-bold select-none text-sm md:text-base ${ userRole(comment.commented_by) }` }
+                        data-id="66"
+                    >
                         { getNameByCommentedBy(comment.commented_by) }
                     </div>
                     <div
                         className="font-normal select-none text-[#1ec8a9] text-xs md:font-bold"
-                        data-id="67">
+                        data-id="67"
+                    >
                         { moment(comment.createdAt).fromNow() }
                     </div>
                 </div>
-                <p className="text-gray-500 text-sm md:text-base" data-id="68">{ comment.content }</p>
+                <p
+                    className="text-gray-500 text-sm md:text-base w-full break-words overflow-wrap-break-word whitespace-normal"
+                    style={{
+                        wordBreak: 'break-word',
+                        overflowWrap: 'break-word',
+                        maxWidth: '100%'
+                    }}
+                    data-id="68"
+                >
+                    { comment.content }
+                </p>
             </div>
         </div>
     );

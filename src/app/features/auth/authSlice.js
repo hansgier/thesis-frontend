@@ -16,6 +16,7 @@ import { clearMessageStore } from "../messages/messagesSlice.js";
 import { clearProjectStore } from "../projects/projectsSlice.js";
 import { clearUpdateStore } from "../projects/updatesSlice.js";
 import { clearReactionStore } from "../reactions/reactionsSlice.js";
+import { message } from "antd";
 
 
 const initialState = {
@@ -36,12 +37,17 @@ const initialState = {
     isError: false,
     isFetchLoading: false,
     guestMode: false,
-    oldPassword: ""
+    oldPassword: "",
+    verifyEmailTemp: null
 };
 
 export const registerUser = createAsyncThunk("auth/register", async (user, thunkAPI) => {
         try {
-            const resp = await customFetch.post(`${ AUTH_URL }/register`, user);
+            const resp = await customFetch.post(`${ AUTH_URL }/register`, user, {
+                headers: {
+                    origin: window.location.href
+                }
+            });
             return resp.data;
         } catch (e) {
             return thunkAPI.rejectWithValue(e.response.data.message);
@@ -84,6 +90,17 @@ export const updateUser = createAsyncThunk("users/updateUser", async (user, thun
         const resp = await customFetch.patch(`${ USERS_URL }/update-user`, user, {
             headers
         });
+        return resp.data;
+    } catch (e) {
+        return thunkAPI.rejectWithValue(e.response.data.message);
+    }
+});
+
+export const verifyEmail = createAsyncThunk("users/verifyEmail", async (user, thunkAPI) => {
+    try {
+        const state = thunkAPI.getState().auth;
+        const {email, token} = user
+        const resp = await customFetch.get(`${ AUTH_URL }/verify-email?token=${token}&email=${email}`);
         return resp.data;
     } catch (e) {
         return thunkAPI.rejectWithValue(e.response.data.message);
@@ -165,6 +182,24 @@ const authSlice = createSlice({
     },
     extraReducers(builder) {
         builder
+            .addCase(verifyEmail.pending, (state) => {
+                state.authError = false;
+                state.authSuccess = false;
+                state.isLoading = true;
+            })
+            .addCase(verifyEmail.fulfilled, (state, { payload }) => {
+                state.authError = false;
+                state.authSuccess = true;
+                state.isLoading = false;
+                message.success({ content: "Email verified!", key: "email-verify" });
+            })
+            .addCase(verifyEmail.rejected, (state, { payload }) => {
+                state.isLoading = false;
+                state.authError = true;
+                state.authSuccess = false;
+                message.warning({ content: "Verification failed!", key: "email-verify" });
+            })
+
             .addCase(updateUser.pending, (state) => {
                 state.authError = false;
                 state.authSuccess = false;
@@ -193,20 +228,27 @@ const authSlice = createSlice({
                 state.isLoading = true;
             })
             .addCase(registerUser.fulfilled, (state, { payload }) => {
-                const { user } = payload;
+                const { registeredUser } = payload;
+                console.log(payload);
                 state.isLoading = false;
-                state.user = user;
+                // state.user = registeredUser;
                 state.authSuccess = true;
                 state.guestMode = false;
                 state.authError = false;
                 state.authErrorMessage = "";
-                addUserToLocalStorage(user);
+                state.verifyEmailTemp = registeredUser?.email
+                message.success({ content: "Check your email for verification.", key: "after-register" });
+                // addUserToLocalStorage(registeredUser);
             })
             .addCase(registerUser.rejected, (state, { payload }) => {
                 state.isLoading = false;
                 state.authError = true;
                 state.authSuccess = false;
                 state.authErrorMessage = payload;
+                if (payload === "username must be unique"){
+                    message.warning({ content: "Username already exists.", key: "user-exists" });
+                }
+                console.log(payload);
             })
 
             .addCase(logout.pending, (state) => {
@@ -255,6 +297,9 @@ const authSlice = createSlice({
                 state.authError = true;
                 state.authSuccess = false;
                 state.authErrorMessage = payload;
+                if (payload === "Invalid email"){
+                    message.error({ content: "Incorrect email. Please try again.", key: "user-login" });
+                } 
             });
     }
 });
@@ -275,6 +320,6 @@ export const {
     setEditProjectMode,
     setEditAnnouncementMode,
     setAddProjectMode,
-    setAddAnnouncementMode
+    setAddAnnouncementMode,
 } = authSlice.actions;
 export default authSlice.reducer;

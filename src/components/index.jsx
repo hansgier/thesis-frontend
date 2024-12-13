@@ -22,12 +22,13 @@ import { AddEditProjectComponent } from "./AddEditProjectComponent.jsx";
 import { AddEditAnnouncementComponent } from "./AddEditAnnouncementComponent.jsx";
 import { AddEditContactComponent } from "./AddEditContactComponent.jsx";
 import { SingleProjectSkeleton } from "./SingleProjectSkeleton.jsx";
-
+import { ProjectStatusBarGraph } from "./ProjectStatusBarGraph.jsx";
 
 export {
     SingleProjectSkeleton,
     Sidebar,
     TopBar,
+    ProjectStatusBarGraph,
     AccountInputRow,
     NavProfile,
     ProjectContainer,

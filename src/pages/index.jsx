@@ -13,6 +13,7 @@ import { Conversations } from "./messages/Conversations.jsx";
 import { ProtectedRoute } from "./ProtectedRoute.jsx";
 import { AdminRoute } from "./AdminRoute.jsx";
 import { AssistantAdminRoute } from "./AssistantAdminRoute.jsx";
+import { EmailVerification } from "./EmailVerification.jsx";
 
 export {
     Announcements,
@@ -29,5 +30,6 @@ export {
     Conversations,
     ProtectedRoute,
     AdminRoute,
-    AssistantAdminRoute
+    EmailVerification,
+    AssistantAdminRoute,
 };

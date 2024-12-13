@@ -7,6 +7,7 @@ import { Announcement, FeaturedProject, UpcomingProject } from "./dashboard/inde
 import { getAllAnnouncements } from "../app/features/announcements/announcementsSlice.js";
 import { getAllBarangays } from "../app/features/users/barangaysSlice.js";
 import { getAllUsers } from "../app/features/users/usersSlice.js";
+import { ProjectStatusBarGraph } from "../components/index.jsx";
 
 export const Dashboard = () => {
     const location = useLocation();
@@ -17,6 +18,8 @@ export const Dashboard = () => {
         completed,
         cancelled,
         ongoing,
+        planned,
+        on_hold,
         isProjectFetchSuccess,
         featuredProjects,
         upcomingProjects,
@@ -81,6 +84,28 @@ export const Dashboard = () => {
                         </div>
                     </div>
                     <div
+                        className="bg-gradient-to-br border-b-2 border-l-2 border-none border-r-2 border-amber-700 border-t-8 from-amber-600 gap-1 grid hover:duration-300 hover:shadow-xl hover:transition-shadow p-4 rounded-lg select-none shadow-md to-emerald-400 lg:flex-1">
+                        <p className="font-semibold mb-4 text-Winter-700 text-sm text-white">On Hold</p>
+                        <div className="flex justify-between">
+                            { isProjectFetchLoading ? <Skeleton.Button active /> :
+                                <h2 className="font-bold text-white text-xl md:text-2xl">
+                                    { on_hold }
+                                </h2>
+                            }
+                        </div>
+                    </div>
+                    <div
+                        className="bg-gradient-to-br border-b-2 border-l-2 border-none border-r-2 border-cyan-700 border-t-8 from-cyan-600 gap-1 grid hover:duration-300 hover:shadow-xl hover:transition-shadow p-4 rounded-lg select-none shadow-md to-pink-400 lg:flex-1">
+                        <p className="font-semibold mb-4 text-Winter-700 text-sm text-white">Planned</p>
+                        <div className="flex justify-between">
+                            { isProjectFetchLoading ? <Skeleton.Button active /> :
+                                <h2 className="font-bold text-white text-xl md:text-2xl">
+                                    { planned }
+                                </h2>
+                            }
+                        </div>
+                    </div>
+                    <div
                         className="bg-gradient-to-br border-b-2 border-l-2 border-none border-r-2 border-red-700 border-t-8 from-red-600 gap-1 grid hover:duration-300 hover:shadow-xl hover:transition-shadow p-4 rounded-lg select-none shadow-md to-pink-400 lg:flex-1">
                         <p className="font-semibold mb-4 text-Winter-700 text-sm text-white">Cancelled</p>
                         <div className="flex justify-between">
@@ -92,17 +117,18 @@ export const Dashboard = () => {
                         </div>
                     </div>
                 </div>
+                <div className="mt-4 mb-10">
+                    <ProjectStatusBarGraph/>
+                </div>
                 <div className="gap-6 grid grid-cols-1 min-h-[calc(100vh_-_theme(spacing.16))] md:gap-4">
-                    {/*----------------------------FEATURED PROJECTS----------------------------*/ }
+                    {/*----------------------------RECENT PROJECTS----------------------------*/ }
                     <div className="md:mx-0 mx-4 rounded-xl">
                         <div className="flex-col gap-1 grid px-0 py-4 select-none space-y-1.5 md:pl-0">
-                            <h3 className="font-bold leading-none text-xl tracking-tight whitespace-normal md:text-2xl">Featured
+                            <h3 className="font-bold leading-none text-xl tracking-tight whitespace-normal md:text-2xl">Recent
                                                                                                                         Projects</h3>
-                            <p className="font-normal text-gray-600 text-xs whitespace-normal md:text-sm">Projects
-                                                                                                          that
-                                                                                                          need
-                                                                                                          your
-                                                                                                          attention.</p>
+                            <p className="font-normal text-gray-600 text-xs whitespace-normal md:text-sm">
+                                Explore our latest community initiatives and ongoing developments.
+                            </p>
                         </div>
                         <div className="p-0">
                             { isProjectFetchLoading ? <Skeleton active block /> : (
@@ -129,10 +155,10 @@ export const Dashboard = () => {
                         <div className="md:mx-0 mx-4 rounded-xl" data-v0-t="card">
                             <div className="flex-col gap-1 grid pr-6 py-6 space-y-1.5">
                                 <h3 className="font-bold leading-none text-xl tracking-tight whitespace-normal md:text-2xl">Upcoming
-                                                                                                                            Projects</h3>
-                                <p className="font-normal text-gray-600 text-xs md:text-sm">Get ready for these
-                                                                                            exciting
-                                                                                            community events.</p>
+                                Projects</h3>
+                                <p className="font-normal text-gray-600 text-xs md:text-sm">
+                                    Discover and anticipate future initiatives planned for our community's growth and development.
+                                </p>
                             </div>
                             { isProjectFetchLoading ? <Skeleton active block /> : (
                                 <>

@@ -146,11 +146,11 @@ export const filterSort = {
 
 export const project_tags = [
     {
-        label: "Administration And Governance",
+        label: "Institutional",
         value: "1"
     },
     {
-        label: "General Public Services",
+        label: "Transportation",
         value: "2"
     },
     {
@@ -158,19 +158,19 @@ export const project_tags = [
         value: "3"
     },
     {
-        label: "Education",
+        label: "Water",
         value: "4"
     },
     {
-        label: "Livelihood",
+        label: "Education",
         value: "5"
     },
     {
-        label: "Infrastructure",
+        label: "Social",
         value: "6"
     },
     {
-        label: "Environmental Management",
+        label: "Infrastructure",
         value: "7"
     },
     {
@@ -178,7 +178,7 @@ export const project_tags = [
         value: "8"
     },
     {
-        label: "Other",
+        label: "Economic",
         value: "9"
     }
 ];

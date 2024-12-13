@@ -343,7 +343,7 @@ export const SingleProject = () => {
                             </div>
                             <div className="mb-4 px-4 md:px-6">
                                 {/*DESCRIPTION*/ }
-                                <p className="leading-relaxed md:text-base select-none text-gray-700 text-justify text-sm">
+                                <p className="leading-relaxed md:text-base select-none text-gray-700 text-justify text-sm break-words overflow-wrap-break-word whitespace-normal" style={{whiteSpace: "pre-wrap"}}>
                                     { singleProject?.description }
                                 </p>
                             </div>

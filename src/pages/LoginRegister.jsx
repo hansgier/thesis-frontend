@@ -14,7 +14,8 @@ export const LoginRegister = () => {
         authError,
         authSuccess,
         guestMode,
-        authErrorMessage
+        authErrorMessage,
+        verifyEmailTemp
     } = useSelector((store) => store.auth);
     const { barangays, isBarangayFetchLoading, isBarangayFetchSuccess } = useSelector((store) => store.barangays);
     const dispatch = useDispatch();

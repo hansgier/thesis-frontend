@@ -1,7 +1,7 @@
 import axios from "axios";
-import { BASE_URL } from "../app/constants.js";
 import { clearStore } from "../app/features/auth/authSlice.js";
 import { removeUserFromLocalStorage } from "./localStorage.jsx";
+import { BASE_URL } from "../app/constants.js";
 
 
 const customFetch = axios.create({

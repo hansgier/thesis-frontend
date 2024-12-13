@@ -244,14 +244,9 @@ const projectsSlice = createSlice({
                 state.filtered_projects = state.projects;
 
                 if (payload.projects) {
-                    // Select 3 random featured projects
-                    const featuredProjects = [];
-                    const shuffledProjects = payload.projects.sort(() => 0.5 - Math.random());
-                    const maxFeaturedProjects = Math.min(3, shuffledProjects.length);
-                    for (let i = 0; i < maxFeaturedProjects; i++) {
-                        featuredProjects.push(shuffledProjects[i]);
-                    }
-                    state.featuredProjects = featuredProjects;
+                    // Select first 3 most recently created projects
+                    const sortedProjects = payload.projects.slice().sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+                    state.featuredProjects = sortedProjects.slice(0, 3);
 
                     // Select upcoming projects with "planned" status
                     const upcomingProjects = payload.projects.filter(project => project.status === "planned");
