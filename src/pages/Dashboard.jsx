@@ -15,16 +15,11 @@ export const Dashboard = () => {
         projects,
         isProjectFetchLoading,
         totalProjects,
-        completed,
-        cancelled,
-        ongoing,
-        planned,
-        on_hold,
         isProjectFetchSuccess,
         featuredProjects,
         upcomingProjects,
         importantAnnouncements,
-        feedbackSummaries
+        feedbackSummaries,
     } = useSelector((store) => store.projects);
     const {
         isAnnouncementFetchLoading,
@@ -33,6 +28,11 @@ export const Dashboard = () => {
         totalAnnouncements
     } = useSelector((store) => store.announcements);
     const dispatch = useDispatch();
+    let completed = 0
+    let ongoing = 0
+    let on_hold = 0
+    let cancelled = 0
+    let planned = 0
 
     useEffect(() => {
         dispatch(getAllProjects());
@@ -42,7 +42,8 @@ export const Dashboard = () => {
         if (location.pathname !== "/project" || location.pathname !== "/singleproject") {
             sessionStorage.setItem("scrollPosition", "0");
         }
-    }, []);
+        console.log(projects.filter((project)=>project?.status === "completed").length);
+    }, [totalProjects]);
 
     return (
         <>
@@ -55,7 +56,7 @@ export const Dashboard = () => {
                         <div className="flex">
                             { isProjectFetchLoading ? <Skeleton.Button active /> :
                                 <h2 className="font-extrabold mr-14 text-3xl text-Winter-700 text-white">
-                                    { totalProjects }
+                                    { projects.length }
                                 </h2>
                             }
 
@@ -67,7 +68,7 @@ export const Dashboard = () => {
                         <div className="flex justify-between">
                             { isProjectFetchLoading ? <Skeleton.Button active /> :
                                 <h2 className="font-bold text-white text-xl md:text-2xl">
-                                    { completed }
+                                    { projects.filter((project)=>project?.status === "completed").length }
                                 </h2>
                             }
                         </div>
@@ -78,7 +79,7 @@ export const Dashboard = () => {
                         <div className="flex justify-between">
                             { isProjectFetchLoading ? <Skeleton.Button active /> :
                                 <h2 className="font-bold text-white text-xl md:text-2xl">
-                                    { ongoing }
+                                    { projects.filter((project)=>project?.status === "ongoing").length }
                                 </h2>
                             }
                         </div>
@@ -89,7 +90,7 @@ export const Dashboard = () => {
                         <div className="flex justify-between">
                             { isProjectFetchLoading ? <Skeleton.Button active /> :
                                 <h2 className="font-bold text-white text-xl md:text-2xl">
-                                    { on_hold }
+                                    { projects.filter((project)=>project?.status === "on_hold").length }
                                 </h2>
                             }
                         </div>
@@ -100,7 +101,7 @@ export const Dashboard = () => {
                         <div className="flex justify-between">
                             { isProjectFetchLoading ? <Skeleton.Button active /> :
                                 <h2 className="font-bold text-white text-xl md:text-2xl">
-                                    { planned }
+                                    { projects.filter((project)=>project?.status === "planned").length }
                                 </h2>
                             }
                         </div>
@@ -111,7 +112,7 @@ export const Dashboard = () => {
                         <div className="flex justify-between">
                             { isProjectFetchLoading ? <Skeleton.Button active /> :
                                 <h2 className="font-bold text-white text-xl md:text-2xl">
-                                    { cancelled }
+                                    { projects.filter((project)=>project?.status === "cancelled").length }
                                 </h2>
                             }
                         </div>
