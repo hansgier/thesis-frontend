@@ -160,7 +160,9 @@ export const SingleProject = () => {
                                                             minimumFractionDigits: 2,
                                                             maximumFractionDigits: 2
                                                         }) }`
-                                                        : singleProject?.[value];
+                                                        : value === "funding_source"
+                                                            ? singleProject?.funding_source?.name
+                                                            : singleProject?.[value];
 
                                                 return (
                                                     <div className="mb-5" key={ index }>

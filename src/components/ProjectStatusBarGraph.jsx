@@ -1,11 +1,17 @@
 import React, { useEffect, useState } from "react";
 import { Bar, BarChart, CartesianGrid, Legend, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
-import { format, parse, parseISO } from "date-fns";
+import { format, parseISO } from "date-fns";
 import { useSelector } from "react-redux";
 
 export const ProjectStatusBarGraph = () => {
     const [monthlyProjectData, setMonthlyProjectData] = useState([]);
     const {projects} = useSelector((store) => store.projects);
+
+    // Define month order for sorting
+    const monthOrder = {
+        'Jan': 1, 'Feb': 2, 'Mar': 3, 'Apr': 4, 'May': 5, 'Jun': 6,
+        'Jul': 7, 'Aug': 8, 'Sep': 9, 'Oct': 10, 'Nov': 11, 'Dec': 12
+    };
 
     useEffect(() => {
         if (!projects || projects.length === 0) return;
@@ -35,10 +41,17 @@ export const ProjectStatusBarGraph = () => {
 
         // Convert to array and sort by date correctly
         const sortedData = Object.values(projectsByMonth).sort((a, b) => {
-            // Parse the month-year string to a proper date for accurate sorting
-            const dateA = parse(a.month, 'MMM yyyy', new Date());
-            const dateB = parse(b.month, 'MMM yyyy', new Date());
-            return dateB - dateA;
+            // Split month and year
+            const [monthA, yearA] = a.month.split(' ');
+            const [monthB, yearB] = b.month.split(' ');
+
+            // First compare years
+            if (yearA !== yearB) {
+                return parseInt(yearA) - parseInt(yearB);
+            }
+
+            // If years are the same, compare months
+            return monthOrder[monthA] - monthOrder[monthB];
         });
 
         setMonthlyProjectData(sortedData);

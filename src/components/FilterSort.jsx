@@ -38,8 +38,8 @@ export const sortButtons = {
 
 export const FilterSort = React.memo(({ page }) => {
     const { view } = useSelector((store) => store.auth);
-    const { sort: projectSort } = useSelector((store) => store.projects);
-    const { sort: announcementSort } = useSelector((store) => store.announcements);
+    const { sort: projectSort, projects, filtered_projects } = useSelector((store) => store.projects);
+    const { sort: announcementSort, filtered_announcements } = useSelector((store) => store.announcements);
     const [viewClicked, setViewClicked] = useState(1);
     const [toggleSort, setToggleSort] = useState(0);
     const [openFilterMobile, setOpenFilterMobile] = useState(false);
@@ -71,7 +71,10 @@ export const FilterSort = React.memo(({ page }) => {
                 className="bg-white border hidden mb-6 overflow-hidden pt-0 relative rounded-2xl md:fixed md:flex md:h-[calc(100%-84px)] md:mr-4 md:p-4 md:w-64 md:z-50"
             >
                 <div className="w-full flex flex-col">
-                    <h2 className="font-semibold select-none text-xl mb-3">{ page }</h2>
+                    <div className="flex items-center">
+                        <h2 className="font-semibold select-none text-xl mb-3">{ page }</h2>
+                        <p className="text-gray-400 text-xs mb-2 ml-3">{ page ==="Projects" ? filtered_projects.length : page ==="Announcements" && filtered_announcements.length}</p>
+                    </div>
                     <div className="pt-0 pb-3 px-0 space-y-4 flex flex-col h-full">
                         {/*-----------------------VIEW-----------------------*/ }
                         <div className="space-y-2">

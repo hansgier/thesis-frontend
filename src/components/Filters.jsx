@@ -16,6 +16,8 @@ const filterProjects = (projects, filters) => {
         // Check tags (multiple select)
         if (filters.tags?.length > 0) {
             const projectTagIds = project.tags.map(tag => tag.id.toString());
+            console.log("Project Tags:", projectTagIds);
+            console.log("Filter Tags:", filters.tags);
             if (!filters.tags.some(tagId => projectTagIds.includes(tagId))) {
                 return false;
             }
@@ -105,6 +107,7 @@ export const Filters = React.memo(({ mode, page }) => {
                 return;
             }
 
+            console.log("values", values);
             const filteredResults = filterProjects(projects, values);
             dispatch(setFilteredProjects(filteredResults));
         } else if (page === "Announcements") {
@@ -153,7 +156,7 @@ export const Filters = React.memo(({ mode, page }) => {
                                     <Select mode="multiple" placeholder="Tags" allowClear>
                                         { project_tags.sort((a, b) => a.label.localeCompare(b.label)).map((tag, i) => {
                                             return <Select.Option key={ i }
-                                                                  value={ tag.values }>{ tag.label }</Select.Option>;
+                                                                  value={ tag.value }>{ tag.label }</Select.Option>;
                                         }) }
                                     </Select>
                                 </Form.Item>
