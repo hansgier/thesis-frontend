@@ -3,7 +3,9 @@ import {
     createProjectThunk,
     deleteProjectThunk,
     editProjectThunk,
+    getAllFundingSourcesThunk,
     getAllProjectsThunk,
+    getFundingSourceThunk,
     getProjectThunk
 } from "./projectsThunk.js";
 import { resetReactions } from "../reactions/reactionsSlice.js";
@@ -37,6 +39,7 @@ const initialState = {
     upcomingProjects: [],
     feedbackSummaries: [],
     uploadedImagesArray: [],
+    funding_source: null,
     uploadLoading: false,
     uploadError: null,
     isEditModeProjectUpdate: false,
@@ -46,6 +49,8 @@ const initialState = {
 
 
 export const getAllProjects = createAsyncThunk("projects/getAllProjects", getAllProjectsThunk);
+export const getAllFundingSources = createAsyncThunk("projects/getAllFundingSources", getAllFundingSourcesThunk);
+export const getFundingSource = createAsyncThunk("projects/getFundingSource", getFundingSourceThunk);
 export const getSingleProject = createAsyncThunk("projects/getSingleProject", getProjectThunk);
 export const createProject = createAsyncThunk("projects/createProject", createProjectThunk);
 export const editProject = createAsyncThunk("projects/editProject", editProjectThunk);
@@ -137,6 +142,17 @@ const projectsSlice = createSlice({
     },
     extraReducers: (builder) => {
         builder
+            .addCase(getAllFundingSources.pending, (state) => {
+                state.funding_source = null
+            })
+            .addCase(getAllFundingSources.fulfilled, (state, { payload }) => {
+                console.log(payload);
+                state.funding_source = payload
+            })
+            .addCase(getAllFundingSources.rejected, (state, { payload }) => {
+                state.funding_source = null
+            })
+
             .addCase(deleteProject.pending, (state) => {
                 state.isProjectFetchSuccess = false;
                 state.isProjectFetchError = false;

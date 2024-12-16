@@ -24,7 +24,7 @@ export const ProjectStatusBarGraph = () => {
                     total: 0,
                     completed: 0,
                     ongoing: 0,
-                    'on hold': 0,
+                    on_hold: 0,
                     planned: 0,
                     cancelled: 0
                 };
@@ -66,7 +66,7 @@ export const ProjectStatusBarGraph = () => {
                     <Legend />
                     <Bar dataKey="completed" fill="#82ca9d" name="Completed" />
                     <Bar dataKey="ongoing" fill="#ffc658" name="Ongoing" />
-                    <Bar dataKey="on hold" fill="#ff7300" name="On Hold" />
+                    <Bar dataKey="on_hold" fill="#ff7300" name="On Hold" />
                     <Bar dataKey="planned" fill="#0088fe" name="Planned" />
                     <Bar dataKey="cancelled" fill="#ff0000" name="Cancelled" />
                 </BarChart>

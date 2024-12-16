@@ -317,8 +317,7 @@ export const SingleProject = () => {
                                         {/*STATUS*/ }
                                         <div
                                             className={ `${ proj_status[singleProject?.status] } border border-transparent focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-ring font-semibold hover:bg-secondary/80 inline-flex items-center px-2.5 py-0.5 rounded-full select-none text-secondary-foreground text-xs transition-colors w-fit whitespace-nowrap` }>
-                                            { singleProject?.status?.charAt(0).toUpperCase() }
-                                            { singleProject?.status?.slice(1) }
+                                            { singleProject?.status === "on_hold" ? "On hold" : singleProject?.status === "approved_proposal" ? "Approved Proposal" : singleProject?.status?.charAt(0).toUpperCase() + singleProject?.status?.slice(1) }
                                         </div>
                                     </div>
                                 </div>

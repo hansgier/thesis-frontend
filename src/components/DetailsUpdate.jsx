@@ -42,7 +42,7 @@ const reducer = (state, action) => {
 };
 
 export const DetailsUpdate = () => {
-    const { projects, singleProject } = useSelector((store) => store.projects);
+    const { projects, singleProject, funding_source } = useSelector((store) => store.projects);
     const { user } = useSelector((store) => store.auth);
     const { users4admin } = useSelector((store) => store.users);
     const { barangays } = useSelector((store) => store.barangays);
@@ -139,7 +139,9 @@ export const DetailsUpdate = () => {
                                                     minimumFractionDigits: 2,
                                                     maximumFractionDigits: 2
                                                 }) }`
-                                                : singleProject?.[value];
+                                                : value === "funding_source"
+                                                    ? singleProject?.funding_source?.name
+                                                    : singleProject?.[value];
 
                                         return (
                                             <div className="mb-5" key={ index }>
@@ -204,7 +206,7 @@ export const DetailsUpdate = () => {
                                            onCancel={ () => {
                                                return;
                                            } }
-                                           title="Add Project Update"
+                                           title="Add Project Remarks"
                                     >
                                         <ProjectUpdate mode="add" />
                                     </Modal>

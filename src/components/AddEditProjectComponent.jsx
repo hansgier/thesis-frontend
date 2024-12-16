@@ -111,11 +111,11 @@ export const AddEditProjectComponent = React.memo(({
                     funding_source: funding_source || null,
                     contract_term: contract_term || null,
                     contractor: contractor || null,
-                    uploadedImages: uploadedImagesArray.length > 0 ? uploadedImagesArray : null
+                    uploadedImages: uploadedImagesArray?.length > 0 ? uploadedImagesArray : null
                 })
             ).then(() => dispatch(setAddProjectMode(false)));
         } else if (mode === "edit") {
-            if (uploadedImagesArray.length < 1 && uploadedMediaList.length === project?.media.length) {
+            if (uploadedImagesArray?.length < 1 && uploadedMediaList?.length === project?.media.length) {
                 // return dispatch(toggleEditProjectMode());
             }
             if (uploadedImagesArray.length > 0) {

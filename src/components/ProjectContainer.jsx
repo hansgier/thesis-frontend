@@ -4,7 +4,6 @@ import { useNavigate } from "react-router-dom";
 import React, { useCallback, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import moment from "moment";
-import { capitalizeFirstLetter } from "../utils/functions.js";
 import { deleteProject, setSelectedProject } from "../app/features/projects/projectsSlice.js";
 import { LikeDislikeButtons } from "./LikeDislikeButtons.jsx";
 import { proj_status } from "../utils/data-components.jsx";
@@ -12,6 +11,7 @@ import { CiEdit } from "react-icons/ci";
 import { toggleEditProjectMode } from "../app/features/auth/authSlice.js";
 import { AddEditProjectComponent } from "./AddEditProjectComponent.jsx";
 import { MdDeleteOutline } from "react-icons/md";
+import { capitalizeFirstLetter } from "../utils/functions.js";
 
 
 export const ProjectContainer = React.memo(({ project }) => {
@@ -220,7 +220,7 @@ export const ProjectContainer = React.memo(({ project }) => {
                                         </div>
                                         <div
                                             className={ `border border-transparent focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-ring font-semibold hover:bg-secondary/80 inline-flex items-center px-2.5 py-0.5 rounded-full select-none text-secondary-foreground text-xs transition-colors w-fit whitespace-nowrap ${ proj_status[project.status] }` }>
-                                            { capitalizeFirstLetter(project.status) }
+                                            { project.status === "on_hold" ? "On hold" : project.status === "approved_proposal" ? "Approved Proposal" : capitalizeFirstLetter(project.status) }
                                         </div>
                                     </div>
                                 </div>

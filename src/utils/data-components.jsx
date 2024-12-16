@@ -11,8 +11,8 @@ export const proj_status = {
     on_hold: "bg-amber-100",
     completed: "bg-green-100",
     cancelled: "bg-red-100",
-    planned: "bg-sky-100"
-
+    planned: "bg-sky-100",
+    approved_proposal: "bg-cyan-100"
 };
 
 export const sideLinks = [
@@ -246,7 +246,7 @@ export const projectDetails_sidebar = [
         color: "bg-rose-600"
     },
     {
-        name: "Locations",
+        name: "Location/s",
         value: "barangays",
         pds_type: "multiple",
         color: "bg-amber-600"
@@ -423,6 +423,10 @@ export const project_status = [
     {
         label: "Planned",
         value: "planned"
+    },
+    {
+        label: "Approved Proposal",
+        value: "approved_proposal"
     }
 ];
 export const project_cost = [

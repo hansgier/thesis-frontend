@@ -171,3 +171,25 @@ export const editProjectThunk = async ({ id, project }, thunkAPI) => {
         return checkForUnauthorizedResponse(e, thunkAPI) || e.message;
     }
 };
+
+export const getAllFundingSourcesThunk = async (_, thunkAPI) => {
+    try {
+        const state = thunkAPI.getState().auth;
+        const headers = state.user.role === "guest" ? { Authorization: `Bearer guest` } : { Authorization: `Bearer ${ state.user.accessToken }` };
+        const response = await customFetch.get(`${PROJECTS_URL}/funding-sources`, { headers });
+        return response.data;
+    } catch (e) {
+        return checkForUnauthorizedResponse(e, thunkAPI);
+    }
+};
+
+export const getFundingSourceThunk = async (id, thunkAPI) => {
+    try {
+        const state = thunkAPI.getState().auth;
+        const headers = state.user.role === "guest" ? { Authorization: `Bearer guest` } : { Authorization: `Bearer ${ state.user.accessToken }` };
+        const response = await customFetch.get(`${PROJECTS_URL}/funding-sources/${id}`, { headers });
+        return response.data;
+    } catch (e) {
+        return checkForUnauthorizedResponse(e, thunkAPI);
+    }
+};
