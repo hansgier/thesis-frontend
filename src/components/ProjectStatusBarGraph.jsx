@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { Bar, BarChart, CartesianGrid, Legend, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
-import { format, parseISO } from "date-fns";
+import { format, parse, parseISO } from "date-fns";
 import { useSelector } from "react-redux";
 
 export const ProjectStatusBarGraph = () => {
     const [monthlyProjectData, setMonthlyProjectData] = useState([]);
-    const {projects} = useSelector((store)=>store.projects)
+    const {projects} = useSelector((store) => store.projects);
 
     useEffect(() => {
         if (!projects || projects.length === 0) return;
@@ -17,7 +17,6 @@ export const ProjectStatusBarGraph = () => {
             if (!date) return acc;
 
             const month = format(parseISO(date), 'MMM yyyy');
-
             if (!acc[month]) {
                 acc[month] = {
                     month,
@@ -29,17 +28,18 @@ export const ProjectStatusBarGraph = () => {
                     cancelled: 0
                 };
             }
-
             acc[month].total++;
             acc[month][project?.status.toLowerCase()]++;
-
             return acc;
         }, {});
 
-        // Convert to array and sort by date
-        const sortedData = Object.values(projectsByMonth).sort((a, b) =>
-            parseISO(`01 ${a.month}`) - parseISO(`01 ${b.month}`)
-        );
+        // Convert to array and sort by date correctly
+        const sortedData = Object.values(projectsByMonth).sort((a, b) => {
+            // Parse the month-year string to a proper date for accurate sorting
+            const dateA = parse(a.month, 'MMM yyyy', new Date());
+            const dateB = parse(b.month, 'MMM yyyy', new Date());
+            return dateB - dateA;
+        });
 
         setMonthlyProjectData(sortedData);
     }, [projects]);
@@ -49,12 +49,7 @@ export const ProjectStatusBarGraph = () => {
             <ResponsiveContainer width="100%" height="100%">
                 <BarChart
                     data={monthlyProjectData}
-                    margin={{
-                        top: 20,
-                        right: 30,
-                        left: 20,
-                        bottom: 5,
-                    }}
+                    margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
                 >
                     <CartesianGrid strokeDasharray="3 3" />
                     <XAxis dataKey="month" />

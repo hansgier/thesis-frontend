@@ -43,7 +43,7 @@ export const Dashboard = () => {
             sessionStorage.setItem("scrollPosition", "0");
         }
         console.log(projects.filter((project)=>project?.status === "completed").length);
-    }, [totalProjects]);
+    }, [projects.length]);
 
     return (
         <>
