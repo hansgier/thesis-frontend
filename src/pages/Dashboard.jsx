@@ -42,7 +42,6 @@ export const Dashboard = () => {
         if (location.pathname !== "/project" || location.pathname !== "/singleproject") {
             sessionStorage.setItem("scrollPosition", "0");
         }
-        console.log(projects.filter((project)=>project?.status === "completed").length);
     }, [projects.length]);
 
     return (
