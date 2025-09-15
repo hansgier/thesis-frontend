@@ -43,11 +43,7 @@ const initialState = {
 
 export const registerUser = createAsyncThunk("auth/register", async (user, thunkAPI) => {
         try {
-            const resp = await customFetch.post(`${ AUTH_URL }/register`, user, {
-                headers: {
-                    origin: window.location.href
-                }
-            });
+            const resp = await customFetch.post(`${ AUTH_URL }/register`, user);
             return resp.data;
         } catch (e) {
             return thunkAPI.rejectWithValue(e.response.data.message);
@@ -229,15 +225,14 @@ const authSlice = createSlice({
             })
             .addCase(registerUser.fulfilled, (state, { payload }) => {
                 const { registeredUser } = payload;
-                console.log(payload);
                 state.isLoading = false;
-                // state.user = registeredUser;
+                state.user = registeredUser;
                 state.authSuccess = true;
                 state.guestMode = false;
                 state.authError = false;
                 state.authErrorMessage = "";
                 state.verifyEmailTemp = registeredUser?.email
-                message.success({ content: "Check your email for verification.", key: "after-register" });
+                message.success({ content: "User registered successfully", key: "after-register" });
                 // addUserToLocalStorage(registeredUser);
             })
             .addCase(registerUser.rejected, (state, { payload }) => {

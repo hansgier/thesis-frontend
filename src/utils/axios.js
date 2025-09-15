@@ -1,22 +1,23 @@
 import axios from "axios";
-import { clearStore } from "../app/features/auth/authSlice.js";
 import { removeUserFromLocalStorage } from "./localStorage.jsx";
 import { BASE_URL } from "../app/constants.js";
 
-
 const customFetch = axios.create({
-    baseURL: BASE_URL
+    baseURL: BASE_URL,
+    timeout: 15000 // optional: helps detect hung requests
 });
 
+// do NOT import authSlice here to avoid circular deps
 export const checkForUnauthorizedResponse = (error, thunkAPI) => {
-    if (error.response.status === 401) {
+    const status = error?.response?.status;
+    if (status === 401) {
         removeUserFromLocalStorage();
-        thunkAPI.dispatch(clearStore());
-        // thunkAPI.dispatch(logout());
-
+        // dispatch via plain action type to avoid importing the slice
+        thunkAPI.dispatch({ type: "auth/clearStore" });
         return thunkAPI.rejectWithValue("Unauthorized! Logging out...");
     }
-    return thunkAPI.rejectWithValue(error.response.data.message);
+    const message = error?.response?.data?.message || error?.message || "Something went wrong";
+    return thunkAPI.rejectWithValue(message);
 };
 
 export default customFetch;
